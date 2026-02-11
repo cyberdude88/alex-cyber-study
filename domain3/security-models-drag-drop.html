@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Models Drag &amp; Drop - Domain 3 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .sec-models-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .sec-models-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    .sec-models-col {
+      width: 48%;
+    }
+    .sec-models-draggable {
+      background: rgba(255, 255, 255, 0.1);
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: grab;
+      user-select: none;
+    }
+    .sec-models-dropzone {
+      border: 2px dashed rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 60px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.04);
+      transition: background 0.2s ease;
+      text-align: left;
+    }
+    .sec-models-dropzone.correct {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22c55e;
+    }
+    .sec-models-dropzone.incorrect {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+    }
+    .sec-models-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 760px) {
+      .sec-models-grid {
+        flex-direction: column;
+      }
+      .sec-models-col {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🧩 Security Models Drag &amp; Drop</h1>
+      <p class="game-subtitle">Match each security model to its definition.</p>
+    </div>
+
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+    </div>
+
+    <div class="sec-models-wrap">
+      <div class="sec-models-grid">
+        <div class="sec-models-col" id="models">
+          <div class="sec-models-draggable" draggable="true" id="state">State Machine model</div>
+          <div class="sec-models-draggable" draggable="true" id="noninterference">Noninterference model</div>
+          <div class="sec-models-draggable" draggable="true" id="matrix">Matrix-based model</div>
+          <div class="sec-models-draggable" draggable="true" id="lattice">Multilevel Lattice model</div>
+          <div class="sec-models-draggable" draggable="true" id="infoflow">Information Flow model</div>
+        </div>
+        <div class="sec-models-col" id="definitions">
+          <div class="sec-models-dropzone" data-correct="state" data-text="Examines all possible system states to maintain proper relationships between objects and subjects.">Examines all possible system states to maintain proper relationships between objects and subjects.</div>
+          <div class="sec-models-dropzone" data-correct="lattice" data-text="Deals mainly with confidentiality issues and focuses on information flow.">Deals mainly with confidentiality issues and focuses on information flow.</div>
+          <div class="sec-models-dropzone" data-correct="matrix" data-text="Organizes tables of subjects and objects to show what actions each subject can take on each object.">Organizes tables of subjects and objects to show what actions each subject can take on each object.</div>
+          <div class="sec-models-dropzone" data-correct="noninterference" data-text="Prevents actions at one level from altering the state visible to another level.">Prevents actions at one level from altering the state visible to another level.</div>
+          <div class="sec-models-dropzone" data-correct="infoflow" data-text="Controls information flows between two versions of the same object.">Controls information flows between two versions of the same object.</div>
+        </div>
+      </div>
+
+      <div class="sec-models-actions">
+        <button class="reset-btn" id="checkBtn">✅ Check Answers</button>
+        <button class="reset-btn" id="resetBtn">🔄 Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 3 Games</a></p></footer>
+
+  <script>
+    const draggables = document.querySelectorAll('.sec-models-draggable');
+    const dropzones = document.querySelectorAll('.sec-models-dropzone');
+    const modelColumn = document.getElementById('models');
+    let draggedItem = null;
+
+    draggables.forEach((item) => {
+      item.addEventListener('dragstart', () => {
+        draggedItem = item;
+      });
+      item.addEventListener('dragend', () => {
+        draggedItem = null;
+      });
+    });
+
+    dropzones.forEach((zone) => {
+      zone.addEventListener('dragover', (event) => event.preventDefault());
+      zone.addEventListener('drop', () => {
+        if (!draggedItem) {
+          return;
+        }
+        zone.innerHTML = '';
+        zone.appendChild(draggedItem);
+      });
+    });
+
+    modelColumn.addEventListener('dragover', (event) => event.preventDefault());
+    modelColumn.addEventListener('drop', () => {
+      if (draggedItem) {
+        modelColumn.appendChild(draggedItem);
+      }
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      dropzones.forEach((zone) => {
+        const dropped = zone.querySelector('.sec-models-draggable');
+        if (dropped && dropped.id === zone.dataset.correct) {
+          zone.classList.add('correct');
+          zone.classList.remove('incorrect');
+        } else {
+          zone.classList.add('incorrect');
+          zone.classList.remove('correct');
+        }
+      });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      const liveItems = document.querySelectorAll('.sec-models-draggable');
+      liveItems.forEach((item) => modelColumn.appendChild(item));
+      dropzones.forEach((zone) => {
+        zone.classList.remove('correct', 'incorrect');
+        zone.innerHTML = zone.dataset.text;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Algorithm Deep-Dive - Domain 3 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .quiz-table-wrap { overflow-x: auto; max-width: 1200px; margin: 0 auto; }
+    .quiz-table { width: 100%; border-collapse: separate; border-spacing: 8px; }
+    .quiz-table th {
+      background: rgba(255,255,255,0.08);
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .quiz-table td {
+      padding: 0.5rem;
+      vertical-align: top;
+    }
+    .quiz-table td:first-child {
+      font-weight: 700;
+      color: #a78bfa;
+      font-size: 1.05rem;
+      white-space: nowrap;
+    }
+    .quiz-table select {
+      width: 100%;
+      padding: 0.6rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 0.88rem;
+      appearance: none;
+      cursor: pointer;
+    }
+    .quiz-table select:focus { border-color: #667eea; outline: none; }
+    .quiz-table select.correct { background: rgba(34,197,94,0.25); border-color: #22c55e; }
+    .quiz-table select.incorrect { background: rgba(239,68,68,0.25); border-color: #ef4444; }
+    .quiz-table select.empty { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
+    .explanation-box {
+      max-width: 1200px; margin: 1.5rem auto 0;
+      background: rgba(34,197,94,0.1); border: 1px solid #22c55e;
+      border-radius: 12px; padding: 1rem 1.5rem;
+      display: none; color: #4ade80; font-size: 0.95rem;
+    }
+    @media (max-width: 768px) {
+      .quiz-table select { font-size: 0.8rem; padding: 0.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🧮 Crypto Algorithm Deep-Dive</h1>
+      <p class="game-subtitle">Match each algorithm's definition, key point, use, and NIST publication</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="resetGame()">🔄 Reset</button>
+      <button class="reset-btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);" onclick="checkAnswers()">✅ Check Answers</button>
+    </div>
+
+    <div class="quiz-table-wrap">
+      <table class="quiz-table" id="quizTable"></table>
+    </div>
+    <div class="explanation-box" id="explanationBox"></div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 3 Games</a></p></footer>
+
+  <script>
+    const data = {
+      Knapsack: {
+        Definition: ["Early public-key system based on subset-sum", "Modern elliptic curve algorithm", "Digital signature method using modular arithmetic", "Key exchange algorithm using finite fields"],
+        KeyPoint: ["Broken and insecure today", "Efficient with small keys", "Provides digital signatures", "Used in TLS 1.3"],
+        Use: ["Encryption (obsolete)", "Digital signatures only", "Mobile encryption", "Integrity verification"],
+        NIST: ["None - historical only", "FIPS 186-4", "NIST SP 800-186", "NIST SP 800-57"]
+      },
+      DSA: {
+        Definition: ["Digital signature algorithm verifying message authenticity", "Encryption based on elliptic curves", "Key exchange for confidentiality", "Early broken public-key system"],
+        KeyPoint: ["Provides authentication and non-repudiation only", "Provides confidentiality and integrity", "Fast mobile performance", "Not used for signatures"],
+        Use: ["Digital signatures only", "Encryption and decryption", "Integrity checks", "Key exchange"],
+        NIST: ["FIPS 186-4", "NIST SP 800-186", "NIST SP 800-57", "None - deprecated"]
+      },
+      ElGamal: {
+        Definition: ["Public-key system based on Diffie-Hellman key exchange", "Subset-sum based encryption", "Elliptic curve digital signature system", "Symmetric block cipher"],
+        KeyPoint: ["Provides both confidentiality and non-repudiation", "Broken and obsolete", "Uses elliptic curve math", "Limited to hashing"],
+        Use: ["Encryption and signatures", "Hashing", "Integrity only", "Obsolete system"],
+        NIST: ["NIST SP 800-57", "FIPS 186-4", "NIST SP 800-186", "None - obsolete"]
+      },
+      ECC: {
+        Definition: ["Asymmetric algorithm using elliptic curves over finite fields", "Subset-sum encryption", "Symmetric key algorithm", "Message digest generator"],
+        KeyPoint: ["Provides strong security with smaller key sizes", "Broken algorithm", "For hashing only", "Low security level"],
+        Use: ["Encryption and digital signatures", "Hashing", "Integrity checking", "Key derivation"],
+        NIST: ["NIST SP 800-186", "FIPS 186-4", "NIST SP 800-57", "None - deprecated"]
+      }
+    };
+
+    const correct = {
+      Knapsack: { Definition:"Early public-key system based on subset-sum", KeyPoint:"Broken and insecure today", Use:"Encryption (obsolete)", NIST:"None - historical only" },
+      DSA: { Definition:"Digital signature algorithm verifying message authenticity", KeyPoint:"Provides authentication and non-repudiation only", Use:"Digital signatures only", NIST:"FIPS 186-4" },
+      ElGamal: { Definition:"Public-key system based on Diffie-Hellman key exchange", KeyPoint:"Provides both confidentiality and non-repudiation", Use:"Encryption and signatures", NIST:"NIST SP 800-57" },
+      ECC: { Definition:"Asymmetric algorithm using elliptic curves over finite fields", KeyPoint:"Provides strong security with smaller key sizes", Use:"Encryption and digital signatures", NIST:"NIST SP 800-186" }
+    };
+
+    function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+
+    function createDropdown(id, options) {
+      const sel = document.createElement('select');
+      sel.id = id;
+      sel.innerHTML = '<option value="">-- Select --</option>' + shuffle(options).map(o => `<option>${o}</option>`).join('');
+      return sel;
+    }
+
+    function loadQuiz() {
+      const table = document.getElementById('quizTable');
+      let html = '<tr><th>Algorithm</th><th>Definition</th><th>Key Point</th><th>Use</th><th>NIST Pub</th></tr>';
+      for (const algo in data) {
+        html += `<tr><td>${algo}</td><td id="${algo}-def"></td><td id="${algo}-key"></td><td id="${algo}-use"></td><td id="${algo}-nist"></td></tr>`;
+      }
+      table.innerHTML = html;
+      requestAnimationFrame(() => {
+        for (const algo in data) {
+          document.getElementById(`${algo}-def`).appendChild(createDropdown(`${algo}Def`, data[algo].Definition));
+          document.getElementById(`${algo}-key`).appendChild(createDropdown(`${algo}Key`, data[algo].KeyPoint));
+          document.getElementById(`${algo}-use`).appendChild(createDropdown(`${algo}Use`, data[algo].Use));
+          document.getElementById(`${algo}-nist`).appendChild(createDropdown(`${algo}NIST`, data[algo].NIST));
+        }
+      });
+    }
+
+    function checkAnswers() {
+      const fieldMap = { Def:'Definition', Key:'KeyPoint', Use:'Use', NIST:'NIST' };
+      document.querySelectorAll('.quiz-table select').forEach(sel => {
+        const m = sel.id.match(/(Knapsack|DSA|ElGamal|ECC)(Def|Key|Use|NIST)/);
+        if (!m) return;
+        const [, algo, fieldKey] = m;
+        const field = fieldMap[fieldKey];
+        if (!sel.value) { sel.className = 'empty'; return; }
+        sel.className = sel.value === correct[algo][field] ? 'correct' : 'incorrect';
+      });
+      const box = document.getElementById('explanationBox');
+      box.innerHTML = '✅ Green = correct, Red = incorrect, Gray = empty. Based on NIST SP 800-57, FIPS 186-4, and NIST SP 800-186.';
+      box.style.display = 'block';
+    }
+
+    function resetGame() {
+      document.getElementById('quizTable').innerHTML = '';
+      document.getElementById('explanationBox').style.display = 'none';
+      loadQuiz();
+    }
+
+    loadQuiz();
+  </script>
+</body>
+</html>

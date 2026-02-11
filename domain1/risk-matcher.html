@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risk Management Matcher - Domain 1 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html" class="active">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🎯 Risk Management Matcher</h1>
+      <p class="game-subtitle">Domain 1 &mdash; Match each concept to its description</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 1</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Domain 1 Mastered! Risk Management nailed! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Concepts</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Descriptions</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 1 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Annual Loss Expectancy (ALE)": "Calculated by multiplying the Single Loss Expectancy by the Annualized Rate of Occurrence, this metric represents the expected monetary loss for an asset due to a risk over one year.",
+      "Business Continuity Plan (BCP)": "A comprehensive plan that documents procedures for maintaining essential business functions during and after a major disruption or disaster event.",
+      "Qualitative Risk Analysis": "A risk assessment approach that uses subjective ratings such as High, Medium, and Low rather than precise dollar figures to evaluate the severity and likelihood of threats.",
+      "Due Diligence": "The process of investigating and understanding the current security posture before making business decisions, ensuring the organization knows its risks and obligations.",
+      "Recovery Point Objective (RPO)": "Defines the maximum acceptable amount of data loss measured in time \u2014 it determines how frequently backups must be created to meet business requirements.",
+      "Separation of Duties": "A security principle requiring that no single individual has enough access or authority to complete a critical task alone, reducing the risk of fraud or error.",
+      "Risk Transference": "A risk response strategy where the organization shifts the financial burden of a potential loss to a third party, most commonly through purchasing insurance."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

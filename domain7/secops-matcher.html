@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecOps Concept Matcher - Domain 7 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li><li><a href="../domain1/index.html">D1</a></li><li><a href="../domain2/index.html">D2</a></li><li><a href="../domain3/index.html">D3</a></li><li><a href="../domain4/index.html">D4</a></li><li><a href="../domain5/index.html">D5</a></li><li><a href="../domain6/index.html">D6</a></li><li><a href="../domain7/index.html" class="active">D7</a></li><li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header"><h1>🎯 SecOps Concept Matcher</h1><p class="game-subtitle">Domain 7 &mdash; Match each concept to its description</p></div>
+    <div class="game-controls"><a href="index.html" class="back-btn">← Back to Domain 7</a><button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button></div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 SecOps is second nature now! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">Concepts</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Descriptions</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 7 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Incident Response": "A structured methodology with phases including Preparation, Detection, Containment, Eradication, Recovery, and Lessons Learned for handling security breaches and events.",
+      "Chain of Custody": "The documented chronological history showing the seizure, custody, control, transfer, and disposition of digital evidence to ensure its integrity and admissibility in legal proceedings.",
+      "SIEM": "A platform that aggregates and correlates log data from multiple sources across the network in real time, using rules and analytics to detect security threats and generate alerts.",
+      "Intrusion Prevention System (IPS)": "A network security device placed inline that monitors traffic flows and actively blocks or drops packets that match known attack signatures or anomalous behavior patterns.",
+      "Disaster Recovery Plan (DRP)": "A documented process focused on restoring IT infrastructure and operations to a functional state after a catastrophic event, including RTOs and RPOs for critical systems.",
+      "SOAR": "A technology stack that integrates security tools and automates incident response workflows through predefined playbooks, reducing mean time to respond and analyst fatigue.",
+      "Mean Time to Repair (MTTR)": "A reliability metric measuring the average time required to restore a system or component to full operational status after a failure has occurred."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

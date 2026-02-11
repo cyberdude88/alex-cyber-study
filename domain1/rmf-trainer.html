@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RMF Step Trainer - Domain 1 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .rmf-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .rmf-column {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+    .rmf-column h3 {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .scenario-item {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 0.85rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 10px;
+      cursor: grab;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      user-select: none;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    .scenario-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .scenario-item.dragging { opacity: 0.4; }
+    .scenario-item.correct {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      cursor: default;
+    }
+    .scenario-item.incorrect {
+      animation: shake 0.5s;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+    .step-drop {
+      background: rgba(255,255,255,0.03);
+      border: 2px dashed rgba(255,255,255,0.15);
+      padding: 1rem;
+      margin: 0.6rem 0;
+      border-radius: 10px;
+      min-height: 50px;
+      transition: all 0.2s;
+    }
+    .step-drop.drag-over {
+      background: rgba(102,126,234,0.15);
+      border-color: #667eea;
+    }
+    .step-drop .step-label {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: rgba(255,255,255,0.8);
+    }
+    .step-drop .step-count {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .step-drop .scenario-item { margin: 0.4rem 0; }
+    @media (max-width: 768px) {
+      .rmf-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html" class="active">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>📋 RMF Step Trainer</h1>
+      <p class="game-subtitle">Drag each scenario to the correct NIST RMF step</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 1</a>
+      <button class="reset-btn" onclick="initRMF()">🔄 Shuffle &amp; Reset</button>
+    </div>
+    <div class="score-display">Correct: <span id="score">0</span> / <span id="total">14</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Perfect! You mastered the RMF lifecycle! 🎉</div>
+
+    <div class="rmf-layout">
+      <div class="rmf-column">
+        <h3>📄 Scenarios (drag these)</h3>
+        <div id="scenariosPool"></div>
+      </div>
+      <div class="rmf-column">
+        <h3>📐 RMF Steps (drop here)</h3>
+        <div id="stepsZone"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 1 Games</a></p></footer>
+
+  <script>
+    const rmfSteps = ["Prepare","Categorize","Select","Implement","Assess","Authorize","Monitor"];
+
+    const scenarios = [
+      { id:1, text:"The organization defines risk tolerance, governance structure, and RMF roles before system development begins.", answer:"Prepare" },
+      { id:2, text:"An enterprise-wide risk strategy and common control approach are established to support multiple systems.", answer:"Prepare" },
+      { id:3, text:"The system owner determines confidentiality, integrity, and availability impact levels for the system.", answer:"Categorize" },
+      { id:4, text:"Information types are identified and mapped to impact values using FIPS 199 guidance.", answer:"Categorize" },
+      { id:5, text:"Security control baselines are selected and tailored based on the system impact level.", answer:"Select" },
+      { id:6, text:"Inherited, common, and system-specific controls are identified and documented.", answer:"Select" },
+      { id:7, text:"Security controls are configured and integrated into the operational system environment.", answer:"Implement" },
+      { id:8, text:"Implementation details are documented in the System Security Plan (SSP).", answer:"Implement" },
+      { id:9, text:"An independent assessor evaluates controls to determine if they are implemented correctly.", answer:"Assess" },
+      { id:10, text:"Assessment results are documented in a Security Assessment Report (SAR).", answer:"Assess" },
+      { id:11, text:"The Authorizing Official reviews risk information and decides whether to grant an ATO.", answer:"Authorize" },
+      { id:12, text:"Residual risk is formally accepted by senior leadership for system operation.", answer:"Authorize" },
+      { id:13, text:"The organization continuously tracks control effectiveness and system changes.", answer:"Monitor" },
+      { id:14, text:"Ongoing assessments and POA&M updates are performed throughout the system lifecycle.", answer:"Monitor" },
+    ];
+
+    let draggedItem = null;
+    let score = 0;
+
+    function initRMF() {
+      const pool = document.getElementById('scenariosPool');
+      const zone = document.getElementById('stepsZone');
+      pool.innerHTML = '';
+      zone.innerHTML = '';
+      score = 0;
+      updateScore();
+      document.getElementById('completionMessage').style.display = 'none';
+
+      // Shuffle scenarios
+      const shuffled = [...scenarios].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach(s => {
+        const el = document.createElement('div');
+        el.className = 'scenario-item';
+        el.textContent = s.text;
+        el.draggable = true;
+        el.dataset.answer = s.answer;
+        el.dataset.id = s.id;
+
+        el.addEventListener('dragstart', () => { draggedItem = el; el.classList.add('dragging'); });
+        el.addEventListener('dragend', () => { el.classList.remove('dragging'); });
+
+        // Touch
+        el.addEventListener('touchstart', tStart, { passive: false });
+        el.addEventListener('touchmove', tMove, { passive: false });
+        el.addEventListener('touchend', tEnd, { passive: false });
+
+        pool.appendChild(el);
+      });
+
+      // Create step drop zones
+      rmfSteps.forEach(step => {
+        const drop = document.createElement('div');
+        drop.className = 'step-drop';
+        drop.dataset.step = step;
+
+        const label = document.createElement('div');
+        label.className = 'step-label';
+        label.textContent = step;
+        drop.appendChild(label);
+
+        const count = document.createElement('div');
+        count.className = 'step-count';
+        count.textContent = '(2 scenarios belong here)';
+        drop.appendChild(count);
+
+        drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+        drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+        drop.addEventListener('drop', e => {
+          e.preventDefault();
+          drop.classList.remove('drag-over');
+          handleDrop(drop);
+        });
+
+        zone.appendChild(drop);
+      });
+    }
+
+    function handleDrop(dropZone) {
+      if (!draggedItem) return;
+      const correct = draggedItem.dataset.answer === dropZone.dataset.step;
+
+      if (correct) {
+        draggedItem.classList.add('correct');
+        draggedItem.draggable = false;
+        dropZone.appendChild(draggedItem);
+        score++;
+        updateScore();
+        if (score === 14) {
+          document.getElementById('completionMessage').style.display = 'block';
+          launchConfetti();
+        }
+      } else {
+        draggedItem.classList.add('incorrect');
+        setTimeout(() => draggedItem.classList.remove('incorrect'), 600);
+      }
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = score;
+    }
+
+    /* Confetti */
+    function launchConfetti() {
+      const colors = ['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa','#fb923c'];
+      for (let i = 0; i < 80; i++) {
+        const d = document.createElement('div');
+        d.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;background:${colors[Math.floor(Math.random()*colors.length)]};left:${50+(Math.random()-0.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;
+        document.body.appendChild(d);
+        const x = (Math.random()-0.5)*600, y = window.innerHeight+50, dur = 1200+Math.random()*800;
+        d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${x}px,${y}px) scale(0.3)`,opacity:0}],{duration:dur,easing:'cubic-bezier(.25,.46,.45,.94)'});
+        setTimeout(()=>d.remove(),dur);
+      }
+    }
+
+    /* Touch */
+    let tClone=null,tEl=null;
+    function tStart(e){e.preventDefault();tEl=e.target.closest('.scenario-item');if(!tEl||!tEl.draggable)return;draggedItem=tEl;tEl.classList.add('dragging');tClone=tEl.cloneNode(true);tClone.style.cssText=`position:fixed;z-index:10000;pointer-events:none;opacity:0.85;width:${tEl.offsetWidth}px;`;document.body.appendChild(tClone);mc(e.touches[0]);}
+    function tMove(e){e.preventDefault();if(!tClone)return;mc(e.touches[0]);const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);document.querySelectorAll('.step-drop').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.step-drop');if(z)z.classList.add('drag-over');}}
+    function tEnd(e){if(!tClone)return;tClone.remove();tClone=null;if(tEl)tEl.classList.remove('dragging');const t=e.changedTouches[0],el=document.elementFromPoint(t.clientX,t.clientY);document.querySelectorAll('.step-drop').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.step-drop');if(z)handleDrop(z);}tEl=null;}
+    function mc(t){if(!tClone)return;tClone.style.left=(t.clientX-tClone.offsetWidth/2)+'px';tClone.style.top=(t.clientY-30)+'px';}
+
+    initRMF();
+  </script>
+</body>
+</html>

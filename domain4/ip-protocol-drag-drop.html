@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP Protocol Number Matcher - Domain 4 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .ip-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .panel h2 {
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      color: #dcfce7;
+    }
+
+    .protocol-pool {
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .drag-item {
+      padding: 0.75rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid rgba(34,197,94,0.35);
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 6px 16px rgba(22,163,74,0.25);
+    }
+
+    .drag-item:active {
+      cursor: grabbing;
+    }
+
+    .drag-item.dragging {
+      opacity: 0.55;
+    }
+
+    .desc-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .drop-box {
+      background: rgba(255,255,255,0.05);
+      border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 0.9rem;
+      min-height: 104px;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .drop-box.drag-over {
+      border-color: #22c55e;
+      background: rgba(34,197,94,0.15);
+      transform: translateY(-1px);
+    }
+
+    .drop-text {
+      color: rgba(255,255,255,0.78);
+      line-height: 1.45;
+      font-size: 0.93rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .answer-slot {
+      min-height: 40px;
+      border-radius: 10px;
+      border: 1px dashed rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.04);
+      padding: 0.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .answer-slot .placeholder {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.83rem;
+    }
+
+    .drop-box.correct {
+      border-color: #22c55e;
+      background: rgba(34,197,94,0.18);
+    }
+
+    .drop-box.incorrect {
+      border-color: #ef4444;
+      background: rgba(239,68,68,0.14);
+    }
+
+    .actions {
+      margin: 1rem auto 0;
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.7rem 1.25rem;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .check-btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+    }
+
+    .reset-btn-local {
+      background: linear-gradient(135deg, #64748b, #475569);
+      box-shadow: 0 4px 14px rgba(71,85,105,0.35);
+    }
+
+    #resultBox {
+      max-width: 1100px;
+      margin: 1rem auto 0;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.35);
+      color: #dcfce7;
+      display: none;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .ip-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html" class="active">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🛰️ IP Protocol Number Matcher</h1>
+      <p class="game-subtitle">Domain 4 &mdash; Drag each protocol number to the correct description</p>
+    </div>
+
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 4</a>
+    </div>
+
+    <div class="ip-grid">
+      <section class="panel">
+        <h2>Protocol Numbers</h2>
+        <div id="dragContainer" class="protocol-pool"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Descriptions</h2>
+        <div id="descContainer" class="desc-list"></div>
+      </section>
+    </div>
+
+    <div class="actions">
+      <button id="checkBtn" class="action-btn check-btn">Check Answers</button>
+      <button id="resetBtn" class="action-btn reset-btn-local">Reset</button>
+    </div>
+
+    <div id="resultBox"></div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 4 Games</a></p></footer>
+
+  <script>
+    const protocols = [
+      { text: "IP Protocol 51", id: "p51" },
+      { text: "IP Protocol 50", id: "p50" },
+      { text: "IP Protocol 6", id: "p6" },
+      { text: "IP Protocol 1", id: "p1" }
+    ];
+
+    const descriptions = [
+      {
+        text: "Authentication Header (AH) provides integrity and authentication for IP packets.",
+        correct: "p51"
+      },
+      {
+        text: "Encapsulating Security Payload (ESP) provides encryption for payloads.",
+        correct: "p50"
+      },
+      {
+        text: "TCP provides reliable, ordered delivery between applications.",
+        correct: "p6"
+      },
+      {
+        text: "ICMP is used for diagnostics and control messaging, such as ping.",
+        correct: "p1"
+      }
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function createDragItem(protocol) {
+      const item = document.createElement("div");
+      item.className = "drag-item";
+      item.draggable = true;
+      item.id = protocol.id;
+      item.textContent = protocol.text;
+      return item;
+    }
+
+    function createDropBox(description) {
+      const box = document.createElement("div");
+      box.className = "drop-box";
+      box.dataset.correct = description.correct;
+
+      const text = document.createElement("div");
+      text.className = "drop-text";
+      text.textContent = description.text;
+
+      const slot = document.createElement("div");
+      slot.className = "answer-slot";
+      slot.innerHTML = "<span class=\"placeholder\">Drop protocol number here</span>";
+
+      box.appendChild(text);
+      box.appendChild(slot);
+      return box;
+    }
+
+    function renderGame() {
+      const dragContainer = document.getElementById("dragContainer");
+      const descContainer = document.getElementById("descContainer");
+      dragContainer.innerHTML = "";
+      descContainer.innerHTML = "";
+
+      shuffle([...protocols]).forEach((protocol) => {
+        dragContainer.appendChild(createDragItem(protocol));
+      });
+
+      shuffle([...descriptions]).forEach((description) => {
+        descContainer.appendChild(createDropBox(description));
+      });
+
+      bindDragAndDrop();
+      clearResult();
+    }
+
+    function bindDragAndDrop() {
+      const dragContainer = document.getElementById("dragContainer");
+      let dragged = null;
+
+      document.querySelectorAll(".drag-item").forEach((item) => {
+        item.addEventListener("dragstart", () => {
+          dragged = item;
+          item.classList.add("dragging");
+        });
+
+        item.addEventListener("dragend", () => {
+          item.classList.remove("dragging");
+          dragged = null;
+        });
+      });
+
+      dragContainer.addEventListener("dragover", (event) => {
+        event.preventDefault();
+      });
+
+      dragContainer.addEventListener("drop", (event) => {
+        event.preventDefault();
+        if (!dragged) return;
+        dragContainer.appendChild(dragged);
+      });
+
+      document.querySelectorAll(".drop-box").forEach((box) => {
+        const slot = box.querySelector(".answer-slot");
+
+        box.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          box.classList.add("drag-over");
+        });
+
+        box.addEventListener("dragleave", () => {
+          box.classList.remove("drag-over");
+        });
+
+        box.addEventListener("drop", (event) => {
+          event.preventDefault();
+          box.classList.remove("drag-over");
+          if (!dragged) return;
+
+          const existing = slot.querySelector(".drag-item");
+          if (existing) {
+            dragContainer.appendChild(existing);
+          }
+
+          slot.innerHTML = "";
+          slot.appendChild(dragged);
+        });
+      });
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      document.querySelectorAll(".drop-box").forEach((box) => {
+        box.classList.remove("correct", "incorrect");
+        const placed = box.querySelector(".answer-slot .drag-item");
+
+        if (placed && placed.id === box.dataset.correct) {
+          box.classList.add("correct");
+          score += 1;
+        } else {
+          box.classList.add("incorrect");
+        }
+      });
+
+      const resultBox = document.getElementById("resultBox");
+      resultBox.style.display = "block";
+      resultBox.innerHTML =
+        `<strong>Score:</strong> ${score}/4<br>` +
+        (score === 4
+          ? "Excellent! AH = 51, ESP = 50, TCP = 6, ICMP = 1."
+          : "Review IP protocol numbers and try again.");
+    }
+
+    function clearResult() {
+      const resultBox = document.getElementById("resultBox");
+      resultBox.style.display = "none";
+      resultBox.innerHTML = "";
+      document.querySelectorAll(".drop-box").forEach((box) => {
+        box.classList.remove("correct", "incorrect");
+      });
+    }
+
+    document.getElementById("checkBtn").addEventListener("click", checkAnswers);
+    document.getElementById("resetBtn").addEventListener("click", renderGame);
+    renderGame();
+  </script>
+</body>
+</html>

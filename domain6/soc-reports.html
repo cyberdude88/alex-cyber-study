@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC Report Quiz - Domain 6 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li><li><a href="../domain1/index.html">D1</a></li><li><a href="../domain2/index.html">D2</a></li><li><a href="../domain3/index.html">D3</a></li><li><a href="../domain4/index.html">D4</a></li><li><a href="../domain5/index.html">D5</a></li><li><a href="../domain6/index.html" class="active">D6</a></li><li><a href="../domain7/index.html">D7</a></li><li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header"><h1>📊 SOC Report Quiz</h1><p class="game-subtitle">Match each SOC report type to its definition</p></div>
+    <div class="game-controls"><a href="index.html" class="back-btn">← Back to Domain 6</a><button class="reset-btn" onclick="initMatchGame(pairs, 5)">🔄 Reset Game</button></div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">5</span></div>
+    <div class="completion-message" id="completionMessage">🎉 SOC reports mastered! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">SOC Types</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Definitions</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p>Sources: ISC2 CISSP Official Study Guide, 9th Edition &amp; AICPA Trust Services Criteria</p><p><a href="index.html">← Back to Domain 6 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "SOC 1 Type 1": "Reports on the fairness of management's description of a service organization's system and the suitability of the design of controls as of a specific date.",
+      "SOC 1 Type 2": "Covers not only the design of controls but also the operating effectiveness of those controls over a specified period of time.",
+      "SOC 2 Type 1": "Evaluates the design of controls relevant to security, availability, processing integrity, confidentiality, or privacy at a specific point in time.",
+      "SOC 2 Type 2": "Reports on both the design and operational effectiveness of controls over time related to security, availability, processing integrity, confidentiality, or privacy.",
+      "SOC 3": "A general-use report that provides the same information as SOC 2 but without detailed control descriptions, intended for public distribution."
+    };
+    initMatchGame(pairs, 5);
+  </script>
+</body>
+</html>

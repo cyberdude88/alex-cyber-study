@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IAM Concept Matcher - Domain 5 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html" class="active">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header"><h1>🎯 IAM Concept Matcher</h1><p class="game-subtitle">Domain 5 &mdash; Match each IAM concept to its description</p></div>
+    <div class="game-controls"><a href="index.html" class="back-btn">← Back to Domain 5</a><button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button></div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 IAM Mastered! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">Concepts</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Descriptions</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 5 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Role-Based Access Control (RBAC)": "An access control model where permissions are assigned to organizational roles rather than individuals, and users gain access by being assigned to the appropriate role.",
+      "Kerberos": "A network authentication protocol that uses a trusted third-party ticket-granting service and symmetric key cryptography to allow nodes to prove their identity without sending passwords over the network.",
+      "SAML (Security Assertion Markup Language)": "An XML-based open standard for exchanging authentication and authorization data between an identity provider and a service provider, commonly used for web-based single sign-on.",
+      "Multi-Factor Authentication (MFA)": "A security mechanism requiring users to present evidence from at least two different categories \u2014 something you know, something you have, or something you are \u2014 before granting access.",
+      "Mandatory Access Control (MAC)": "A strict access control model where the operating system enforces access policies based on security labels and clearances, and individual users cannot override or change permissions on objects.",
+      "Identity Federation": "A trust arrangement between multiple organizations that allows users authenticated in one domain to access resources in partner domains without needing separate credentials for each.",
+      "Privilege Escalation": "An attack technique where an adversary exploits a vulnerability or misconfiguration to gain higher-level permissions than originally granted, potentially achieving administrative control of a system."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

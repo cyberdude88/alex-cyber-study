@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Security Matcher - Domain 2 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html" class="active">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🎯 Asset Security Matcher</h1>
+      <p class="game-subtitle">Domain 2 &mdash; Match each concept to its description</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 2</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Domain 2 Mastered! Asset Security crushed! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">Concepts</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Descriptions</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 2 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Data Owner": "A senior management role responsible for determining the classification level of information and defining who is authorized to access it within the organization.",
+      "Data Custodian": "The technical role responsible for implementing and maintaining the security controls and backups that protect data on a day-to-day basis, as directed by management.",
+      "Data Remanence": "The residual representation of data that persists on storage media even after attempts to erase or overwrite it, requiring special sanitization techniques for classified systems.",
+      "Data Loss Prevention (DLP)": "A technology solution that monitors, detects, and blocks sensitive data from being transmitted outside the organization through email, USB drives, or cloud services.",
+      "Scoping": "The process of determining which portions of a standard or regulatory framework are applicable to a specific organization based on its environment and operations.",
+      "Data Classification": "The practice of organizing information into categories such as Public, Internal, Confidential, and Top Secret based on its sensitivity and the impact of unauthorized disclosure.",
+      "Pseudonymization": "A de-identification technique that replaces personally identifiable information with artificial identifiers, allowing data to be re-associated with the original subject when needed."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Types Drag &amp; Drop - Domain 3 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .memory-layout {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    .memory-types-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .memory-type {
+      background: linear-gradient(135deg, #eab308, #ca8a04);
+      color: #111827;
+      border: 1px solid rgba(234,179,8,0.65);
+      border-radius: 12px;
+      padding: 0.9rem;
+      font-weight: 800;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+    }
+
+    .memory-type.dragging {
+      opacity: 0.55;
+    }
+
+    .scenario-list {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .scenario-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 1rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .scenario-text {
+      color: rgba(255,255,255,0.78);
+      line-height: 1.55;
+      margin-bottom: 0.8rem;
+    }
+
+    .drop-zone {
+      min-height: 48px;
+      border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.45);
+      padding: 0.35rem;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .drop-zone.drag-over {
+      border-color: #eab308;
+      background: rgba(234,179,8,0.15);
+    }
+
+    .scenario-card.correct {
+      border-color: #22c55e;
+      background: rgba(34,197,94,0.14);
+    }
+
+    .scenario-card.incorrect {
+      border-color: #ef4444;
+      background: rgba(239,68,68,0.12);
+    }
+
+    .placed-chip {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #111827;
+      border-radius: 999px;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.9rem;
+      font-weight: 800;
+      border: 1px solid rgba(245,158,11,0.65);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🧠 CISSP Memory Types Drag &amp; Drop</h1>
+      <p class="game-subtitle">Domain 3 &mdash; Match each memory type to the correct scenario</p>
+    </div>
+
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" id="checkBtn">✅ Check Answers</button>
+      <button class="reset-btn" id="resetBtn">🔄 Reset</button>
+    </div>
+
+    <div class="score-display">Score: <span id="score">-</span></div>
+
+    <div class="memory-layout">
+      <section class="memory-types-grid" id="memoryTypes"></section>
+      <section class="scenario-list" id="scenarios"></section>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 3 Games</a></p></footer>
+
+  <script>
+    const memoryTypes = [
+      { id: "sram", label: "Static RAM (SRAM)" },
+      { id: "dram", label: "Dynamic RAM (DRAM)" },
+      { id: "secondary", label: "Secondary Memory" },
+      { id: "real", label: "Real Memory" }
+    ];
+
+    const scenarios = [
+      {
+        id: "1",
+        text: "An employee takes home a retired SSD. Weeks later, company files are recovered.",
+        answer: "secondary"
+      },
+      {
+        id: "2",
+        text: "Power loss causes all running processes and unsaved data to disappear instantly.",
+        answer: "dram"
+      },
+      {
+        id: "3",
+        text: "CPU cache stores ultra-fast temporary data that vanishes when power is cut.",
+        answer: "sram"
+      },
+      {
+        id: "4",
+        text: "The OS uses installed physical memory modules to load and execute applications.",
+        answer: "real"
+      }
+    ];
+
+    let dragged = null;
+    let sourceScenarioId = null;
+    const matches = {};
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function renderGame() {
+      const typesEl = document.getElementById("memoryTypes");
+      const scenariosEl = document.getElementById("scenarios");
+      typesEl.innerHTML = "";
+      scenariosEl.innerHTML = "";
+      Object.keys(matches).forEach((k) => delete matches[k]);
+      document.getElementById("score").textContent = "-";
+
+      shuffle(memoryTypes).forEach((type) => {
+        const item = document.createElement("div");
+        item.className = "memory-type";
+        item.draggable = true;
+        item.dataset.typeId = type.id;
+        item.textContent = type.label;
+
+        item.addEventListener("dragstart", () => {
+          dragged = item;
+          const parentScenario = item.closest(".scenario-card");
+          sourceScenarioId = parentScenario ? parentScenario.dataset.scenarioId : null;
+          item.classList.add("dragging");
+        });
+        item.addEventListener("dragend", () => {
+          item.classList.remove("dragging");
+          dragged = null;
+          sourceScenarioId = null;
+        });
+
+        typesEl.appendChild(item);
+      });
+
+      scenarios.forEach((scenario) => {
+        const card = document.createElement("div");
+        card.className = "scenario-card";
+        card.dataset.scenarioId = scenario.id;
+
+        const text = document.createElement("p");
+        text.className = "scenario-text";
+        text.textContent = scenario.text;
+
+        const zone = document.createElement("div");
+        zone.className = "drop-zone";
+        zone.textContent = "Drop answer here";
+
+        zone.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          zone.classList.add("drag-over");
+        });
+        zone.addEventListener("dragleave", () => {
+          zone.classList.remove("drag-over");
+        });
+        zone.addEventListener("drop", (event) => {
+          event.preventDefault();
+          zone.classList.remove("drag-over");
+          if (!dragged) return;
+
+          if (sourceScenarioId && sourceScenarioId !== scenario.id) {
+            delete matches[sourceScenarioId];
+            const source = document.querySelector(`.scenario-card[data-scenario-id="${sourceScenarioId}"] .drop-zone`);
+            if (source) source.textContent = "Drop answer here";
+          }
+
+          const existing = zone.querySelector(".memory-type");
+          if (existing) {
+            delete matches[scenario.id];
+            document.getElementById("memoryTypes").appendChild(existing);
+          }
+
+          zone.textContent = "";
+          dragged.classList.add("placed-chip");
+          zone.appendChild(dragged);
+          matches[scenario.id] = dragged.dataset.typeId;
+          card.classList.remove("correct", "incorrect");
+        });
+
+        card.appendChild(text);
+        card.appendChild(zone);
+        scenariosEl.appendChild(card);
+      });
+
+      typesEl.addEventListener("dragover", (event) => event.preventDefault());
+      typesEl.addEventListener("drop", (event) => {
+        event.preventDefault();
+        if (!dragged) return;
+        if (sourceScenarioId) {
+          delete matches[sourceScenarioId];
+          const source = document.querySelector(`.scenario-card[data-scenario-id="${sourceScenarioId}"] .drop-zone`);
+          if (source) source.textContent = "Drop answer here";
+        }
+        dragged.classList.remove("placed-chip");
+        typesEl.appendChild(dragged);
+      });
+    }
+
+    function checkAnswers() {
+      let correct = 0;
+      scenarios.forEach((scenario) => {
+        const card = document.querySelector(`.scenario-card[data-scenario-id="${scenario.id}"]`);
+        const userAnswer = matches[scenario.id];
+        card.classList.remove("correct", "incorrect");
+        if (!userAnswer) return;
+        if (userAnswer === scenario.answer) {
+          card.classList.add("correct");
+          correct += 1;
+        } else {
+          card.classList.add("incorrect");
+        }
+      });
+      document.getElementById("score").textContent = `${correct} / ${scenarios.length}`;
+    }
+
+    document.getElementById("checkBtn").addEventListener("click", checkAnswers);
+    document.getElementById("resetBtn").addEventListener("click", renderGame);
+
+    renderGame();
+  </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP Protocol Drag and Drop (Classic) - Domain 4 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .classic-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .classic-grid {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .drag-item, .drop-box {
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px;
+      min-width: 150px;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+    .drag-item {
+      cursor: grab;
+      user-select: none;
+    }
+    .drop-box {
+      min-height: 80px;
+      text-align: left;
+    }
+    .drop-box.correct {
+      background-color: rgba(34, 197, 94, 0.35);
+      border-color: #22c55e;
+    }
+    .drop-box.incorrect {
+      background-color: rgba(239, 68, 68, 0.35);
+      border-color: #ef4444;
+    }
+    .classic-actions {
+      margin-top: 10px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #resultBox {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.2);
+      display: none;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .classic-grid {
+        flex-direction: column;
+      }
+      .drag-item, .drop-box {
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html" class="active">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🛰️ IP Protocol Drag and Drop (Classic)</h1>
+      <p class="game-subtitle">Match the IP protocol number to its description.</p>
+    </div>
+
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 4</a>
+    </div>
+
+    <div class="classic-wrap">
+      <div class="classic-grid">
+        <div>
+          <h3>Protocol Numbers</h3>
+          <div id="dragContainer"></div>
+        </div>
+        <div>
+          <h3>Descriptions</h3>
+          <div id="descContainer"></div>
+        </div>
+      </div>
+
+      <div class="classic-actions">
+        <button class="reset-btn" onclick="checkAnswers()">✅ Check Answers</button>
+        <button class="reset-btn" onclick="resetGame()">🔄 Reset</button>
+      </div>
+
+      <div id="resultBox"></div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 4 Games</a></p></footer>
+
+  <script>
+    const protocols = [
+      { text: "IP Protocol 51", id: "p51" },
+      { text: "IP Protocol 50", id: "p50" },
+      { text: "IP Protocol 6", id: "p6" },
+      { text: "IP Protocol 1", id: "p1" }
+    ];
+
+    const descriptions = [
+      { text: "Authentication Header (AH) - provides integrity and authentication for IP packets", correct: "p51" },
+      { text: "Encapsulating Security Payload (ESP) - provides encryption for payloads", correct: "p50" },
+      { text: "TCP - provides reliable, ordered delivery between applications", correct: "p6" },
+      { text: "ICMP - used for diagnostic and control (for example, ping)", correct: "p1" }
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function renderGame() {
+      const dragContainer = document.getElementById("dragContainer");
+      const descContainer = document.getElementById("descContainer");
+      dragContainer.innerHTML = "";
+      descContainer.innerHTML = "";
+
+      shuffle([...protocols]).forEach((proto) => {
+        const div = document.createElement("div");
+        div.className = "drag-item";
+        div.draggable = true;
+        div.id = proto.id;
+        div.textContent = proto.text;
+        dragContainer.appendChild(div);
+      });
+
+      shuffle([...descriptions]).forEach((desc) => {
+        const div = document.createElement("div");
+        div.className = "drop-box";
+        div.dataset.correct = desc.correct;
+        div.textContent = desc.text;
+        descContainer.appendChild(div);
+      });
+
+      attachDragDropHandlers();
+    }
+
+    function attachDragDropHandlers() {
+      let draggedItem = null;
+
+      document.addEventListener("dragstart", (event) => {
+        if (event.target.classList.contains("drag-item")) {
+          draggedItem = event.target;
+        }
+      });
+
+      document.addEventListener("dragend", () => {
+        draggedItem = null;
+      });
+
+      document.addEventListener("dragover", (event) => {
+        if (event.target.classList.contains("drop-box")) {
+          event.preventDefault();
+        }
+      });
+
+      document.addEventListener("drop", (event) => {
+        if (event.target.classList.contains("drop-box") && draggedItem) {
+          event.preventDefault();
+          event.target.textContent = draggedItem.textContent;
+          event.target.dataset.answer = draggedItem.id;
+        }
+      });
+    }
+
+    function checkAnswers() {
+      const boxes = document.querySelectorAll(".drop-box");
+      let score = 0;
+      boxes.forEach((box) => {
+        box.classList.remove("correct", "incorrect");
+        if (box.dataset.answer === box.dataset.correct) {
+          box.classList.add("correct");
+          score += 1;
+        } else {
+          box.classList.add("incorrect");
+        }
+      });
+      const resultBox = document.getElementById("resultBox");
+      resultBox.style.display = "block";
+      resultBox.innerHTML = "<b>Score:</b> " + score + "/4<br>" +
+        (score === 4
+          ? "Excellent! AH = 51, ESP = 50, TCP = 6, ICMP = 1."
+          : "Review IPsec protocols and try again.");
+    }
+
+    function resetGame() {
+      document.getElementById("resultBox").style.display = "none";
+      renderGame();
+    }
+
+    renderGame();
+  </script>
+</body>
+</html>

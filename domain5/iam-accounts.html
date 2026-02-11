@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IAM Account Scenarios - Domain 5 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .iam-layout { max-width: 1100px; margin: 0 auto; }
+
+    .iam-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .iam-col {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+
+    .iam-col h3 {
+      text-align: center;
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    .scenario-chip {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 0.85rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 10px;
+      cursor: grab;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      user-select: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .scenario-chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .scenario-chip.dragging { opacity: 0.4; }
+
+    .answer-slot {
+      background: rgba(255,255,255,0.03);
+      border: 2px dashed rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 0.6rem 0;
+      min-height: 70px;
+      transition: all 0.2s;
+    }
+
+    .answer-slot.drag-over {
+      background: rgba(59,130,246,0.1);
+      border-color: #3b82f6;
+    }
+
+    .answer-slot .slot-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: #60a5fa;
+    }
+
+    .answer-slot .scenario-chip { margin: 0.4rem 0; cursor: default; }
+
+    .answer-slot.correct {
+      background: rgba(34,197,94,0.12);
+      border-color: #22c55e;
+      border-style: solid;
+    }
+
+    .answer-slot.correct .scenario-chip {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+
+    .answer-slot.incorrect {
+      background: rgba(239,68,68,0.12);
+      border-color: #ef4444;
+      border-style: solid;
+    }
+
+    .answer-slot.incorrect .scenario-chip {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .explanation-box {
+      max-width: 1100px;
+      margin: 1.5rem auto 0;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: none;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.7);
+    }
+
+    @media (max-width: 768px) {
+      .iam-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li><li><a href="../domain1/index.html">D1</a></li><li><a href="../domain2/index.html">D2</a></li><li><a href="../domain3/index.html">D3</a></li><li><a href="../domain4/index.html">D4</a></li><li><a href="../domain5/index.html" class="active">D5</a></li><li><a href="../domain6/index.html">D6</a></li><li><a href="../domain7/index.html">D7</a></li><li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>👤 IAM Account Scenarios</h1>
+      <p class="game-subtitle">Drag each scenario into the correct account type during a periodic access review</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 5</a>
+      <button class="reset-btn" onclick="initGame()">🔄 Reset</button>
+      <button class="reset-btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);" onclick="checkAnswers()">✅ Check Answers</button>
+    </div>
+    <div class="score-display">Placed: <span id="score">0</span> / <span id="total">4</span></div>
+    <div class="completion-message" id="completionMessage">🎉 IAM access review mastered! 🎉</div>
+
+    <div class="iam-layout">
+      <div class="iam-grid">
+        <div class="iam-col">
+          <h3>📋 Scenarios (drag these)</h3>
+          <div id="scenariosPool"></div>
+        </div>
+        <div class="iam-col">
+          <h3>🗂️ Account Types (drop here)</h3>
+          <div id="answersZone"></div>
+        </div>
+      </div>
+      <div class="explanation-box" id="explanationBox"></div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 5 Games</a></p></footer>
+
+  <script>
+    const scenarioData = [
+      { id: "system", html: 'A service account named <b>svc_dbbackup</b> runs automated database backups but has no interactive logins.' },
+      { id: "intruder", html: 'An admin-level account <b>admin_temp</b> shows no logons, yet evidence of file creation exists in system logs.' },
+      { id: "fraudulent", html: 'An accounting supervisor creates <b>jsmith_test</b> to export sensitive data through a hidden account.' },
+      { id: "employee", html: 'An HR system created <b>mthompson</b> for a new hire who never started work.' }
+    ];
+
+    const answerSlots = [
+      { id: "system", label: "System account used by scheduled jobs" },
+      { id: "intruder", label: "Intruder has hidden their tracks by altering system logs" },
+      { id: "fraudulent", label: "Personal account created to hide fraudulent activities" },
+      { id: "employee", label: "Personal account created for an employee who never showed up" }
+    ];
+
+    let draggedEl = null;
+
+    function initGame() {
+      const pool = document.getElementById('scenariosPool');
+      const zone = document.getElementById('answersZone');
+      pool.innerHTML = '';
+      zone.innerHTML = '';
+      document.getElementById('score').textContent = '0';
+      document.getElementById('completionMessage').style.display = 'none';
+      document.getElementById('explanationBox').style.display = 'none';
+
+      // Shuffle scenarios
+      const shuffled = [...scenarioData].sort(() => Math.random() - 0.5);
+      shuffled.forEach(s => {
+        const chip = document.createElement('div');
+        chip.className = 'scenario-chip';
+        chip.innerHTML = s.html;
+        chip.draggable = true;
+        chip.dataset.answer = s.id;
+
+        chip.addEventListener('dragstart', () => { draggedEl = chip; chip.classList.add('dragging'); });
+        chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+        chip.addEventListener('touchstart', tS, { passive: false });
+        chip.addEventListener('touchmove', tM, { passive: false });
+        chip.addEventListener('touchend', tE, { passive: false });
+
+        pool.appendChild(chip);
+      });
+
+      // Shuffle answer slots
+      const shuffledSlots = [...answerSlots].sort(() => Math.random() - 0.5);
+      shuffledSlots.forEach(a => {
+        const slot = document.createElement('div');
+        slot.className = 'answer-slot';
+        slot.dataset.answer = a.id;
+
+        const label = document.createElement('div');
+        label.className = 'slot-label';
+        label.textContent = a.label;
+        slot.appendChild(label);
+
+        slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
+        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+        slot.addEventListener('drop', e => { e.preventDefault(); slot.classList.remove('drag-over'); dropOn(slot); });
+
+        zone.appendChild(slot);
+      });
+    }
+
+    function dropOn(slot) {
+      if (!draggedEl) return;
+      // Return existing
+      const existing = slot.querySelector('.scenario-chip');
+      if (existing) {
+        document.getElementById('scenariosPool').appendChild(existing);
+        existing.draggable = true;
+      }
+      slot.classList.remove('correct', 'incorrect');
+      slot.appendChild(draggedEl);
+      draggedEl = null;
+      document.getElementById('score').textContent = document.querySelectorAll('.answer-slot .scenario-chip').length;
+    }
+
+    function checkAnswers() {
+      let allCorrect = true;
+      let count = 0;
+      let html = '';
+
+      document.querySelectorAll('.answer-slot').forEach(slot => {
+        const chip = slot.querySelector('.scenario-chip');
+        slot.classList.remove('correct', 'incorrect');
+        if (!chip) { allCorrect = false; return; }
+
+        if (chip.dataset.answer === slot.dataset.answer) {
+          slot.classList.add('correct');
+          chip.draggable = false;
+          count++;
+          html += `<p style="color:#4ade80;">✅ "${slot.querySelector('.slot-label').textContent}" — Correct match!</p>`;
+        } else {
+          slot.classList.add('incorrect');
+          allCorrect = false;
+          html += `<p style="color:#f87171;">❌ "${slot.querySelector('.slot-label').textContent}" — Incorrect, try again.</p>`;
+        }
+      });
+
+      const box = document.getElementById('explanationBox');
+      box.innerHTML = html;
+      box.style.display = 'block';
+
+      if (allCorrect && count === 4) {
+        document.getElementById('completionMessage').style.display = 'block';
+        lC();
+      }
+    }
+
+    function lC(){const c=['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa','#fb923c'];for(let i=0;i<80;i++){const d=document.createElement('div');d.style.cssText=`position:fixed;width:8px;height:8px;border-radius:50%;background:${c[Math.floor(Math.random()*c.length)]};left:${50+(Math.random()-0.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;document.body.appendChild(d);const x=(Math.random()-0.5)*600,y=window.innerHeight+50,dur=1200+Math.random()*800;d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${x}px,${y}px) scale(0.3)`,opacity:0}],{duration:dur,easing:'cubic-bezier(.25,.46,.45,.94)'});setTimeout(()=>d.remove(),dur)}}
+
+    let tc=null,te=null;
+    function tS(e){e.preventDefault();te=e.target.closest('.scenario-chip');if(!te||!te.draggable)return;draggedEl=te;te.classList.add('dragging');tc=te.cloneNode(true);tc.style.cssText=`position:fixed;z-index:10000;pointer-events:none;opacity:0.85;width:${te.offsetWidth}px;`;document.body.appendChild(tc);mv(e.touches[0])}
+    function tM(e){e.preventDefault();if(!tc)return;mv(e.touches[0]);const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);document.querySelectorAll('.answer-slot').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.answer-slot');if(z)z.classList.add('drag-over')}}
+    function tE(e){if(!tc)return;tc.remove();tc=null;if(te)te.classList.remove('dragging');const t=e.changedTouches[0],el=document.elementFromPoint(t.clientX,t.clientY);document.querySelectorAll('.answer-slot').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.answer-slot');if(z)dropOn(z)}te=null}
+    function mv(t){if(!tc)return;tc.style.left=(t.clientX-tc.offsetWidth/2)+'px';tc.style.top=(t.clientY-30)+'px'}
+
+    initGame();
+  </script>
+</body>
+</html>

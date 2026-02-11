@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptanalysis Drag &amp; Drop - Domain 3 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .crypto-dd-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .crypto-dd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 1rem;
+    }
+    .crypto-dd-bank {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 220px;
+    }
+    .crypto-dd-box {
+      border: 2px dashed rgba(255, 255, 255, 0.25);
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      min-height: 74px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .crypto-dd-box:last-child {
+      margin-bottom: 0;
+    }
+    .crypto-dd-item {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 8px;
+      margin: 5px;
+      cursor: grab;
+      user-select: none;
+    }
+    .crypto-dd-item.correct {
+      background: #22c55e;
+      color: #0f172a;
+    }
+    .crypto-dd-item.incorrect {
+      background: #ef4444;
+      color: #fff;
+    }
+    #explanation {
+      background: rgba(255, 255, 255, 0.05);
+      color: #d1d5db;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 20px;
+      display: none;
+      text-align: left;
+    }
+    .crypto-dd-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    @media (max-width: 760px) {
+      .crypto-dd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🔎 Cryptanalysis Drag &amp; Drop</h1>
+      <p class="game-subtitle">Match each attack type with its definition.</p>
+    </div>
+
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <div class="crypto-dd-actions">
+        <button class="reset-btn" onclick="checkAnswers()">✅ Check Answers</button>
+        <button class="reset-btn" onclick="resetGame()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <div class="crypto-dd-wrap">
+      <div class="crypto-dd-grid">
+        <div class="crypto-dd-bank" id="itemBank">
+          <div class="crypto-dd-item" draggable="true" id="freq">Frequency Analysis</div>
+          <div class="crypto-dd-item" draggable="true" id="diff">Differential Cryptanalysis</div>
+          <div class="crypto-dd-item" draggable="true" id="linear">Linear Cryptanalysis</div>
+          <div class="crypto-dd-item" draggable="true" id="alg">Algebraic Attack</div>
+        </div>
+        <div>
+          <div class="crypto-dd-box" data-answer="freq">Creates a chart listing all letters of the alphabet and how often each occurs.</div>
+          <div class="crypto-dd-box" data-answer="diff">Studies how input differences affect output differences in block ciphers.</div>
+          <div class="crypto-dd-box" data-answer="linear">Uses linear equations to approximate cipher behavior from known plaintexts.</div>
+          <div class="crypto-dd-box" data-answer="alg">Solves algebraic equations that represent cipher operations to find keys.</div>
+        </div>
+      </div>
+
+      <div id="explanation"></div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 3 Games</a></p></footer>
+
+  <script>
+    const items = document.querySelectorAll('.crypto-dd-item');
+    const boxes = document.querySelectorAll('.crypto-dd-box');
+    const itemBank = document.getElementById('itemBank');
+    const explanations = {
+      freq: 'Used in classical cryptanalysis to exploit letter frequency patterns in substitution ciphers.',
+      diff: 'Analyzes changes in ciphertext from specific input changes to reveal key bits.',
+      linear: 'Uses linear approximations between plaintext, ciphertext, and key bits.',
+      alg: 'Models cipher as algebraic equations and solves for the key mathematically.'
+    };
+    let draggedItem = null;
+
+    items.forEach((item) => {
+      item.addEventListener('dragstart', () => {
+        draggedItem = item;
+      });
+    });
+
+    boxes.forEach((box) => {
+      box.addEventListener('dragover', (event) => event.preventDefault());
+      box.addEventListener('drop', () => {
+        if (draggedItem && !box.querySelector('.crypto-dd-item')) {
+          box.appendChild(draggedItem);
+        }
+      });
+    });
+
+    itemBank.addEventListener('dragover', (event) => event.preventDefault());
+    itemBank.addEventListener('drop', () => {
+      if (draggedItem) {
+        itemBank.appendChild(draggedItem);
+      }
+    });
+
+    function checkAnswers() {
+      let explanationHtml = '<h3>Results:</h3>';
+      boxes.forEach((box) => {
+        const item = box.querySelector('.crypto-dd-item');
+        if (!item) {
+          explanationHtml += '<p><b>Unanswered:</b> Place an attack type in this definition box.</p>';
+          return;
+        }
+        item.classList.remove('correct', 'incorrect');
+        if (item.id === box.dataset.answer) {
+          item.classList.add('correct');
+          explanationHtml += '<p><b>' + item.textContent + '</b>: Correct - ' + explanations[item.id] + '</p>';
+        } else {
+          item.classList.add('incorrect');
+          explanationHtml += '<p><b>' + item.textContent + '</b>: Incorrect - ' + explanations[box.dataset.answer] + '</p>';
+        }
+      });
+      const explanationBox = document.getElementById('explanation');
+      explanationBox.innerHTML = explanationHtml;
+      explanationBox.style.display = 'block';
+    }
+
+    function resetGame() {
+      const liveItems = document.querySelectorAll('.crypto-dd-item');
+      liveItems.forEach((item) => {
+        item.classList.remove('correct', 'incorrect');
+        itemBank.appendChild(item);
+      });
+      const explanationBox = document.getElementById('explanation');
+      explanationBox.style.display = 'none';
+      explanationBox.innerHTML = '';
+    }
+  </script>
+</body>
+</html>

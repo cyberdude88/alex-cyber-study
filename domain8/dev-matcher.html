@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Security Matcher - Domain 8 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li><li><a href="../domain1/index.html">D1</a></li><li><a href="../domain2/index.html">D2</a></li><li><a href="../domain3/index.html">D3</a></li><li><a href="../domain4/index.html">D4</a></li><li><a href="../domain5/index.html">D5</a></li><li><a href="../domain6/index.html">D6</a></li><li><a href="../domain7/index.html">D7</a></li><li><a href="../domain8/index.html" class="active">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header"><h1>🎯 Dev Security Matcher</h1><p class="game-subtitle">Domain 8 &mdash; Match each concept to its description</p></div>
+    <div class="game-controls"><a href="index.html" class="back-btn">← Back to Domain 8</a><button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button></div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 You're CISSP-ready on software security! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">Concepts</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Descriptions</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 8 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "SQL Injection": "An attack where a malicious actor inserts database query commands into application input fields to manipulate the backend database into revealing, modifying, or deleting data it should not.",
+      "Buffer Overflow": "A vulnerability that occurs when a program writes data beyond the allocated memory boundary, potentially allowing an attacker to overwrite adjacent memory and execute arbitrary code.",
+      "Cross-Site Scripting (XSS)": "A web vulnerability where an attacker injects client-side scripts into pages viewed by other users, enabling session hijacking, defacement, or redirection to malicious sites.",
+      "DevSecOps": "A development philosophy that integrates security practices into every phase of the CI/CD pipeline, making security testing automated, continuous, and a shared responsibility of the entire team.",
+      "OWASP Top 10": "A regularly updated awareness document published by a nonprofit foundation that lists the most critical web application security risks, used as a benchmark for secure development standards.",
+      "Secure SDLC": "A framework that embeds security activities \u2014 threat modeling, code review, and security testing \u2014 into each phase of the software development lifecycle from requirements through deployment.",
+      "API Security Gateway": "A component that sits between API consumers and backend services, enforcing authentication, rate limiting, input validation, and encryption to protect programmatic interfaces from abuse."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

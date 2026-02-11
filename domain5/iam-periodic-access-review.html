@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IAM Periodic Access Review Scenarios - Domain 5 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .iam-review-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .iam-review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 12px;
+    }
+    .iam-scenario, .iam-answer {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 15px;
+      min-height: 100px;
+    }
+    .iam-scenario {
+      cursor: grab;
+      user-select: none;
+      margin-bottom: 10px;
+    }
+    .iam-answer {
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .iam-answer.correct {
+      background-color: rgba(22, 163, 74, 0.4);
+      border-color: #16a34a;
+    }
+    .iam-answer.incorrect {
+      background-color: rgba(220, 38, 38, 0.4);
+      border-color: #dc2626;
+    }
+    .iam-review-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #iamExplanation {
+      margin-top: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 15px;
+      color: rgba(255, 255, 255, 0.88);
+      display: none;
+      text-align: left;
+    }
+    @media (max-width: 768px) {
+      .iam-review-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html" class="active">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🗂️ IAM Periodic Access Review Scenarios</h1>
+      <p class="game-subtitle">Match each account scenario to the correct review finding.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 5</a>
+    </div>
+
+    <div class="iam-review-wrap">
+      <div class="iam-review-grid">
+        <div id="scenarios">
+          <div class="iam-scenario" draggable="true" data-answer="system">A service account named <b>svc_dbbackup</b> runs automated database backups but has no interactive logins.</div>
+          <div class="iam-scenario" draggable="true" data-answer="intruder">An admin-level account <b>admin_temp</b> shows no logons, yet evidence of file creation exists in system logs.</div>
+          <div class="iam-scenario" draggable="true" data-answer="fraudulent">An accounting supervisor creates <b>jsmith_test</b> to export sensitive data through a hidden account.</div>
+          <div class="iam-scenario" draggable="true" data-answer="employee">An HR system created <b>mthompson</b> for a new hire who never started work.</div>
+        </div>
+
+        <div id="answers">
+          <div class="iam-answer" data-answer="system">System account used by scheduled jobs</div>
+          <div class="iam-answer" data-answer="intruder">Intruder has hidden their tracks by altering system logs</div>
+          <div class="iam-answer" data-answer="fraudulent">Personal account created to hide fraudulent activities</div>
+          <div class="iam-answer" data-answer="employee">Personal account created for an employee who never showed up</div>
+        </div>
+      </div>
+
+      <div class="iam-review-actions">
+        <button class="reset-btn" id="checkBtn">✅ Check Answers</button>
+        <button class="reset-btn" id="resetBtn">🔄 Reset</button>
+      </div>
+
+      <div id="iamExplanation"></div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 5 Games</a></p></footer>
+
+  <script>
+    const scenarios = document.querySelectorAll('.iam-scenario');
+    const answers = document.querySelectorAll('.iam-answer');
+    const scenarioContainer = document.getElementById('scenarios');
+    const explanation = document.getElementById('iamExplanation');
+    let dragged = null;
+
+    scenarios.forEach((scenario) => {
+      scenario.addEventListener('dragstart', () => {
+        dragged = scenario;
+      });
+      scenario.addEventListener('dragend', () => {
+        dragged = null;
+      });
+    });
+
+    answers.forEach((answer) => {
+      answer.addEventListener('dragover', (event) => event.preventDefault());
+      answer.addEventListener('drop', (event) => {
+        event.preventDefault();
+        if (!dragged) {
+          return;
+        }
+        if (answer.querySelector('.iam-scenario')) {
+          return;
+        }
+        answer.appendChild(dragged);
+      });
+    });
+
+    scenarioContainer.addEventListener('dragover', (event) => event.preventDefault());
+    scenarioContainer.addEventListener('drop', () => {
+      if (dragged) {
+        scenarioContainer.appendChild(dragged);
+      }
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      const messages = [];
+      answers.forEach((answer) => {
+        const scenario = answer.querySelector('.iam-scenario');
+        answer.classList.remove('correct', 'incorrect');
+        if (!scenario) {
+          messages.push('❌ <b>' + answer.textContent.trim() + '</b>: No scenario dropped yet.');
+          return;
+        }
+        if (scenario.dataset.answer === answer.dataset.answer) {
+          answer.classList.add('correct');
+          messages.push('✅ <b>' + answer.textContent.trim() + '</b>: Correct match.');
+        } else {
+          answer.classList.add('incorrect');
+          messages.push('❌ <b>' + answer.textContent.trim() + '</b>: Incorrect, review IAM periodic access review indicators.');
+        }
+      });
+      explanation.innerHTML = messages.join('<br><br>');
+      explanation.style.display = 'block';
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      const liveScenarios = document.querySelectorAll('.iam-scenario');
+      liveScenarios.forEach((scenario) => scenarioContainer.appendChild(scenario));
+      answers.forEach((answer) => answer.classList.remove('correct', 'incorrect'));
+      explanation.style.display = 'none';
+      explanation.innerHTML = '';
+    });
+  </script>
+</body>
+</html>

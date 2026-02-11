@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Security Matcher - Domain 4 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html" class="active">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header"><h1>🎯 Network Security Matcher</h1><p class="game-subtitle">Domain 4 &mdash; Match each concept to its description</p></div>
+    <div class="game-controls"><a href="index.html" class="back-btn">← Back to Domain 4</a><button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button></div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Networks have no secrets from you! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">Concepts</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Descriptions</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 4 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Stateful Inspection Firewall": "A network security device that tracks the state of active connections and makes filtering decisions based on the context of traffic rather than just individual packet headers.",
+      "VLAN (Virtual LAN)": "A logical segmentation technique that groups devices on different physical network switches into the same broadcast domain, isolating traffic without requiring separate hardware.",
+      "DNS Poisoning": "An attack where a malicious actor inserts fraudulent address records into a name resolution cache, causing users to be redirected to attacker-controlled servers when visiting legitimate domains.",
+      "TLS Handshake": "A negotiation process where a client and server agree on cipher suites, exchange certificates, and establish session keys before encrypted application data can be transmitted.",
+      "ARP Spoofing": "A Layer 2 attack where an adversary sends falsified hardware-address messages on a local network to associate their MAC address with the IP address of a legitimate host, enabling traffic interception.",
+      "Network Address Translation (NAT)": "A technique that modifies IP address information in packet headers as traffic passes through a router, allowing multiple internal hosts to share a single public IP address.",
+      "Software-Defined Networking (SDN)": "An architecture that decouples the control plane from the data plane, allowing network administrators to programmatically manage traffic flow through a centralized controller."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

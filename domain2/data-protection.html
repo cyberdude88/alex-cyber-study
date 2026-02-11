@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Protection Scenarios - Domain 2 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .dp-layout { max-width: 1000px; margin: 0 auto; }
+
+    .scenarios-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .scenario-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+
+    .scenario-card .scenario-text {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .scenario-card .scenario-num {
+      color: #f97316;
+      font-weight: 700;
+      margin-right: 0.25rem;
+    }
+
+    .scenario-dropzone {
+      border: 2px dashed rgba(255,255,255,0.15);
+      border-radius: 10px;
+      min-height: 50px;
+      padding: 0.75rem;
+      transition: all 0.2s;
+      text-align: center;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.85rem;
+    }
+
+    .scenario-dropzone.drag-over {
+      background: rgba(249,115,22,0.1);
+      border-color: #f97316;
+    }
+
+    .scenario-dropzone.correct {
+      background: rgba(34,197,94,0.15);
+      border-color: #22c55e;
+      border-style: solid;
+    }
+
+    .scenario-dropzone.incorrect {
+      background: rgba(239,68,68,0.15);
+      border-color: #ef4444;
+      border-style: solid;
+    }
+
+    .scenario-dropzone .action-chip {
+      margin: 0;
+    }
+
+    .actions-pool {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+
+    .actions-pool h3 {
+      text-align: center;
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    .actions-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .action-chip {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      cursor: grab;
+      font-weight: 700;
+      font-size: 0.9rem;
+      user-select: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .action-chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .action-chip.dragging { opacity: 0.4; }
+
+    .explanation-box {
+      max-width: 1000px;
+      margin: 1.5rem auto 0;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: none;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .explanation-box .correct-line { color: #4ade80; }
+    .explanation-box .incorrect-line { color: #f87171; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li><li><a href="../domain1/index.html">D1</a></li><li><a href="../domain2/index.html" class="active">D2</a></li><li><a href="../domain3/index.html">D3</a></li><li><a href="../domain4/index.html">D4</a></li><li><a href="../domain5/index.html">D5</a></li><li><a href="../domain6/index.html">D6</a></li><li><a href="../domain7/index.html">D7</a></li><li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🧩 Data Protection Scenarios</h1>
+      <p class="game-subtitle">Match each scenario with the correct data protection action</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 2</a>
+      <button class="reset-btn" onclick="resetGame()">🔄 Reset</button>
+      <button class="reset-btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);" onclick="checkAnswers()">✅ Check Answers</button>
+    </div>
+    <div class="score-display">Placed: <span id="score">0</span> / <span id="total">4</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Perfect! You know your data protection controls! 🎉</div>
+
+    <div class="dp-layout">
+      <div class="scenarios-grid" id="scenariosGrid"></div>
+      <div class="actions-pool">
+        <h3>🔒 Actions (drag into the scenarios above)</h3>
+        <div class="actions-list" id="actionsPool"></div>
+      </div>
+      <div class="explanation-box" id="explanationBox"></div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 2 Games</a></p></footer>
+
+  <script>
+    const scenarios = [
+      { id: "A", num: "1", text: "A company stores an archive of customer records on a file server that is seldom accessed." },
+      { id: "B", num: "2", text: "A mobile user uploads sensitive files via VPN to the corporate cloud, and you want to detect malware or malicious uploads." },
+      { id: "D", num: "3", text: "A marketing team distributes high-value promotional videos to partners externally and wants to track unauthorized sharing." },
+      { id: "C", num: "4", text: "A production system sends confidential data out to the Internet and you want to monitor for data exfiltration." }
+    ];
+
+    const actions = [
+      { id: "A", text: "Implement encryption on data at rest" },
+      { id: "B", text: "Implement ingress monitoring on data in transit" },
+      { id: "C", text: "Implement egress monitoring on data in transit" },
+      { id: "D", text: "Apply watermarking on digital media" }
+    ];
+
+    const explanations = {
+      A: "Data at rest on a seldom-accessed file server should be encrypted to protect against unauthorized access.",
+      B: "Ingress monitoring inspects incoming data (uploads via VPN) for malware or malicious content.",
+      C: "Egress monitoring watches outbound traffic to detect and prevent data exfiltration.",
+      D: "Watermarking embeds invisible markers in media files to trace unauthorized sharing."
+    };
+
+    let draggedAction = null;
+
+    function initGame() {
+      const grid = document.getElementById('scenariosGrid');
+      const pool = document.getElementById('actionsPool');
+      grid.innerHTML = '';
+      pool.innerHTML = '';
+      document.getElementById('score').textContent = '0';
+      document.getElementById('completionMessage').style.display = 'none';
+      document.getElementById('explanationBox').style.display = 'none';
+
+      scenarios.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'scenario-card';
+        card.dataset.answer = s.id;
+
+        const text = document.createElement('div');
+        text.className = 'scenario-text';
+        text.innerHTML = `<span class="scenario-num">${s.num}.</span> ${s.text}`;
+        card.appendChild(text);
+
+        const zone = document.createElement('div');
+        zone.className = 'scenario-dropzone';
+        zone.textContent = 'Drop action here';
+
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+        zone.addEventListener('drop', e => {
+          e.preventDefault();
+          zone.classList.remove('drag-over');
+          dropOnZone(zone, card);
+        });
+
+        card.appendChild(zone);
+        grid.appendChild(card);
+      });
+
+      // Shuffle actions
+      const shuffled = [...actions].sort(() => Math.random() - 0.5);
+      shuffled.forEach(a => {
+        const chip = document.createElement('div');
+        chip.className = 'action-chip';
+        chip.textContent = a.text;
+        chip.draggable = true;
+        chip.dataset.id = a.id;
+
+        chip.addEventListener('dragstart', () => { draggedAction = chip; chip.classList.add('dragging'); });
+        chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+
+        // Touch
+        chip.addEventListener('touchstart', tS, { passive: false });
+        chip.addEventListener('touchmove', tM, { passive: false });
+        chip.addEventListener('touchend', tE, { passive: false });
+
+        pool.appendChild(chip);
+      });
+    }
+
+    function dropOnZone(zone, card) {
+      if (!draggedAction) return;
+
+      // Return existing chip
+      const existing = zone.querySelector('.action-chip');
+      if (existing) {
+        document.getElementById('actionsPool').appendChild(existing);
+        existing.draggable = true;
+      }
+
+      zone.classList.remove('correct', 'incorrect');
+      zone.textContent = '';
+      zone.appendChild(draggedAction);
+      draggedAction = null;
+      updateCount();
+    }
+
+    function updateCount() {
+      document.getElementById('score').textContent = document.querySelectorAll('.scenario-dropzone .action-chip').length;
+    }
+
+    function checkAnswers() {
+      let allCorrect = true;
+      let correctCount = 0;
+      let html = '';
+
+      document.querySelectorAll('.scenario-card').forEach((card, i) => {
+        const zone = card.querySelector('.scenario-dropzone');
+        const chip = zone.querySelector('.action-chip');
+        zone.classList.remove('correct', 'incorrect');
+
+        if (!chip) {
+          allCorrect = false;
+          return;
+        }
+
+        const expected = card.dataset.answer;
+        const got = chip.dataset.id;
+
+        if (got === expected) {
+          zone.classList.add('correct');
+          chip.draggable = false;
+          correctCount++;
+          html += `<p class="correct-line">✅ Scenario ${scenarios[i].num}: Correct — ${explanations[expected]}</p>`;
+        } else {
+          zone.classList.add('incorrect');
+          allCorrect = false;
+          html += `<p class="incorrect-line">❌ Scenario ${scenarios[i].num}: Incorrect — The correct action is "${actions.find(a => a.id === expected).text}"</p>`;
+        }
+      });
+
+      const box = document.getElementById('explanationBox');
+      box.innerHTML = html;
+      box.style.display = 'block';
+
+      if (allCorrect && correctCount === 4) {
+        document.getElementById('completionMessage').style.display = 'block';
+        launchConfetti();
+      }
+    }
+
+    function resetGame() { initGame(); }
+
+    function launchConfetti() {
+      const c = ['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa','#fb923c'];
+      for (let i = 0; i < 80; i++) {
+        const d = document.createElement('div');
+        d.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;background:${c[Math.floor(Math.random()*c.length)]};left:${50+(Math.random()-0.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;
+        document.body.appendChild(d);
+        const x=(Math.random()-0.5)*600,y=window.innerHeight+50,dur=1200+Math.random()*800;
+        d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${x}px,${y}px) scale(0.3)`,opacity:0}],{duration:dur,easing:'cubic-bezier(.25,.46,.45,.94)'});
+        setTimeout(()=>d.remove(),dur);
+      }
+    }
+
+    let tc=null,te=null;
+    function tS(e){e.preventDefault();te=e.target.closest('.action-chip');if(!te||!te.draggable)return;draggedAction=te;te.classList.add('dragging');tc=te.cloneNode(true);tc.style.cssText=`position:fixed;z-index:10000;pointer-events:none;opacity:0.85;width:${te.offsetWidth}px;`;document.body.appendChild(tc);mv(e.touches[0])}
+    function tM(e){e.preventDefault();if(!tc)return;mv(e.touches[0]);const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);document.querySelectorAll('.scenario-dropzone').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.scenario-dropzone');if(z)z.classList.add('drag-over')}}
+    function tE(e){if(!tc)return;tc.remove();tc=null;if(te)te.classList.remove('dragging');const t=e.changedTouches[0],el=document.elementFromPoint(t.clientX,t.clientY);document.querySelectorAll('.scenario-dropzone').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.scenario-dropzone');if(z){const card=z.closest('.scenario-card');if(card)dropOnZone(z,card)}}te=null}
+    function mv(t){if(!tc)return;tc.style.left=(t.clientX-tc.offsetWidth/2)+'px';tc.style.top=(t.clientY-30)+'px'}
+
+    initGame();
+  </script>
+</body>
+</html>

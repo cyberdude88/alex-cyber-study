@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kerberos Authentication Flow - Domain 5 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .kerb-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .ref-panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+    .ref-panel h3 { text-align: center; font-size: 1.05rem; margin-bottom: 1rem; }
+    .ref-panel ul { list-style: none; padding: 0; }
+    .ref-panel li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .ref-panel li strong { color: #60a5fa; }
+    .flow-column {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+    .flow-column h3 { text-align: center; font-size: 1.05rem; margin-bottom: 1rem; }
+    .flow-step {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 0.85rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 10px;
+      cursor: grab;
+      font-weight: 600;
+      font-size: 0.95rem;
+      user-select: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .flow-step:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .flow-step.dragging { opacity: 0.4; }
+    .flow-step .step-emoji { font-size: 1.3rem; }
+    .flow-slot {
+      background: rgba(255,255,255,0.03);
+      border: 2px dashed rgba(255,255,255,0.15);
+      padding: 0.85rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 10px;
+      min-height: 50px;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .flow-slot.drag-over { background: rgba(102,126,234,0.15); border-color: #667eea; }
+    .flow-slot .flow-step { margin: 0; }
+    .flow-slot.correct { background: rgba(34,197,94,0.15); border-color: #22c55e; border-style: solid; }
+    .flow-slot.correct .flow-step { background: linear-gradient(135deg, #22c55e, #16a34a); cursor: default; }
+    .flow-slot.incorrect { background: rgba(239,68,68,0.15); border-color: #ef4444; border-style: solid; }
+    .flow-slot.incorrect .flow-step { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .slot-number {
+      position: absolute; top: -8px; left: 10px;
+      background: #334155; color: #fff;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 1px 8px; border-radius: 999px;
+    }
+    @media (max-width: 900px) { .kerb-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html" class="active">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🛡️ Kerberos Authentication Flow</h1>
+      <p class="game-subtitle">Drag each step into the correct order based on the Kerberos protocol</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 5</a>
+      <button class="reset-btn" onclick="initKerberos()">🔀 Shuffle</button>
+      <button class="reset-btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);" onclick="checkKerberos()">✅ Check Answers</button>
+    </div>
+    <div class="score-display">Placed: <span id="score">0</span> / <span id="total">6</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Perfect! You know Kerberos inside and out! 🎉</div>
+
+    <div class="kerb-layout">
+      <!-- Reference -->
+      <div class="ref-panel">
+        <h3>📚 Kerberos Components</h3>
+        <ul>
+          <li><strong>AS</strong> &mdash; Authentication Server. Verifies the user and issues a Ticket-Granting Ticket (TGT).</li>
+          <li><strong>TGS</strong> &mdash; Ticket Granting Server. Issues service tickets based on a valid TGT.</li>
+          <li><strong>TGT</strong> &mdash; Ticket Granting Ticket. Proof that the user has already authenticated.</li>
+          <li><strong>Authenticator</strong> &mdash; Encrypted timestamp proving the client's identity and freshness.</li>
+          <li><strong>Session Key</strong> &mdash; Temporary symmetric key used to encrypt tickets and authenticators.</li>
+          <li><strong>Service Ticket</strong> &mdash; Allows access to a specific service without re-authentication.</li>
+          <li><strong>AP-REQ / AP-REP</strong> &mdash; Application request and optional mutual authentication response.</li>
+        </ul>
+      </div>
+
+      <!-- Steps -->
+      <div class="flow-column">
+        <h3>🧩 Steps (drag these)</h3>
+        <div id="stepsContainer"></div>
+      </div>
+
+      <!-- Slots -->
+      <div class="flow-column">
+        <h3>📐 Correct Order (drop here)</h3>
+        <div id="slotsContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer><p><a href="index.html">← Back to Domain 5 Games</a></p></footer>
+
+  <script>
+    const correctOrder = [
+      { emoji:"💻", text:"Client → AS (AS-REQ) — User ID request" },
+      { emoji:"🎫", text:"AS → Client (AS-REP) — TGT + session key" },
+      { emoji:"🔐", text:"Client → TGS (TGS-REQ) — TGT + Authenticator" },
+      { emoji:"📜", text:"TGS → Client (TGS-REP) — Service Ticket" },
+      { emoji:"🖥️", text:"Client → Service (AP-REQ) — Service Ticket + Authenticator" },
+      { emoji:"✅", text:"Service → Client (AP-REP) — Mutual authentication" }
+    ];
+
+    let draggedStep = null;
+
+    function initKerberos() {
+      const stepsEl = document.getElementById('stepsContainer');
+      const slotsEl = document.getElementById('slotsContainer');
+      stepsEl.innerHTML = '';
+      slotsEl.innerHTML = '';
+      document.getElementById('score').textContent = '0';
+      document.getElementById('completionMessage').style.display = 'none';
+
+      const shuffled = [...correctOrder].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach((item, i) => {
+        const step = document.createElement('div');
+        step.className = 'flow-step';
+        step.innerHTML = `<span class="step-emoji">${item.emoji}</span><span>${item.text}</span>`;
+        step.draggable = true;
+        step.dataset.index = correctOrder.indexOf(item);
+
+        step.addEventListener('dragstart', () => { draggedStep = step; step.classList.add('dragging'); });
+        step.addEventListener('dragend', () => step.classList.remove('dragging'));
+        step.addEventListener('touchstart', tStart, { passive: false });
+        step.addEventListener('touchmove', tMove, { passive: false });
+        step.addEventListener('touchend', tEnd, { passive: false });
+
+        stepsEl.appendChild(step);
+      });
+
+      correctOrder.forEach((_, i) => {
+        const slot = document.createElement('div');
+        slot.className = 'flow-slot';
+        slot.dataset.index = i;
+        const num = document.createElement('span');
+        num.className = 'slot-number';
+        num.textContent = `Step ${i + 1}`;
+        slot.appendChild(num);
+
+        slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
+        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+        slot.addEventListener('drop', e => { e.preventDefault(); slot.classList.remove('drag-over'); dropOnSlot(slot); });
+
+        slotsEl.appendChild(slot);
+      });
+    }
+
+    function dropOnSlot(slot) {
+      if (!draggedStep) return;
+      const existing = slot.querySelector('.flow-step');
+      if (existing) {
+        document.getElementById('stepsContainer').appendChild(existing);
+        existing.draggable = true;
+      }
+      slot.classList.remove('correct', 'incorrect');
+      slot.appendChild(draggedStep);
+      draggedStep = null;
+      updatePlaced();
+    }
+
+    function updatePlaced() {
+      document.getElementById('score').textContent = document.querySelectorAll('.flow-slot .flow-step').length;
+    }
+
+    function checkKerberos() {
+      let allCorrect = true;
+      let correctCount = 0;
+      document.querySelectorAll('.flow-slot').forEach((slot, i) => {
+        const step = slot.querySelector('.flow-step');
+        slot.classList.remove('correct', 'incorrect');
+        if (step && parseInt(step.dataset.index) === i) {
+          slot.classList.add('correct');
+          step.draggable = false;
+          correctCount++;
+        } else if (step) {
+          slot.classList.add('incorrect');
+          allCorrect = false;
+        } else {
+          allCorrect = false;
+        }
+      });
+      if (allCorrect && correctCount === 6) {
+        document.getElementById('completionMessage').style.display = 'block';
+        launchConfetti();
+      }
+    }
+
+    function launchConfetti() {
+      const c = ['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa','#fb923c'];
+      for (let i = 0; i < 80; i++) {
+        const d = document.createElement('div');
+        d.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;background:${c[Math.floor(Math.random()*c.length)]};left:${50+(Math.random()-0.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;
+        document.body.appendChild(d);
+        const x=(Math.random()-0.5)*600,y=window.innerHeight+50,dur=1200+Math.random()*800;
+        d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${x}px,${y}px) scale(0.3)`,opacity:0}],{duration:dur,easing:'cubic-bezier(.25,.46,.45,.94)'});
+        setTimeout(()=>d.remove(),dur);
+      }
+    }
+
+    let tClone=null,tEl=null;
+    function tStart(e){e.preventDefault();tEl=e.target.closest('.flow-step');if(!tEl||!tEl.draggable)return;draggedStep=tEl;tEl.classList.add('dragging');tClone=tEl.cloneNode(true);tClone.style.cssText=`position:fixed;z-index:10000;pointer-events:none;opacity:0.85;width:${tEl.offsetWidth}px;`;document.body.appendChild(tClone);mc(e.touches[0]);}
+    function tMove(e){e.preventDefault();if(!tClone)return;mc(e.touches[0]);const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);document.querySelectorAll('.flow-slot').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.flow-slot');if(z)z.classList.add('drag-over');}}
+    function tEnd(e){if(!tClone)return;tClone.remove();tClone=null;if(tEl)tEl.classList.remove('dragging');const t=e.changedTouches[0],el=document.elementFromPoint(t.clientX,t.clientY);document.querySelectorAll('.flow-slot').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.flow-slot');if(z)dropOnSlot(z);}tEl=null;}
+    function mc(t){if(!tClone)return;tClone.style.left=(t.clientX-tClone.offsetWidth/2)+'px';tClone.style.top=(t.clientY-30)+'px';}
+
+    initKerberos();
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptographic Attack Matcher - Domain 3 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🔐 Cryptographic Attack Matcher</h1>
+      <p class="game-subtitle">Domain 3 &mdash; Match each attack type to its scenario</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Crypto attacks are no mystery to you! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">Attack Types</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Scenarios</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 3 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Brute-Force Attack": "An attacker systematically attempts every possible key combination against an encrypted database until the correct decryption key is discovered through computational exhaustion.",
+      "Analytic Attack": "A cryptanalyst exploits mathematical weaknesses in an encryption algorithm's structure to reduce the computational complexity required to break the cipher.",
+      "Implementation Attack": "An adversary exploits a flaw in the software code of a cryptographic library where the developer incorrectly implemented the AES key schedule routine.",
+      "Statistical Attack": "An attacker analyzes the output of a pseudo-random number generator used for session key generation to identify patterns that deviate from true randomness.",
+      "Fault Injection Attack": "An adversary subjects a hardware security module to extreme voltage fluctuations during cryptographic operations to induce computational errors that reveal key material.",
+      "Side-Channel Attack": "An attacker monitors electromagnetic emissions from a smart card during RSA decryption operations to extract the private key through signal analysis.",
+      "Timing Attack": "An adversary measures microsecond variations in the execution time of cryptographic operations to infer information about secret key bits being processed."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

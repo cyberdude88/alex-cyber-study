@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDLC Model Sorter - Domain 8 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .sdlc-layout { max-width: 1300px; margin: 0 auto; }
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .model-bin {
+      background: rgba(255,255,255,0.04);
+      border: 2px dashed rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 1rem;
+      min-height: 180px;
+      transition: all 0.2s;
+    }
+    .model-bin.drag-over { background: rgba(20,184,166,0.1); border-color: #14b8a6; }
+    .model-bin h3 { text-align: center; font-size: 1rem; margin-bottom: 0.75rem; color: #14b8a6; }
+    .model-bin .count { text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 0.5rem; }
+    .bullet-item {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 0.6rem 0.8rem;
+      margin: 0.4rem 0;
+      border-radius: 8px;
+      cursor: grab;
+      font-size: 0.88rem;
+      font-weight: 600;
+      user-select: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .bullet-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .bullet-item.dragging { opacity: 0.4; }
+    .bullet-item.correct { background: linear-gradient(135deg, #22c55e, #16a34a); cursor: default; }
+    .bullet-item.incorrect { animation: shake 0.5s; background: linear-gradient(135deg, #ef4444, #dc2626); }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+    .pool-section {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+    .pool-section h3 { text-align: center; font-size: 1.1rem; margin-bottom: 1rem; }
+    .pool-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .pool-items .bullet-item { flex: 0 0 auto; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li><li><a href="../domain1/index.html">D1</a></li><li><a href="../domain2/index.html">D2</a></li><li><a href="../domain3/index.html">D3</a></li><li><a href="../domain4/index.html">D4</a></li><li><a href="../domain5/index.html">D5</a></li><li><a href="../domain6/index.html">D6</a></li><li><a href="../domain7/index.html">D7</a></li><li><a href="../domain8/index.html" class="active">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header"><h1>🔄 SDLC Model Sorter</h1><p class="game-subtitle">Drag each characteristic into the correct SDLC model</p></div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 8</a>
+      <button class="reset-btn" onclick="initSDLC()">🔄 Shuffle &amp; Reset</button>
+    </div>
+    <div class="score-display">Correct: <span id="score">0</span> / <span id="total">35</span></div>
+    <div class="completion-message" id="completionMessage">🎉 All 35 sorted! You know every SDLC model! 🎉</div>
+
+    <div class="sdlc-layout">
+      <div class="model-grid" id="modelGrid"></div>
+      <div class="pool-section">
+        <h3>📦 Characteristics (drag these into the correct model above)</h3>
+        <div class="pool-items" id="pool"></div>
+      </div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 8 Games</a></p></footer>
+
+  <script>
+    const models = ["Agile","Scrum","Waterfall","Spiral","V-Model","Iterative","RAD"];
+    const bullets = {
+      Agile:["Customer satisfaction – deliver early","Welcome change – even late","Frequent delivery – short cycles","Close collaboration – business + devs","Working software – primary measure"],
+      Scrum:["Empiricism – decisions via observation","Inspection – frequent checks","Adaptation – adjust quickly","Self-management – team controls work","Cross-functional teams – all skills inside"],
+      Waterfall:["Linear flow – step-by-step","Complete requirements – upfront","Formal approvals – gate each phase","Late testing – after build phase","Low change tolerance – costly"],
+      Spiral:["Risk-driven – risks guide phases","Iterative cycles – repeat spirals","Early prototyping – validate concepts","Stakeholder involvement – every cycle","Progressive commitment – gradual"],
+      "V-Model":["Validation + verification – mapped","Test early – plan tests","Strict structure – controlled sequence","High documentation – test artifacts","Quality alignment – mapped steps"],
+      Iterative:["Repeat cycles – refine","Early partial builds – usable pieces","Continuous feedback – improves next","Evolving requirements – adjust","Incremental improvement – each loop"],
+      RAD:["Rapid prototyping – fast visual builds","User-driven design – constant input","Short cycles – quick iterations","Component reuse – prebuilt modules","High-speed delivery – fast system"]
+    };
+
+    let draggedItem = null;
+    let score = 0;
+
+    function initSDLC() {
+      const grid = document.getElementById('modelGrid');
+      const pool = document.getElementById('pool');
+      grid.innerHTML = '';
+      pool.innerHTML = '';
+      score = 0;
+      updateScore();
+      document.getElementById('completionMessage').style.display = 'none';
+
+      // Create model bins
+      models.forEach(m => {
+        const bin = document.createElement('div');
+        bin.className = 'model-bin';
+        bin.dataset.model = m;
+        bin.innerHTML = `<h3>${m}</h3><div class="count">(5 items)</div>`;
+        bin.addEventListener('dragover', e => { e.preventDefault(); bin.classList.add('drag-over'); });
+        bin.addEventListener('dragleave', () => bin.classList.remove('drag-over'));
+        bin.addEventListener('drop', e => { e.preventDefault(); bin.classList.remove('drag-over'); handleDrop(bin); });
+        grid.appendChild(bin);
+      });
+
+      // Flatten and shuffle
+      const all = [];
+      Object.entries(bullets).forEach(([model, arr]) => {
+        arr.forEach((text, idx) => all.push({ text, model, order: idx }));
+      });
+      all.sort(() => Math.random() - 0.5);
+
+      all.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'bullet-item';
+        el.textContent = item.text;
+        el.draggable = true;
+        el.dataset.model = item.model;
+        el.dataset.order = item.order;
+        el.addEventListener('dragstart', () => { draggedItem = el; el.classList.add('dragging'); });
+        el.addEventListener('dragend', () => el.classList.remove('dragging'));
+        el.addEventListener('touchstart', tS, { passive: false });
+        el.addEventListener('touchmove', tM, { passive: false });
+        el.addEventListener('touchend', tE, { passive: false });
+        pool.appendChild(el);
+      });
+    }
+
+    function handleDrop(bin) {
+      if (!draggedItem) return;
+      if (draggedItem.dataset.model === bin.dataset.model) {
+        draggedItem.classList.add('correct');
+        draggedItem.draggable = false;
+        bin.appendChild(draggedItem);
+        score++;
+        updateScore();
+        if (score === 35) {
+          document.getElementById('completionMessage').style.display = 'block';
+          lC();
+        }
+      } else {
+        draggedItem.classList.add('incorrect');
+        setTimeout(() => draggedItem.classList.remove('incorrect'), 500);
+      }
+    }
+
+    function updateScore() { document.getElementById('score').textContent = score; }
+
+    function lC(){const c=['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa','#fb923c'];for(let i=0;i<80;i++){const d=document.createElement('div');d.style.cssText=`position:fixed;width:8px;height:8px;border-radius:50%;background:${c[Math.floor(Math.random()*c.length)]};left:${50+(Math.random()-0.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;document.body.appendChild(d);const x=(Math.random()-0.5)*600,y=window.innerHeight+50,dur=1200+Math.random()*800;d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${x}px,${y}px) scale(0.3)`,opacity:0}],{duration:dur,easing:'cubic-bezier(.25,.46,.45,.94)'});setTimeout(()=>d.remove(),dur)}}
+
+    let tc=null,te=null;
+    function tS(e){e.preventDefault();te=e.target.closest('.bullet-item');if(!te||!te.draggable)return;draggedItem=te;te.classList.add('dragging');tc=te.cloneNode(true);tc.style.cssText=`position:fixed;z-index:10000;pointer-events:none;opacity:0.85;width:${te.offsetWidth}px;`;document.body.appendChild(tc);mv(e.touches[0])}
+    function tM(e){e.preventDefault();if(!tc)return;mv(e.touches[0]);const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);document.querySelectorAll('.model-bin').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.model-bin');if(z)z.classList.add('drag-over')}}
+    function tE(e){if(!tc)return;tc.remove();tc=null;if(te)te.classList.remove('dragging');const t=e.changedTouches[0],el=document.elementFromPoint(t.clientX,t.clientY);document.querySelectorAll('.model-bin').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.model-bin');if(z)handleDrop(z)}te=null}
+    function mv(t){if(!tc)return;tc.style.left=(t.clientX-tc.offsetWidth/2)+'px';tc.style.top=(t.clientY-30)+'px'}
+
+    initSDLC();
+  </script>
+</body>
+</html>

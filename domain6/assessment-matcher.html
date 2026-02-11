@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Methods Matcher - Domain 6 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li><li><a href="../domain1/index.html">D1</a></li><li><a href="../domain2/index.html">D2</a></li><li><a href="../domain3/index.html">D3</a></li><li><a href="../domain4/index.html">D4</a></li><li><a href="../domain5/index.html">D5</a></li><li><a href="../domain6/index.html" class="active">D6</a></li><li><a href="../domain7/index.html">D7</a></li><li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="game-container">
+    <div class="game-header"><h1>🎯 Assessment Methods Matcher</h1><p class="game-subtitle">Domain 6 &mdash; Match each testing method to its description</p></div>
+    <div class="game-controls"><a href="index.html" class="back-btn">← Back to Domain 6</a><button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset Game</button></div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Assessment pro! 🎉</div>
+    <div class="game-area">
+      <div class="terms-column"><div class="column-header">Concepts</div><div id="termsContainer"></div></div>
+      <div class="scenarios-column"><div class="column-header">Descriptions</div><div id="scenariosContainer"></div></div>
+    </div>
+  </div>
+  <footer><p><a href="index.html">← Back to Domain 6 Games</a></p></footer>
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Penetration Testing": "An authorized simulated attack against a system where ethical hackers attempt to exploit vulnerabilities to determine the real-world effectiveness of existing security controls.",
+      "Vulnerability Scanning": "An automated process that probes systems and networks for known weaknesses using a database of signatures, producing a report of findings ranked by severity without actually exploiting them.",
+      "Static Application Security Testing (SAST)": "A white-box testing technique that analyzes application source code, bytecode, or binaries for security vulnerabilities without executing the program.",
+      "Dynamic Application Security Testing (DAST)": "A black-box testing approach that interacts with a running application by sending crafted inputs to its interfaces to discover vulnerabilities like injection flaws and authentication issues.",
+      "Fuzz Testing": "A testing technique that feeds massive amounts of random, unexpected, or malformed data into application inputs to discover crashes, memory leaks, and unhandled exception vulnerabilities.",
+      "SOC 2 Type II Report": "An audit report that evaluates whether a service organization's controls are suitably designed AND operating effectively over a specified period of time, covering trust service criteria.",
+      "Red Team Exercise": "A comprehensive adversarial assessment where an independent team uses real-world attack techniques across multiple vectors including social engineering, physical, and digital to test an organization's overall detection and response capabilities."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>
