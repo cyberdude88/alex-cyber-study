@@ -169,8 +169,14 @@
       attachDragDropHandlers();
     }
 
+    let draggedItem = null;
+    let handlersBound = false;
+
     function attachDragDropHandlers() {
-      let draggedItem = null;
+      if (handlersBound) {
+        return;
+      }
+      handlersBound = true;
 
       document.addEventListener("dragstart", (event) => {
         if (event.target.classList.contains("drag-item")) {
@@ -191,6 +197,7 @@
       document.addEventListener("drop", (event) => {
         if (event.target.classList.contains("drop-box") && draggedItem) {
           event.preventDefault();
+          event.target.classList.remove("correct", "incorrect");
           event.target.textContent = draggedItem.textContent;
           event.target.dataset.answer = draggedItem.id;
         }
