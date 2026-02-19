@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../cat/styles.css" />
+  </head>
+  <body data-mode="fixed" data-view="setup">
+    <main class="app-shell">
+      <header class="hero">
+        <h1>Custom Quiz</h1>
+        <p>Set number of questions, timer preference, and included domains.</p>
+      </header>
+
+      <section class="panel controls" id="setupPanel">
+        <p class="small-note" id="modeSummaryText">Custom quiz mode: choose question count and included domains.</p>
+
+        <div class="grid-two" id="customQuizControls">
+          <label>
+            Number of Questions
+            <input type="number" id="fixedQuestionCount" min="1" max="200" value="75" />
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="timedQuiz" checked />
+            <span>Timed Quiz</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="showRunningScore" />
+            <span>Show Running Score</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="instantFeedback" />
+            <span>Mark Incorrect On Submit</span>
+          </label>
+        </div>
+        <p class="small-note" id="timingScaleNote">Timer is ON: 02:15:00 for 75 questions (3h baseline at 100).</p>
+
+        <div class="actions-row">
+          <button id="startBtn">Start New Attempt</button>
+          <button id="resumeBtn" class="ghost">Resume Session</button>
+          <button id="sessionInfoBtn" class="ghost">Save Session Info</button>
+        </div>
+
+        <p class="small-note" id="bankStatus">Question bank loaded | pass threshold: 700/1000</p>
+        <p class="small-note hidden" id="catMimicNote"></p>
+      </section>
+
+      <section class="panel" id="domainTargetPanel">
+        <h3>Domain Selection</h3>
+        <p class="small-note" id="domainSelectionSummary">Custom quiz uses selected domains only.</p>
+        <div id="domainTargetGrid" class="domain-target-grid"></div>
+      </section>
+
+      <section class="panel question hidden" id="questionPanel">
+        <div class="meta-row">
+          <span id="progressText"></span>
+          <span id="scoreText"></span>
+        </div>
+        <div class="meta-row">
+          <span id="timerText">03:00:00</span>
+        </div>
+        <div class="meta-row hidden">
+          <span id="domainText"></span>
+          <span id="difficultyText"></span>
+          <span id="questionTimerText">0s</span>
+          <span id="avgQuestionTimeText">0s</span>
+          <span id="scoredTrackerText"></span>
+          <span id="unscoredRuleText"></span>
+          <span id="ciStopText"></span>
+        </div>
+        <h2 id="questionStem"></h2>
+        <form id="choicesForm"></form>
+        <div class="actions-row">
+          <button id="submitAnswerBtn">Submit Answer</button>
+        </div>
+        <p class="small-note" id="feedbackText"></p>
+      </section>
+
+      <section class="panel stats hidden" id="statsPanel">
+        <h3>Live Attempt Metrics</h3>
+        <div class="mode-row">
+          <label class="switch-toggle">
+            <input type="checkbox" id="hideMetricsPanel" />
+            <span class="switch-slider" aria-hidden="true"></span>
+            <span>Hide Metrics Panel</span>
+          </label>
+        </div>
+        <div id="statsContent">
+          <div class="timing-side">
+            <div><span>Time Left</span><strong id="timerText">03:00:00</strong></div>
+            <div><span>Current Question Time</span><strong id="questionTimerText">0s</strong></div>
+            <div><span>Average Question Time</span><strong id="avgQuestionTimeText">0s</strong></div>
+          </div>
+          <div class="metrics-grid">
+            <div><span id="metric1Label">Exam Readiness</span><strong id="thetaText">0.00</strong></div>
+            <div><span id="metric2Label">Pass Confidence</span><strong id="seText">--</strong></div>
+            <div><span id="metric3Label">Score Confidence Band</span><strong id="ciText">--</strong></div>
+            <div><span id="metric4Label">Scaled Score</span><strong id="scaledText">500</strong></div>
+            <div><span id="metric5Label">Pass Probability</span><strong id="passProbText">--</strong></div>
+            <div><span id="metric6Label">Response Pace</span><strong id="guessSignalText">0%</strong></div>
+          </div>
+          <div class="graph-wrap">
+            <h4>Computerized Adaptive Test Analytics</h4>
+            <svg id="progressGraph" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-label="Score progress chart"></svg>
+            <p class="small-note">Dot markers: green = correct answer, red = incorrect answer, black = non-counted.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel results hidden" id="resultsPanel">
+        <h3>Analytics</h3>
+        <p id="outcomeBanner" class="outcome"></p>
+        <p id="finalSummary"></p>
+        <div id="domainBreakdown"></div>
+        <div id="domainStrengthChart" class="domain-strength-chart"></div>
+        <p id="analyticsNotes" class="small-note"></p>
+        <div class="actions-row">
+          <button id="saveResultsBtn" class="ghost">Save Results</button>
+        </div>
+        <h4>Missed Question Review</h4>
+        <div class="actions-row">
+          <button id="reviewIncorrectBtn" class="ghost">Missed Only</button>
+          <button id="reviewAllBtn" class="ghost">All Questions</button>
+        </div>
+        <div id="explanationReview" class="explanation-review"></div>
+        <div class="table-wrap">
+          <table id="reviewTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Domain</th>
+                <th>Difficulty</th>
+                <th>Scored?</th>
+                <th>Correct?</th>
+                <th>Elapsed(s)</th>
+                <th>Scaled</th>
+                <th>Explanation</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <textarea id="reviewText" rows="12" class="hidden" readonly></textarea>
+      </section>
+
+      <input id="modeCat" type="radio" class="hidden" />
+      <input id="modeCustom" type="radio" checked class="hidden" />
+      <input id="showTechnicalMetrics" type="checkbox" class="hidden" />
+      <input id="minQuestions" class="hidden" />
+      <input id="maxQuestions" class="hidden" />
+    </main>
+
+    <script type="module" src="../cat/app.js"></script>
+  </body>
+</html>

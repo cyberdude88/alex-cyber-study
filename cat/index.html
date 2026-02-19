@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAT Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-mode="cat">
+    <main class="app-shell">
+      <header class="hero">
+        <h1>CAT Simulation</h1>
+        <p>
+          Full adaptive simulation with exam-style weighting and pass-threshold
+          tracking at 700.
+        </p>
+      </header>
+
+      <section class="panel controls" id="setupPanel">
+        <p class="small-note" id="modeSummaryText">CAT mode: adaptive CISSP simulation with exam-style weighting. Note: This alone does NOT guarantee exam readiness, it is a learning tool.</p>
+
+        <div class="actions-row">
+          <button id="startBtn">Start New Attempt</button>
+          <button id="resumeBtn" class="ghost">Resume Session</button>
+          <button id="sessionInfoBtn" class="ghost">Save Session Info</button>
+        </div>
+
+        <p class="small-note" id="bankStatus">Question bank: loading...</p>
+        <p class="small-note" id="catMimicNote">
+          Exam model: 3-hour timer, the official CISSP Exam uses Computerized Adaptive Testing (CAT), and will stop
+          between 100 and 150 items, and 25 of the first 100 administered questions are randomly marked unscored.
+        </p>
+      </section>
+
+      <section class="panel question hidden" id="questionPanel">
+        <h2 id="questionStem"></h2>
+        <form id="choicesForm"></form>
+
+        <div class="actions-row">
+          <button id="submitAnswerBtn">Submit Answer</button>
+        </div>
+
+        <p class="small-note" id="feedbackText"></p>
+      </section>
+
+      <section class="panel stats hidden" id="statsPanel">
+        <h3>Live Attempt Metrics</h3>
+        <div class="mode-row">
+          <label class="switch-toggle">
+            <input type="checkbox" id="hideMetricsPanel" />
+            <span class="switch-slider" aria-hidden="true"></span>
+            <span>Hide Metrics Panel</span>
+          </label>
+        </div>
+        <div id="statsContent">
+        <div class="timing-side">
+          <div><span>Time Left</span><strong id="timerText">03:00:00</strong></div>
+          <div><span>Current Question Time</span><strong id="questionTimerText">0s</strong></div>
+          <div><span>Average Question Time</span><strong id="avgQuestionTimeText">0s</strong></div>
+        </div>
+        <div class="mode-row">
+          <span class="small-note">Practice view shows readiness and confidence by default.</span>
+          <label class="toggle">
+            <input type="checkbox" id="showTechnicalMetrics" />
+            <span>Show Technical Metrics</span>
+          </label>
+        </div>
+        <div class="metrics-grid">
+          <div><span id="metric1Label">Exam Readiness</span><strong id="thetaText">0.00</strong></div>
+          <div><span id="metric2Label">Pass Confidence</span><strong id="seText">--</strong></div>
+          <div><span id="metric3Label">Score Confidence Band</span><strong id="ciText">--</strong></div>
+          <div><span id="metric4Label">Scaled Score</span><strong id="scaledText">500</strong></div>
+          <div><span id="metric5Label">Pass Probability</span><strong id="passProbText">--</strong></div>
+          <div><span id="metric6Label">Response Pace</span><strong id="guessSignalText">0%</strong></div>
+        </div>
+        <div class="graph-wrap">
+          <h4>Computerized Adaptive Test Analytics</h4>
+          <svg id="progressGraph" viewBox="0 0 1000 240" preserveAspectRatio="none" aria-label="Score progress chart"></svg>
+          <p class="small-note">Dot markers: green = correct answer, red = incorrect answer, black = non-counted.</p>
+        </div>
+        <p class="small-note">
+          This is a practice-only estimate and not an official ISC2 result.
+        </p>
+        </div>
+      </section>
+
+      <section class="panel results hidden" id="resultsPanel">
+        <h3>Analytics</h3>
+        <p id="finalSummary"></p>
+        <div id="domainBreakdown"></div>
+        <div id="domainStrengthChart" class="domain-strength-chart"></div>
+        <p id="analyticsNotes" class="small-note"></p>
+        <div class="actions-row">
+          <button id="saveResultsBtn" class="ghost">Save Results</button>
+        </div>
+        <div class="table-wrap">
+          <table id="reviewTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Domain</th>
+                <th>Difficulty</th>
+                <th>Scored?</th>
+                <th>Correct?</th>
+                <th>Elapsed(s)</th>
+                <th>Scaled</th>
+                <th>Explanation</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

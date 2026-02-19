@@ -1,0 +1,45 @@
+name: CAT Quality
+
+on:
+  push:
+    paths:
+      - 'cat/**'
+      - 'scripts/**'
+      - '.github/workflows/cat-quality.yml'
+  pull_request:
+    paths:
+      - 'cat/**'
+      - 'scripts/**'
+      - '.github/workflows/cat-quality.yml'
+
+jobs:
+  validate-cat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate and regenerate CAT bank QA artifacts
+        run: |
+          python3 scripts/validate_cat_bank.py \
+            cat/question-bank.sample.json \
+            --write-report cat/question-bank.qa.json \
+            --write-manifest cat/question-bank.manifest.json
+
+      - name: Ensure generated artifacts are committed
+        run: |
+          git diff --exit-code cat/question-bank.qa.json cat/question-bank.manifest.json
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax-check CAT app logic
+        run: |
+          node --check cat/app.js
