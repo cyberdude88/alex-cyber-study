@@ -1,4 +1,6 @@
 const STORAGE_KEY = "cissp_cat_session_v2";
+const RECENT_ITEMS_KEY = "cissp_cat_recent_items_v1";
+const RECENT_ITEMS_MAX = 350;
 const EXAM_DURATION_SEC = 3 * 60 * 60;
 const AUTOSTART_KEY = "cissp_cat_autostart";
 const AUTORESUME_KEY = "cissp_cat_autoresume";
@@ -94,7 +96,43 @@ const app = {
   domainSelectorMap: new Map(),
   graphFilter: "all",
   reviewFilter: "all",
+  recentItemIds: [],
 };
+
+function loadRecentItemIds() {
+  try {
+    const raw = localStorage.getItem(RECENT_ITEMS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return Array.from(new Set(parsed.map((x) => String(x)))).slice(-RECENT_ITEMS_MAX);
+  } catch {
+    return [];
+  }
+}
+
+function saveRecentItemIds(ids) {
+  try {
+    localStorage.setItem(RECENT_ITEMS_KEY, JSON.stringify(ids.slice(-RECENT_ITEMS_MAX)));
+  } catch {
+    // Best-effort only.
+  }
+}
+
+function rememberRecentItem(id) {
+  if (!id) return;
+  const key = String(id);
+  const next = app.recentItemIds.filter((x) => x !== key);
+  next.push(key);
+  app.recentItemIds = next.slice(-RECENT_ITEMS_MAX);
+  saveRecentItemIds(app.recentItemIds);
+}
+
+function filterRecentlySeen(items, minPool = 80) {
+  const recent = new Set(app.recentItemIds);
+  const fresh = items.filter((item) => !recent.has(String(item.id)));
+  return fresh.length >= Math.min(minPool, items.length) ? fresh : items;
+}
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
@@ -501,6 +539,7 @@ function selectNextItem() {
   const attemptedIds = new Set(app.attempt.itemsAnswered.map((x) => x.itemId));
   const candidates = app.bank.items.filter((item) => !attemptedIds.has(item.id));
   if (!candidates.length) return null;
+  const eligibleCandidates = filterRecentlySeen(candidates, 90);
 
   const domainStats = summarizeDomainStats(app.attempt.itemsAnswered);
   const nextQuestionNumber = app.attempt.itemsAnswered.length + 1;
@@ -514,7 +553,7 @@ function selectNextItem() {
   const passCutTheta = scaledToTheta(700); // ≈ 1.0
   const judgmentBoostStrength = clamp((app.attempt.theta - (-1)) / (passCutTheta - (-1)), 0, 1) * 0.18;
 
-  const scored = candidates.map((item) => {
+  const scored = eligibleCandidates.map((item) => {
     const domain = getCanonicalDomainName(item.domain);
     const blueprint = DOMAIN_BLUEPRINT.find((d) => d.name === domain);
 
@@ -543,7 +582,7 @@ function selectNextItem() {
   });
 
   scored.sort((a, b) => b.score - a.score);
-  return scored[0]?.item ?? null;
+  return pickRankWeighted(scored, 0.42, 16, 80);
 }
 
 function selectNextItemFixed() {
@@ -555,17 +594,35 @@ function selectNextItemFixed() {
     return selectedDomains.has(getCanonicalDomainName(item.domain));
   });
   if (!candidates.length) return null;
+  const eligibleCandidates = filterRecentlySeen(candidates, 60);
 
   const recentBands = app.attempt.itemsAnswered.slice(-3).map((x) => x.difficultyBand);
 
-  const scored = candidates.map((item) => {
+  const scored = eligibleCandidates.map((item) => {
     const band = difficultyBand(item.difficulty);
     const repeatPenalty = recentBands.includes(band) ? 0.06 : 0;
     return { item, score: 0.25 - repeatPenalty + Math.random() * 0.2 };
   });
 
   scored.sort((a, b) => b.score - a.score);
-  return scored[0]?.item ?? null;
+  return pickRankWeighted(scored, 0.55, 20, 90);
+}
+
+function pickRankWeighted(scored, topFraction = 0.2, minPool = 10, maxPool = 40) {
+  if (!scored.length) return null;
+  const raw = Math.ceil(scored.length * topFraction);
+  const poolSize = Math.max(minPool, Math.min(maxPool, Math.max(1, raw), scored.length));
+  const pool = scored.slice(0, poolSize);
+
+  // Flatter weights increase take-to-take variety while keeping CAT relevance.
+  const weights = pool.map((_, idx) => Math.sqrt(poolSize - idx));
+  const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+  let draw = Math.random() * totalWeight;
+  for (let idx = 0; idx < pool.length; idx += 1) {
+    draw -= weights[idx];
+    if (draw <= 0) return pool[idx].item;
+  }
+  return pool[pool.length - 1].item;
 }
 
 // partialScore: for dichotomous items pass undefined (derived from isCorrect).
@@ -1186,6 +1243,7 @@ function answerCurrentQuestion() {
     answeredAt: new Date().toISOString(),
     scaledAfter,
   });
+  rememberRecentItem(item.id);
 
   app.attempt.scoreHistory.push({
     questionNumber,
@@ -1203,10 +1261,11 @@ function answerCurrentQuestion() {
 }
 
 function selectFirstItem(theta) {
-  const scored = app.bank.items
+  const pool = filterRecentlySeen(app.bank.items, 110);
+  const scored = pool
     .map((item) => ({ item, score: itemInformation(theta, item) + Math.random() * 0.02 }))
     .sort((a, b) => b.score - a.score);
-  return scored[0]?.item ?? null;
+  return pickRankWeighted(scored, 0.36, 18, 90);
 }
 
 function sampleUnscoredPositions() {
@@ -1242,6 +1301,7 @@ function startNewAttempt() {
       return;
     }
   }
+  app.recentItemIds = loadRecentItemIds();
 
   app.attempt = {
     attemptId: crypto.randomUUID(),
@@ -1494,7 +1554,7 @@ function wireEvents() {
   if (ui.sessionInfoBtn) {
     ui.sessionInfoBtn.addEventListener("click", () => {
     alert(
-      "Session progress is saved in this browser session only (sessionStorage). You can resume in this browser/tab session, but it may be lost if the session is cleared."
+      "Session progress is saved in this browser session (sessionStorage). Recently seen question history is also saved to localStorage to reduce repeats across new takes."
     );
   });
   }
@@ -1531,6 +1591,7 @@ function wireEvents() {
 }
 
 function init() {
+  app.recentItemIds = loadRecentItemIds();
   const cfg = getDefaultConfig();
   if (ui.minQuestions) ui.minQuestions.value = String(cfg.minQuestions);
   if (ui.maxQuestions) ui.maxQuestions.value = String(cfg.maxQuestions);
