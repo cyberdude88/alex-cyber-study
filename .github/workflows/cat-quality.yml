@@ -24,6 +24,10 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Enforce CAT runtime/bank contract
+        run: |
+          python3 scripts/check_cat_contract.py
+
       - name: Validate and regenerate CAT bank QA artifacts
         run: |
           python3 scripts/validate_cat_bank.py \

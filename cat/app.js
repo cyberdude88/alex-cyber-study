@@ -131,15 +131,30 @@ function scaledToTheta(score) {
   return ((score - 100) / 900) * 6 - 3;
 }
 
+// Returns the lower-asymptote (guessing) parameter appropriate for the item type.
+// MCQ: c ≈ 0.25 (1-in-4 chance on a 4-choice item).
+// PBQ/drag-drop/ordering/hotspot: c = 0 — random placement has no fixed floor,
+// so the model reduces to 2PL (unbiased ability estimation for performance tasks).
+function itemGuessingParam(item) {
+  const type = item.type ?? "mcq";
+  if (type === "mcq") return item.guessing ?? 0.25;
+  return 0;
+}
+
 function itemProbability(theta, item) {
   const a = item.discrimination ?? 1;
-  return logistic(a * (theta - item.difficulty));
+  const c = itemGuessingParam(item);
+  const p2pl = logistic(a * (theta - item.difficulty));
+  return c + (1 - c) * p2pl;
 }
 
 function itemInformation(theta, item) {
   const a = item.discrimination ?? 1;
+  const c = itemGuessingParam(item);
   const p = itemProbability(theta, item);
-  return a * a * p * (1 - p);
+  // 3PL Fisher information — with c=0 this reduces cleanly to 2PL for PBQ items.
+  // Formula: a²·(P−c)²·(1−P) / ((1−c)²·P)
+  return (a * a * Math.pow(p - c, 2) * (1 - p)) / (Math.pow(1 - c, 2) * Math.max(p, 1e-9));
 }
 
 function summarizeDomainStats(itemsAnswered) {
@@ -186,6 +201,47 @@ function validateBank(bank) {
 
     item.difficulty = typeof item.difficulty === "number" ? clamp(item.difficulty, -3, 3) : 0;
     item.discrimination = typeof item.discrimination === "number" ? clamp(item.discrimination, 0.3, 2.5) : 1;
+
+    // questionType: "knowledge" = recall/definition, "scenario" = applied context,
+    // "judgment" = best-answer ambiguity requiring managerial risk thinking.
+    // Existing banks without this field default to "scenario" (neutral).
+    const KNOWN_QTYPES = ["knowledge", "scenario", "judgment"];
+    item.questionType = KNOWN_QTYPES.includes(item.questionType) ? item.questionType : "scenario";
+
+    // judgmentLevel 1-3: how much managerial ambiguity the item carries.
+    // 1 = one clearly correct answer, 2 = plausible distractors, 3 = best-answer
+    // where multiple options are defensible to someone with knowledge but not judgment.
+    // Defaults based on questionType if not explicitly set.
+    if (typeof item.judgmentLevel !== "number" || item.judgmentLevel < 1 || item.judgmentLevel > 3) {
+      item.judgmentLevel = item.questionType === "judgment" ? 3 : item.questionType === "scenario" ? 2 : 1;
+    }
+
+    // impliedKnowledge: true for questions testing industry consensus or cross-domain
+    // insight not found in standard study guides. ISC2 deliberately includes these
+    // to separate experienced practitioners from pure test-preppers.
+    item.impliedKnowledge = item.impliedKnowledge === true;
+
+    // Normalize item type. Unknown types fall back to "mcq" so existing banks load cleanly.
+    const KNOWN_TYPES = ["mcq", "dragdrop", "ordering", "hotspot"];
+    item.type = KNOWN_TYPES.includes(item.type) ? item.type : "mcq";
+
+    // PBQ items: enforce c=0 and validate polytomous schema when maxScore > 1.
+    // maxScore > 1 signals GPCM partial credit — requires a thresholds[] array
+    // of length maxScore (one threshold per scoring step). Without it, fall back
+    // to dichotomous scoring so the exam can still run.
+    if (item.type !== "mcq") {
+      item.guessing = 0;
+      if (typeof item.maxScore === "number" && item.maxScore > 1) {
+        if (!Array.isArray(item.thresholds) || item.thresholds.length !== item.maxScore) {
+          console.warn(`Item ${item.id}: polytomous PBQ (maxScore=${item.maxScore}) missing valid thresholds[]. Falling back to dichotomous scoring.`);
+          item.maxScore = 1;
+        }
+      } else {
+        item.maxScore = 1;
+      }
+    } else {
+      item.maxScore = 1;
+    }
   }
 }
 
@@ -376,7 +432,11 @@ function buildDomainTargetPanel() {
   const existingActions = document.getElementById("domainSelectionActions");
   if (existingActions) existingActions.remove();
 
-  if (ui.domainTargetPanel) {
+  if (
+    ui.domainTargetPanel &&
+    ui.domainTargetGrid &&
+    ui.domainTargetGrid.parentElement === ui.domainTargetPanel
+  ) {
     const actions = document.createElement("div");
     actions.id = "domainSelectionActions";
     actions.className = "actions-row";
@@ -446,6 +506,14 @@ function selectNextItem() {
   const nextQuestionNumber = app.attempt.itemsAnswered.length + 1;
   const maxQuestions = app.attempt.config.maxQuestions;
 
+  // Theta-aware judgment weighting. As theta rises toward and above the pass cut
+  // (theta ≈ 1.0 = scaled 700), the real CISSP deliberately presents more
+  // ambiguous "best answer" items where judgment matters more than recall.
+  // judgmentBoostStrength ramps from 0 at theta=-3 to a max near the pass cut
+  // and above — replicating the "you feel like you know nothing" ISC2 effect.
+  const passCutTheta = scaledToTheta(700); // ≈ 1.0
+  const judgmentBoostStrength = clamp((app.attempt.theta - (-1)) / (passCutTheta - (-1)), 0, 1) * 0.18;
+
   const scored = candidates.map((item) => {
     const domain = getCanonicalDomainName(item.domain);
     const blueprint = DOMAIN_BLUEPRINT.find((d) => d.name === domain);
@@ -460,9 +528,17 @@ function selectNextItem() {
       domainBoost = clamp(deficit * 0.06, -0.2, 0.35);
     }
 
+    // At low theta: knowledge items are slightly preferred (establish baseline).
+    // At high theta: judgment/scenario items are boosted — tests managerial thinking.
+    // impliedKnowledge items get a small flat boost at all levels (always include
+    // some — they're the most CISSP-authentic and create realistic uncertainty).
+    const jLevel = item.judgmentLevel ?? 2;
+    const judgmentBoost = judgmentBoostStrength * (jLevel - 1) * 0.5;
+    const impliedBoost = item.impliedKnowledge ? 0.04 : 0;
+
     return {
       item,
-      score: info + domainBoost + Math.random() * 0.02,
+      score: info + domainBoost + judgmentBoost + impliedBoost + Math.random() * 0.02,
     };
   });
 
@@ -492,20 +568,40 @@ function selectNextItemFixed() {
   return scored[0]?.item ?? null;
 }
 
-function updateAbility(item, isCorrect) {
+// partialScore: for dichotomous items pass undefined (derived from isCorrect).
+// For future polytomous PBQ (GPCM), pass the raw partial score (0..maxScore)
+// so the GPCM branch can compute the correct score function gradient.
+function updateAbility(item, isCorrect, partialScore) {
   const prevTheta = app.attempt.theta;
-  const p = itemProbability(prevTheta, item);
   const a = item.discrimination ?? 1;
-  const y = isCorrect ? 1 : 0;
+  // Use type-aware guessing floor (0 for PBQ, 0.25 for MCQ).
+  const c = itemGuessingParam(item);
+  const p = itemProbability(prevTheta, item);
+
+  // GPCM scaffold: when maxScore > 1, partial credit scoring will replace this
+  // block with the polytomous score function gradient. Dichotomous path for now.
+  const y = (typeof partialScore === "number") ? clamp(partialScore / Math.max(item.maxScore ?? 1, 1), 0, 1) : (isCorrect ? 1 : 0);
 
   const scoredCount = app.attempt.itemsAnswered.filter((x) => x.scored).length;
   const step = 0.48 / (1 + scoredCount / 28);
-  const gradient = a * (y - p);
+  // 3PL/2PL score function gradient. For PBQ (c=0) this simplifies to a·(y−p),
+  // which is the standard 2PL gradient — no guessing suppression needed there.
+  const gradient = (a * (y - p) * (p - c)) / (Math.max(p, 1e-9) * (1 - c));
   app.attempt.theta = clamp(prevTheta + step * gradient, -3, 3);
 
-  const info = itemInformation(app.attempt.theta, item);
-  app.attempt.totalInformation += info;
-  app.attempt.se = 1 / Math.sqrt(Math.max(app.attempt.totalInformation, 1e-6));
+  // Recompute Fisher information at the updated theta over ALL scored items
+  // (including the current one). Accumulating at varying thetas biases SE.
+  const newTheta = app.attempt.theta;
+  const itemMap = new Map(app.bank.items.map((i) => [i.id, i]));
+  const totalInfo = app.attempt.itemsAnswered
+    .filter((x) => x.scored)
+    .reduce((sum, row) => {
+      const bi = itemMap.get(row.itemId);
+      return bi ? sum + itemInformation(newTheta, bi) : sum;
+    }, itemInformation(newTheta, item)); // include current item being scored
+
+  app.attempt.totalInformation = totalInfo;
+  app.attempt.se = 1 / Math.sqrt(Math.max(totalInfo, 1e-6));
 }
 
 function shouldStop() {
@@ -514,12 +610,24 @@ function shouldStop() {
     return n >= (app.attempt.targetQuestionCount || app.attempt.config.maxQuestions);
   }
 
-  const { minQuestions, maxQuestions, ciStopWidth } = app.attempt.config;
+  const { minQuestions, maxQuestions } = app.attempt.config;
   if (n >= maxQuestions) return true;
   if (n < minQuestions) return false;
 
-  const ciWidth = 3.92 * app.attempt.se;
-  return ciWidth <= ciStopWidth;
+  // Certification CAT stopping rule: stop when the 95% CI is entirely on one
+  // side of the pass cut. This is the correct psychometric criterion for a
+  // pass/fail exam — the question is not "is SE small?" but "are we confident
+  // about the pass/fail decision regardless of SE magnitude?"
+  //
+  // Under 3PL, items provide ~60% of 2PL information (~0.15/item). The old
+  // CI-width rule (ciWidth ≤ 0.75) would require ~178 items to satisfy — beyond
+  // the 150 max. The pass/fail confidence rule stops correctly:
+  //   clear pass (theta=1.5): ~100 items  |  borderline (theta≈1.0): runs to 150.
+  const passCutTheta = scaledToTheta(700);
+  const ciHalf = 1.96 * app.attempt.se;
+  const clearPass = (app.attempt.theta - ciHalf) > passCutTheta;
+  const clearFail = (app.attempt.theta + ciHalf) < passCutTheta;
+  return clearPass || clearFail;
 }
 
 function passProbability() {
@@ -720,7 +828,7 @@ function renderMetrics() {
   if (ui.ciStopText) {
     ui.ciStopText.textContent =
       app.attempt.config.mode === "cat"
-        ? "Adaptive stop handled automatically."
+        ? `Stop rule: 95% CI clears pass cut (${thetaToScaled(scaledToTheta(700)).toFixed(0)}). Borderline candidates run to 150.`
         : `Custom Quiz Stop Rule: ${app.attempt.targetQuestionCount || app.attempt.config.maxQuestions} questions`;
   }
 
@@ -1044,11 +1152,15 @@ function answerCurrentQuestion() {
   const correct = selectedIndex === item.correctIndex;
   const elapsedSec = (Date.now() - app.attempt.currentPresentedAtMs) / 1000;
 
+  // partialScore: for MCQ this is always 0 or 1. PBQ items (dragdrop/ordering)
+  // will supply a numeric partial score (0..maxScore) once that UI is built.
+  const partialScore = correct ? (item.maxScore ?? 1) : 0;
+
   const questionNumber = app.attempt.itemsAnswered.length + 1;
   const scored = app.attempt.config.mode === "cat" ? !app.attempt.unscoredPositions.includes(questionNumber) : true;
 
   if (scored) {
-    updateAbility(item, correct);
+    updateAbility(item, correct, partialScore);
   }
 
   const scaledAfter = thetaToScaled(app.attempt.theta);
@@ -1057,8 +1169,11 @@ function answerCurrentQuestion() {
   app.attempt.itemsAnswered.push({
     questionNumber,
     itemId: item.id,
+    itemType: item.type ?? "mcq",
     domain: getCanonicalDomainName(item.domain),
     correct,
+    partialScore,
+    maxScore: item.maxScore ?? 1,
     scored,
     selectedIndex,
     correctIndex: item.correctIndex,
@@ -1136,8 +1251,12 @@ function startNewAttempt() {
     completed: false,
     stopReason: null,
     theta: config.startTheta,
-    se: 1.2,
-    totalInformation: 0.7,
+    // 3PL prior: 1/sqrt(0.44) ≈ 1.51. Under 3PL with c=0.25, items yield ~0.15
+    // information units each (vs ~0.25 for 2PL). Starting totalInformation of 0.44
+    // represents a diffuse prior — roughly 3 effective 3PL items — giving honest
+    // starting uncertainty before any responses are observed.
+    se: 1 / Math.sqrt(0.44),
+    totalInformation: 0.44,
     itemsAnswered: [],
     scoreHistory: [{ questionNumber: 0, scaled: thetaToScaled(config.startTheta) }],
     targetQuestionCount: config.mode === "fixed" ? config.fixedQuestionCount : config.maxQuestions,
@@ -1176,7 +1295,7 @@ function loadBank(bank) {
 
   app.bank = bank;
   if (ui.bankStatus) {
-    ui.bankStatus.textContent = `${bank.items.length} items available | pass threshold: 700`;
+    ui.bankStatus.textContent = "Question bank loaded | pass threshold: 700";
   }
   buildDomainTargetPanel();
   refreshModeUi();
