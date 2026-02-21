@@ -25,6 +25,29 @@ Add CISSP PBQ variety while keeping pacing realistic:
 - Mix: ASCII-diagram MCQ + short dragdrop/ordering PBQ variants.
 - Script exists but has NOT been applied to the bank yet.
 
+## CRITICAL — DO NOT OVERWRITE THE QUESTION BANK
+
+`cat/question-bank.sample.json` contains **3,599 hand-crafted, validated CISSP questions**.
+This bank was built over many sessions and is the core asset of the project.
+
+**Never do any of the following:**
+- Generate new items and write them directly to `cat/question-bank.sample.json`, replacing existing content
+- Run any script that opens the bank for writing (`'w'` mode) without first confirming it is strictly appending new items
+- Use bulk AI-generation to replace or regenerate existing items
+
+**Allowed bank operations:**
+- Appending new items via validated scripts (e.g. `add_pbq_items.py`, `add_diagram_items.py`)
+- Editing individual item fields (stem, explanation, choices) in place
+- Running read-only scripts (validate, audit, lint, annotate)
+
+If you are unsure whether a script will overwrite the bank, **read the script first** and confirm it opens the file in append/update mode, not replace mode. Always run validation after any bank change:
+```bash
+python3 scripts/validate_cat_bank.py cat/question-bank.sample.json
+```
+Expected: `error_count: 0`, `warning_count: 0`, `item_count: 3599` (or higher if items were added).
+
+---
+
 ## Important current state
 1. `cat/question-bank.sample.json` currently has PBQ additions only (no `d*-diagram-*` IDs present).
 2. `cat/app.js` has PBQ throttle block in `selectNextItem()` (around line ~656).

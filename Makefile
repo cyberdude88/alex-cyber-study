@@ -1,4 +1,4 @@
-.PHONY: cat-annotate cat-contract cat-qa cat-accuracy cat-quality cat-check
+.PHONY: cat-annotate cat-contract cat-qa cat-accuracy cat-quality cat-check cat-generate-memory cat-open-validate cat-build-open
 
 cat-annotate:
 	python3 scripts/annotate_cat_sources.py cat/question-bank.sample.json
@@ -25,3 +25,23 @@ cat-quality:
 
 cat-check: cat-qa cat-accuracy cat-quality
 	node --check cat/app.js
+
+cat-generate-memory:
+	python3 scripts/generate_from_cissp_memory.py \
+		--memory /home/alex/memory/cissp_agent_memory.json \
+		--bank cat/question-bank.sample.json \
+		--catalog sources/open_sources_catalog.json \
+		--target 2200 \
+		--seed 88 \
+		--replace-items
+
+cat-open-validate:
+	python3 scripts/validate_open_sources.py \
+		--bank cat/question-bank.sample.json \
+		--catalog sources/open_sources_catalog.json
+
+cat-build-open: cat-generate-memory cat-open-validate
+	python3 scripts/check_cat_contract.py \
+		--bank cat/question-bank.sample.json \
+		--app cat/app.js \
+		--index cat/index.html
