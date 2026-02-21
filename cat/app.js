@@ -1,5 +1,5 @@
 const STORAGE_KEY = "cissp_cat_session_v2";
-const RECENT_ITEMS_KEY = "cissp_cat_recent_items_v2";
+const RECENT_ITEMS_KEY = "cissp_cat_recent_items_v3";
 const RECENT_ITEMS_MAX = 1200;
 const EXAM_DURATION_SEC = 3 * 60 * 60;
 const AUTOSTART_KEY = "cissp_cat_autostart";
@@ -132,9 +132,32 @@ function saveRecentItemIds(ids) {
   }
 }
 
-function rememberRecentItem(id) {
-  if (!id) return;
-  const key = String(id);
+function getItemFamilyKey(item) {
+  if (!item) return "";
+  return String(item.variantOf || item.id || "");
+}
+
+function getStemKey(stem) {
+  return String(stem || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function getAttemptedDedupSets() {
+  const byId = new Map((app.bank?.items || []).map((item) => [String(item.id), item]));
+  const families = new Set();
+  const stems = new Set();
+  for (const row of app.attempt?.itemsAnswered || []) {
+    const bankItem = byId.get(String(row.itemId));
+    const familyKey = String(row.familyKey || getItemFamilyKey(bankItem) || row.itemId);
+    if (familyKey) families.add(familyKey);
+    const stemKey = String(row.stemKey || getStemKey(bankItem?.stem));
+    if (stemKey) stems.add(stemKey);
+  }
+  return { families, stems };
+}
+
+function rememberRecentItem(item) {
+  const key = getItemFamilyKey(item);
+  if (!key) return;
   const next = app.recentItemIds.filter((x) => x !== key);
   next.push(key);
   app.recentItemIds = next.slice(-RECENT_ITEMS_MAX);
@@ -143,7 +166,7 @@ function rememberRecentItem(id) {
 
 function filterRecentlySeen(items, minPool = 80) {
   const recent = new Set(app.recentItemIds);
-  const fresh = items.filter((item) => !recent.has(String(item.id)));
+  const fresh = items.filter((item) => !recent.has(getItemFamilyKey(item)));
   return fresh.length >= Math.min(minPool, items.length) ? fresh : items;
 }
 
@@ -675,8 +698,11 @@ function selectNextItem() {
     return selectNextItemFixed();
   }
 
-  const attemptedIds = new Set(app.attempt.itemsAnswered.map((x) => x.itemId));
-  const candidates = app.bank.items.filter((item) => !attemptedIds.has(item.id));
+  const attempted = getAttemptedDedupSets();
+  const candidates = app.bank.items.filter((item) =>
+    !attempted.families.has(getItemFamilyKey(item))
+    && !attempted.stems.has(getStemKey(item.stem))
+  );
   if (!candidates.length) return null;
   const eligibleCandidates = filterRecentlySeen(candidates, 90);
 
@@ -734,9 +760,10 @@ function selectNextItem() {
 
 function selectNextItemFixed() {
   const selectedDomains = new Set(app.attempt.config.selectedDomains || []);
-  const attemptedIds = new Set(app.attempt.itemsAnswered.map((x) => x.itemId));
+  const attempted = getAttemptedDedupSets();
   const candidates = app.bank.items.filter((item) => {
-    if (attemptedIds.has(item.id)) return false;
+    if (attempted.families.has(getItemFamilyKey(item))) return false;
+    if (attempted.stems.has(getStemKey(item.stem))) return false;
     if (!selectedDomains.size) return true;
     return selectedDomains.has(getCanonicalDomainName(item.domain));
   });
@@ -1531,6 +1558,8 @@ function answerCurrentQuestion() {
   app.attempt.itemsAnswered.push({
     questionNumber,
     itemId: item.id,
+    familyKey: getItemFamilyKey(item),
+    stemKey: getStemKey(item.stem),
     itemType: item.type ?? "mcq",
     domain: getCanonicalDomainName(item.domain),
     correct,
@@ -1551,7 +1580,7 @@ function answerCurrentQuestion() {
     answeredAt: new Date().toISOString(),
     scaledAfter,
   });
-  rememberRecentItem(item.id);
+  rememberRecentItem(item);
 
   app.attempt.scoreHistory.push({
     questionNumber,

@@ -1,11 +1,18 @@
 {
-  "item_count": 3552,
+  "item_count": 3582,
   "profile": "human",
   "error_count": 0,
-  "warning_count": 96,
-  "info_count": 3823,
-  "average_quality_score": 99.19,
+  "warning_count": 97,
+  "info_count": 3883,
+  "average_quality_score": 99.17,
   "low_quality_items": [
+    {
+      "item": "d6-pbq-dd2",
+      "quality_score": 89,
+      "domain": "6. Security Assessment and Testing",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
     {
       "item": "d2-q10__v2",
       "quality_score": 90,
@@ -95,6 +102,27 @@
       "quality_score": 92,
       "domain": "6. Security Assessment and Testing",
       "questionType": "scenario",
+      "pilotEligible": false
+    },
+    {
+      "item": "d2-pbq-dd1",
+      "quality_score": 92,
+      "domain": "2. Asset Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d3-pbq-dd1",
+      "quality_score": 92,
+      "domain": "3. Security Architecture and Engineering",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d5-pbq-dd1",
+      "quality_score": 92,
+      "domain": "5. Identity and Access Management (IAM)",
+      "questionType": "pbq",
       "pilotEligible": false
     },
     {
@@ -325,34 +353,6 @@
       "item": "d3-q64__v3",
       "quality_score": 94,
       "domain": "3. Security Architecture and Engineering",
-      "questionType": "scenario",
-      "pilotEligible": false
-    },
-    {
-      "item": "d6-q79",
-      "quality_score": 94,
-      "domain": "6. Security Assessment and Testing",
-      "questionType": "scenario",
-      "pilotEligible": false
-    },
-    {
-      "item": "d6-q79__v3",
-      "quality_score": 94,
-      "domain": "6. Security Assessment and Testing",
-      "questionType": "scenario",
-      "pilotEligible": false
-    },
-    {
-      "item": "d5-q66",
-      "quality_score": 94,
-      "domain": "5. Identity and Access Management (IAM)",
-      "questionType": "scenario",
-      "pilotEligible": false
-    },
-    {
-      "item": "d5-q66__v1",
-      "quality_score": 94,
-      "domain": "5. Identity and Access Management (IAM)",
       "questionType": "scenario",
       "pilotEligible": false
     }
@@ -23870,6 +23870,372 @@
       "level": "info",
       "kind": "missing_actor_context",
       "item": "d1-preamble-q5__v3",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d1-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d1-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d1-pbq-dd2",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d1-pbq-dd2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d1-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d2-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "very_short_distractor",
+      "item": "d2-pbq-dd1",
+      "message": "At least one choice is very short compared to exam style."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d2-pbq-dd1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d2-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d2-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d3-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "very_short_distractor",
+      "item": "d3-pbq-dd1",
+      "message": "At least one choice is very short compared to exam style."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d3-pbq-dd1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d3-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d3-pbq-dd2",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d3-pbq-dd2",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d3-pbq-dd2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d3-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d3-pbq-or1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d3-pbq-or2",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d3-pbq-or2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d4-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d4-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d4-pbq-dd2",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d4-pbq-dd2",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d4-pbq-dd2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d4-pbq-dd3",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d4-pbq-dd3",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d4-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d4-pbq-or2",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d5-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "very_short_distractor",
+      "item": "d5-pbq-dd1",
+      "message": "At least one choice is very short compared to exam style."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d5-pbq-dd1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d5-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d5-pbq-dd2",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d5-pbq-dd2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d5-pbq-dd3",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d5-pbq-dd3",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d5-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d6-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d6-pbq-dd1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d6-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "warning",
+      "kind": "negative_stem",
+      "item": "d6-pbq-dd2",
+      "message": "Negative stem wording (NOT/EXCEPT/LEAST) can increase construct-irrelevant difficulty."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d6-pbq-dd2",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d6-pbq-dd2",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d6-pbq-dd2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d6-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d7-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d7-pbq-dd1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d7-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d7-pbq-dd2",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d7-pbq-dd2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "very_short_distractor",
+      "item": "d7-pbq-or1",
+      "message": "At least one choice is very short compared to exam style."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d7-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d7-pbq-or2",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d8-pbq-dd1",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d8-pbq-dd1",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "absolute_wording",
+      "item": "d8-pbq-dd2",
+      "message": "Absolute wording in stem: all."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d8-pbq-dd2",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "info",
+      "kind": "missing_decision_prompt",
+      "item": "d8-pbq-dd2",
+      "message": "Stem may feel recall-heavy; consider a best/next/first decision prompt."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d8-pbq-or1",
       "message": "Stem may feel generic; consider role-based actor context."
     }
   ],
@@ -48736,6 +49102,216 @@
       "quality_score": 100,
       "domain": "1. Security and Risk Management",
       "questionType": "judgment",
+      "pilotEligible": false
+    },
+    {
+      "item": "d1-pbq-dd1",
+      "quality_score": 97,
+      "domain": "1. Security and Risk Management",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d1-pbq-dd2",
+      "quality_score": 97,
+      "domain": "1. Security and Risk Management",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d1-pbq-or1",
+      "quality_score": 100,
+      "domain": "1. Security and Risk Management",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d1-pbq-or2",
+      "quality_score": 100,
+      "domain": "1. Security and Risk Management",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d2-pbq-dd1",
+      "quality_score": 92,
+      "domain": "2. Asset Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d2-pbq-or1",
+      "quality_score": 100,
+      "domain": "2. Asset Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d3-pbq-dd1",
+      "quality_score": 92,
+      "domain": "3. Security Architecture and Engineering",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d3-pbq-dd2",
+      "quality_score": 96,
+      "domain": "3. Security Architecture and Engineering",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d3-pbq-or1",
+      "quality_score": 100,
+      "domain": "3. Security Architecture and Engineering",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d3-pbq-or2",
+      "quality_score": 100,
+      "domain": "3. Security Architecture and Engineering",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d4-pbq-dd1",
+      "quality_score": 97,
+      "domain": "4. Communication and Network Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d4-pbq-dd2",
+      "quality_score": 96,
+      "domain": "4. Communication and Network Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d4-pbq-dd3",
+      "quality_score": 97,
+      "domain": "4. Communication and Network Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d4-pbq-or1",
+      "quality_score": 100,
+      "domain": "4. Communication and Network Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d4-pbq-or2",
+      "quality_score": 100,
+      "domain": "4. Communication and Network Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d5-pbq-dd1",
+      "quality_score": 92,
+      "domain": "5. Identity and Access Management (IAM)",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d5-pbq-dd2",
+      "quality_score": 97,
+      "domain": "5. Identity and Access Management (IAM)",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d5-pbq-dd3",
+      "quality_score": 97,
+      "domain": "5. Identity and Access Management (IAM)",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d5-pbq-or1",
+      "quality_score": 100,
+      "domain": "5. Identity and Access Management (IAM)",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d6-pbq-dd1",
+      "quality_score": 96,
+      "domain": "6. Security Assessment and Testing",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d6-pbq-dd2",
+      "quality_score": 89,
+      "domain": "6. Security Assessment and Testing",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d6-pbq-or1",
+      "quality_score": 100,
+      "domain": "6. Security Assessment and Testing",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d6-pbq-or2",
+      "quality_score": 100,
+      "domain": "6. Security Assessment and Testing",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d7-pbq-dd1",
+      "quality_score": 96,
+      "domain": "7. Security Operations",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d7-pbq-dd2",
+      "quality_score": 97,
+      "domain": "7. Security Operations",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d7-pbq-or1",
+      "quality_score": 98,
+      "domain": "7. Security Operations",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d7-pbq-or2",
+      "quality_score": 100,
+      "domain": "7. Security Operations",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d8-pbq-dd1",
+      "quality_score": 97,
+      "domain": "8. Software Development Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d8-pbq-dd2",
+      "quality_score": 96,
+      "domain": "8. Software Development Security",
+      "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d8-pbq-or1",
+      "quality_score": 100,
+      "domain": "8. Software Development Security",
+      "questionType": "pbq",
       "pilotEligible": false
     }
   ]

@@ -1,10 +1,10 @@
 {
   "bank_file": "cat/question-bank.sample.json",
-  "sha256": "1de2de1e6b911e9bba6754b5e39632b0a15279145de07f7ee410be300d7e396f",
+  "sha256": "64af7a71f4167a8492ebc3ec1142de0e9ea863fe894afb3908f3688691124212",
   "summary": {
     "item_count": 3582,
     "unique_item_ids": 3582,
-    "source_catalog_count": 25,
+    "source_catalog_count": 24,
     "source_coverage_count": 3582,
     "domain_counts": {
       "1. Security and Risk Management": 596,
