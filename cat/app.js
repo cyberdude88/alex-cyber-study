@@ -1,6 +1,9 @@
 const STORAGE_KEY = "cissp_cat_session_v2";
 const RECENT_ITEMS_KEY = "cissp_cat_recent_items_v3";
+const LEGACY_RECENT_ITEMS_KEYS = ["cissp_cat_recent_items_v2", "cissp_cat_recent_items_v1"];
+const RECENT_STEMS_KEY = "cissp_cat_recent_stems_v1";
 const RECENT_ITEMS_MAX = 1200;
+const RECENT_STEMS_MAX = 2000;
 const EXAM_DURATION_SEC = 3 * 60 * 60;
 const AUTOSTART_KEY = "cissp_cat_autostart";
 const AUTORESUME_KEY = "cissp_cat_autoresume";
@@ -103,6 +106,7 @@ const app = {
   graphFilter: "all",
   reviewFilter: "all",
   recentItemIds: [],
+  recentStemKeys: [],
 };
 
 function createAttemptId() {
@@ -115,10 +119,23 @@ function createAttemptId() {
 function loadRecentItemIds() {
   try {
     const raw = localStorage.getItem(RECENT_ITEMS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return Array.from(new Set(parsed.map((x) => String(x)))).slice(-RECENT_ITEMS_MAX);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return Array.from(new Set(parsed.map((x) => String(x)))).slice(-RECENT_ITEMS_MAX);
+    }
+
+    // One-time migration from legacy keys to preserve anti-repeat history.
+    for (const key of LEGACY_RECENT_ITEMS_KEYS) {
+      const legacyRaw = localStorage.getItem(key);
+      if (!legacyRaw) continue;
+      const legacy = JSON.parse(legacyRaw);
+      if (!Array.isArray(legacy)) continue;
+      const migrated = Array.from(new Set(legacy.map((x) => String(x)))).slice(-RECENT_ITEMS_MAX);
+      localStorage.setItem(RECENT_ITEMS_KEY, JSON.stringify(migrated));
+      return migrated;
+    }
+    return [];
   } catch {
     return [];
   }
@@ -127,6 +144,26 @@ function loadRecentItemIds() {
 function saveRecentItemIds(ids) {
   try {
     localStorage.setItem(RECENT_ITEMS_KEY, JSON.stringify(ids.slice(-RECENT_ITEMS_MAX)));
+  } catch {
+    // Best-effort only.
+  }
+}
+
+function loadRecentStemKeys() {
+  try {
+    const raw = localStorage.getItem(RECENT_STEMS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return Array.from(new Set(parsed.map((x) => String(x)))).slice(-RECENT_STEMS_MAX);
+  } catch {
+    return [];
+  }
+}
+
+function saveRecentStemKeys(keys) {
+  try {
+    localStorage.setItem(RECENT_STEMS_KEY, JSON.stringify(keys.slice(-RECENT_STEMS_MAX)));
   } catch {
     // Best-effort only.
   }
@@ -157,17 +194,33 @@ function getAttemptedDedupSets() {
 
 function rememberRecentItem(item) {
   const key = getItemFamilyKey(item);
-  if (!key) return;
-  const next = app.recentItemIds.filter((x) => x !== key);
-  next.push(key);
-  app.recentItemIds = next.slice(-RECENT_ITEMS_MAX);
-  saveRecentItemIds(app.recentItemIds);
+  if (key) {
+    const next = app.recentItemIds.filter((x) => x !== key);
+    next.push(key);
+    app.recentItemIds = next.slice(-RECENT_ITEMS_MAX);
+    saveRecentItemIds(app.recentItemIds);
+  }
+
+  const stemKey = getStemKey(item?.stem);
+  if (stemKey) {
+    const nextStem = app.recentStemKeys.filter((x) => x !== stemKey);
+    nextStem.push(stemKey);
+    app.recentStemKeys = nextStem.slice(-RECENT_STEMS_MAX);
+    saveRecentStemKeys(app.recentStemKeys);
+  }
 }
 
 function filterRecentlySeen(items, minPool = 80) {
   const recent = new Set(app.recentItemIds);
-  const fresh = items.filter((item) => !recent.has(getItemFamilyKey(item)));
-  return fresh.length >= Math.min(minPool, items.length) ? fresh : items;
+  const recentStems = new Set(app.recentStemKeys);
+  const fullyFresh = items.filter((item) =>
+    !recent.has(getItemFamilyKey(item))
+    && !recentStems.has(getStemKey(item.stem))
+  );
+  if (fullyFresh.length >= Math.min(minPool, items.length)) return fullyFresh;
+
+  const familyFresh = items.filter((item) => !recent.has(getItemFamilyKey(item)));
+  return familyFresh.length >= Math.min(minPool, items.length) ? familyFresh : items;
 }
 
 function clamp(n, min, max) {
@@ -1639,6 +1692,7 @@ function startNewAttempt() {
     }
   }
   app.recentItemIds = loadRecentItemIds();
+  app.recentStemKeys = loadRecentStemKeys();
 
   app.attempt = {
     attemptId: createAttemptId(),
@@ -1950,6 +2004,7 @@ function wireEvents() {
 
 function init() {
   app.recentItemIds = loadRecentItemIds();
+  app.recentStemKeys = loadRecentStemKeys();
   const cfg = getDefaultConfig();
   if (ui.minQuestions) ui.minQuestions.value = String(cfg.minQuestions);
   if (ui.maxQuestions) ui.maxQuestions.value = String(cfg.maxQuestions);

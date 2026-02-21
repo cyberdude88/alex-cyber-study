@@ -1,9 +1,9 @@
 {
-  "item_count": 3582,
+  "item_count": 3585,
   "profile": "human",
   "error_count": 0,
-  "warning_count": 97,
-  "info_count": 3883,
+  "warning_count": 98,
+  "info_count": 3884,
   "average_quality_score": 99.17,
   "low_quality_items": [
     {
@@ -24236,6 +24236,18 @@
       "level": "info",
       "kind": "missing_actor_context",
       "item": "d8-pbq-or1",
+      "message": "Stem may feel generic; consider role-based actor context."
+    },
+    {
+      "level": "warning",
+      "kind": "thin_explanation",
+      "item": "d1-qeth-easy-3",
+      "message": "Explanation is too brief for defensible rationale."
+    },
+    {
+      "level": "info",
+      "kind": "missing_actor_context",
+      "item": "d1-qeth-easy-3",
       "message": "Stem may feel generic; consider role-based actor context."
     }
   ],
@@ -49312,6 +49324,27 @@
       "quality_score": 100,
       "domain": "8. Software Development Security",
       "questionType": "pbq",
+      "pilotEligible": false
+    },
+    {
+      "item": "d1-qeth-easy-1",
+      "quality_score": 100,
+      "domain": "1. Security and Risk Management",
+      "questionType": "knowledge",
+      "pilotEligible": false
+    },
+    {
+      "item": "d1-qeth-easy-2",
+      "quality_score": 100,
+      "domain": "1. Security and Risk Management",
+      "questionType": "knowledge",
+      "pilotEligible": false
+    },
+    {
+      "item": "d1-qeth-easy-3",
+      "quality_score": 95,
+      "domain": "1. Security and Risk Management",
+      "questionType": "knowledge",
       "pilotEligible": false
     }
   ]

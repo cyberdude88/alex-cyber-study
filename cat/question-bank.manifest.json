@@ -1,10 +1,10 @@
 {
   "bank_file": "cat/question-bank.sample.json",
-  "sha256": "64af7a71f4167a8492ebc3ec1142de0e9ea863fe894afb3908f3688691124212",
-  "item_count": 3582,
-  "unique_item_ids": 3582,
+  "sha256": "544d091a691c45db31d580fded978d74604d66bed21e33542c4124f641e31312",
+  "item_count": 3585,
+  "unique_item_ids": 3585,
   "domain_counts": {
-    "1. Security and Risk Management": 596,
+    "1. Security and Risk Management": 599,
     "2. Asset Security": 354,
     "3. Security Architecture and Engineering": 452,
     "4. Communication and Network Security": 429,
