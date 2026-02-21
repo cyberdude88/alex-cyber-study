@@ -8,18 +8,8 @@ DIAGRAM_ITEMS = [
     "id": "d1-diagram-q1",
     "domain": "1. Security and Risk Management",
     "stem": (
-      "An organization's risk analyst produced the following qualitative risk matrix:\n\n"
-      "  ┌──────────────────────────────────────────────────────┐\n"
-      "  │          RISK PRIORITY MATRIX                        │\n"
-      "  │                                                      │\n"
-      "  │  HIGH │  MODERATE PRIORITY  │  TOP PRIORITY         │\n"
-      "  │  PROB │  (treat / transfer) │  (immediate action)   │\n"
-      "  │       ├─────────────────────┼───────────────────────┤\n"
-      "  │  LOW  │  LOW PRIORITY       │  MEDIUM PRIORITY      │\n"
-      "  │  PROB │  (accept / monitor) │  (reduce / plan)      │\n"
-      "  │       └─────────────────────┴───────────────────────┘\n"
-      "  │              LOW IMPACT            HIGH IMPACT       │\n"
-      "  └──────────────────────────────────────────────────────┘\n\n"
+      "An organization's risk analyst is classifying risk using a qualitative matrix "
+      "with likelihood (low/high) and impact (low/high). "
       "Risk item: An internet-facing server runs an unpatched service with a public exploit "
       "(CVSS 9.8). Breach would expose all customer PII. "
       "Which cell BEST describes this risk and what is the FIRST required action?"
@@ -47,16 +37,6 @@ DIAGRAM_ITEMS = [
     "id": "d3-diagram-q1",
     "domain": "3. Security Architecture and Engineering",
     "stem": (
-      "Refer to the OSI model diagram below:\n\n"
-      "  ┌─────────────────────────────────────────┐\n"
-      "  │  L7 │ Application  (HTTP, SMTP, DNS)    │\n"
-      "  │  L6 │ Presentation (encoding, SSL/TLS?) │  ← ?\n"
-      "  │  L5 │ Session      (dialog control)     │\n"
-      "  │  L4 │ Transport    (TCP, UDP)            │\n"
-      "  │  L3 │ Network      (IP, ICMP)            │\n"
-      "  │  L2 │ Data Link    (Ethernet, MAC)       │\n"
-      "  │  L1 │ Physical     (cables, bits)        │\n"
-      "  └─────────────────────────────────────────┘\n\n"
       "A network engineer says 'TLS provides encryption at the Presentation layer.' "
       "A security architect disagrees. Which statement is MOST accurate?"
     ),
@@ -86,14 +66,6 @@ DIAGRAM_ITEMS = [
     "domain": "4. Communication and Network Security",
     "stem": (
       "A network architect is designing a web application infrastructure. "
-      "Review the zone diagram:\n\n"
-      "  ┌──────────────────────────────────────────────────────────┐\n"
-      "  │  [INTERNET] ──► [Zone A] ──► [Zone B] ──► [Zone C]     │\n"
-      "  │                                                          │\n"
-      "  │  Zone A: Perimeter / Edge (border router, edge firewall) │\n"
-      "  │  Zone B: DMZ (screened subnet)                          │\n"
-      "  │  Zone C: Internal LAN (corporate users, internal DBs)   │\n"
-      "  └──────────────────────────────────────────────────────────┘\n\n"
       "The org hosts a public-facing HTTPS web application that connects to an "
       "internal database. Where should the Web Application Firewall (WAF) be placed "
       "to BEST protect against OWASP Top 10 attacks (SQLi, XSS, etc.)?"
@@ -123,15 +95,8 @@ DIAGRAM_ITEMS = [
     "id": "d4-diagram-q2",
     "domain": "4. Communication and Network Security",
     "stem": (
-      "An analyst is reviewing network traffic captures and observes the following "
-      "packet flow:\n\n"
-      "  ┌────────────────────────────────────────────────────────┐\n"
-      "  │  Host A (10.0.0.5)   ────►  Router  ────►  Host B    │\n"
-      "  │                              (10.0.0.1)   (10.0.0.8) │\n"
-      "  │                                                        │\n"
-      "  │  Host A broadcasts: 'Who has 10.0.0.8? Tell 10.0.0.5'│\n"
-      "  │  Host B replies:    '10.0.0.8 is at AA:BB:CC:DD:EE'  │\n"
-      "  └────────────────────────────────────────────────────────┘\n\n"
+      "An analyst reviews packet captures in a flat subnet. Host A sends an ARP request for "
+      "Host B's IP and receives a legitimate ARP reply with Host B's MAC. "
       "An attacker on the same subnet sends an unsolicited reply: "
       "'10.0.0.8 is at 00:11:22:33:44:55 (attacker MAC).' "
       "What attack is being performed and which OSI layer is exploited?"
@@ -160,15 +125,8 @@ DIAGRAM_ITEMS = [
     "id": "d5-diagram-q1",
     "domain": "5. Identity and Access Management (IAM)",
     "stem": (
-      "Review the following access control model diagram:\n\n"
-      "  ┌──────────────────────────────────────────────────────────┐\n"
-      "  │  SUBJECT: Alice (Clearance = SECRET)                     │\n"
-      "  │                                                          │\n"
-      "  │  Attempt 1: Read file labeled TOP SECRET     → [  ? ]   │\n"
-      "  │  Attempt 2: Write to file labeled CLASSIFIED → [  ? ]   │\n"
-      "  │  Attempt 3: Read file labeled CONFIDENTIAL  → [  ? ]    │\n"
-      "  │  Attempt 4: Write to file labeled SECRET     → [  ? ]   │\n"
-      "  └──────────────────────────────────────────────────────────┘\n\n"
+      "A subject named Alice has SECRET clearance and attempts these actions: "
+      "(1) read TOP SECRET, (2) write CLASSIFIED, (3) read CONFIDENTIAL, (4) write SECRET. "
       "Under the Bell-LaPadula mandatory access control model, which set of "
       "outcomes (PERMIT / DENY) is CORRECT?"
     ),
@@ -198,17 +156,6 @@ DIAGRAM_ITEMS = [
     "domain": "6. Security Assessment and Testing",
     "stem": (
       "A penetration tester is selecting an engagement scope. "
-      "Review the knowledge diagram:\n\n"
-      "  ┌─────────────────────────────────────────────────────────┐\n"
-      "  │  TEST TYPE │ TESTER KNOWLEDGE  │ SIMULATES             │\n"
-      "  │────────────┼───────────────────┼───────────────────────│\n"
-      "  │  [Type A]  │ Zero prior info   │ External attacker      │\n"
-      "  │  [Type B]  │ Full source code, │ Malicious insider /   │\n"
-      "  │            │ diagrams, creds   │ auditor               │\n"
-      "  │  [Type C]  │ Partial info      │ Informed outsider      │\n"
-      "  │            │ (some network     │ (e.g., partner firm)  │\n"
-      "  │            │  diagrams only)   │                        │\n"
-      "  └─────────────────────────────────────────────────────────┘\n\n"
       "A financial firm hires a pen test firm and shares only the external IP range. "
       "No architecture documentation, no credentials, no source code is provided. "
       "Which test type and label CORRECTLY identifies this engagement?"
@@ -238,19 +185,8 @@ DIAGRAM_ITEMS = [
     "id": "d7-diagram-q1",
     "domain": "7. Security Operations",
     "stem": (
-      "A forensic investigator arrives at a compromised workstation. "
-      "The system is still powered on. Review the volatility order:\n\n"
-      "  ┌──────────────────────────────────────────────────────────┐\n"
-      "  │     ORDER OF VOLATILITY (MOST → LEAST volatile)         │\n"
-      "  │                                                          │\n"
-      "  │  [1] CPU registers, cache, running processes (RAM)      │\n"
-      "  │  [2] Network connections, routing/ARP tables            │\n"
-      "  │  [3] Temporary files, swap/page file                    │\n"
-      "  │  [4] Hard disk / SSD storage                            │\n"
-      "  │  [5] Remote logs, cloud storage                         │\n"
-      "  │  [6] Archival media (tape, optical)                     │\n"
-      "  └──────────────────────────────────────────────────────────┘\n\n"
-      "Following the principle of order of volatility, which action should the "
+      "A forensic investigator arrives at a compromised workstation that is still powered on. "
+      "Following the order-of-volatility principle (collect most volatile evidence first), which action should the "
       "investigator perform FIRST on the live system?"
     ),
     "choices": [
@@ -278,26 +214,15 @@ DIAGRAM_ITEMS = [
     "id": "d8-diagram-q1",
     "domain": "8. Software Development Security",
     "stem": (
-      "A DevSecOps team is mapping security activities to SDLC phases. "
-      "Review the diagram:\n\n"
-      "  ┌─────────────────────────────────────────────────────────┐\n"
-      "  │  SDLC PHASE         │ SECURITY ACTIVITY               │\n"
-      "  │─────────────────────┼─────────────────────────────────│\n"
-      "  │  Requirements       │  [A] Classify data, define      │\n"
-      "  │                     │      security requirements       │\n"
-      "  │─────────────────────┼─────────────────────────────────│\n"
-      "  │  Design             │  [B] Threat modeling (STRIDE)   │\n"
-      "  │─────────────────────┼─────────────────────────────────│\n"
-      "  │  Implementation     │  [C] SAST, code review          │\n"
-      "  │─────────────────────┼─────────────────────────────────│\n"
-      "  │  Testing            │  [D] DAST, pen test, fuzzing    │\n"
-      "  │─────────────────────┼─────────────────────────────────│\n"
-      "  │  Deployment         │  [E] Hardening, change control  │\n"
-      "  │─────────────────────┼─────────────────────────────────│\n"
-      "  │  Maintenance        │  [F] Patch management, vuln mgmt│\n"
-      "  └─────────────────────────────────────────────────────────┘\n\n"
+      "A DevSecOps team maps security activities to SDLC phases: "
+      "[A] Requirements (classify data, define security requirements), "
+      "[B] Design (threat modeling), "
+      "[C] Implementation (SAST, code review), "
+      "[D] Testing (DAST, pen test, fuzzing), "
+      "[E] Deployment (hardening, change control), "
+      "[F] Maintenance (patch and vulnerability management). "
       "A developer asks: 'When is it CHEAPEST to find and fix a security flaw?' "
-      "Based on the diagram, which phase and activity is CORRECT?"
+      "Which phase and activity is CORRECT?"
     ),
     "choices": [
       "Activity [A] — Requirements phase. Flaws identified earliest cost the least to fix; each phase multiplies remediation cost roughly 10x.",
@@ -325,19 +250,8 @@ DIAGRAM_ITEMS = [
     "id": "d2-diagram-q1",
     "domain": "2. Asset Security",
     "stem": (
-      "A security manager is briefing junior analysts on data classification. "
-      "Review the hierarchy diagram:\n\n"
-      "  ┌────────────────────────────────────────────────────────┐\n"
-      "  │          COMMERCIAL DATA CLASSIFICATION TIERS          │\n"
-      "  │                                                        │\n"
-      "  │   ▲  CONFIDENTIAL  — trade secrets, IP, PII/PHI       │\n"
-      "  │   │                                                    │\n"
-      "  │   │  PRIVATE       — internal HR, salary, contracts   │\n"
-      "  │   │                                                    │\n"
-      "  │   │  SENSITIVE     — needs care but not top-tier      │\n"
-      "  │   │                                                    │\n"
-      "  │   ▼  PUBLIC        — press releases, marketing        │\n"
-      "  └────────────────────────────────────────────────────────┘\n\n"
+      "A security manager uses this commercial data classification hierarchy: "
+      "CONFIDENTIAL > PRIVATE > SENSITIVE > PUBLIC. "
       "An analyst receives an email from a vendor with a document marked CONFIDENTIAL "
       "and immediately uploads it to a public cloud drive for easier collaboration. "
       "Which principle did the analyst MOST directly violate?"
