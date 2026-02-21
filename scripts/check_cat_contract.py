@@ -44,9 +44,16 @@ def main() -> int:
     index_html = args.index.read_text(encoding="utf-8")
 
     type_counts: dict[str, int] = {}
+    citation_items = 0
     for item in items:
         item_type = str(item.get("type", "mcq"))
         type_counts[item_type] = type_counts.get(item_type, 0) + 1
+        if isinstance(item.get("sourceIds"), list) and item.get("sourceIds"):
+            citation_items += 1
+
+    source_catalog = bank.get("sourceCatalog")
+    if not isinstance(source_catalog, dict) or not source_catalog:
+        warnings.append("question bank has no sourceCatalog; analytics citation view will be empty")
 
     non_mcq = sum(v for k, v in type_counts.items() if k != "mcq")
     if non_mcq > 0 and not has_pbq_runtime_markers(runtime):
@@ -64,6 +71,8 @@ def main() -> int:
     print(f"- items: {len(items)}")
     print(f"- type_counts: {type_counts}")
     print(f"- non_mcq_items: {non_mcq}")
+    print(f"- citation_items: {citation_items}/{len(items)}")
+    print(f"- source_catalog_entries: {len(source_catalog) if isinstance(source_catalog, dict) else 0}")
     print(f"- pbq_runtime_markers: {has_pbq_runtime_markers(runtime)}")
 
     for w in warnings:

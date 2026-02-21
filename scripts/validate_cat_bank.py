@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Validate and fingerprint CAT question banks.
 
-This script is designed to keep cross-tool edits (e.g., Claude + Codex)
-synchronized by generating deterministic QA artifacts that CI enforces.
+This script generates deterministic QA artifacts that CI enforces.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+from urllib.parse import urlparse
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -34,6 +34,26 @@ DOMAIN_ALIASES = {
     "6 Security Assessment and Testing": "6. Security Assessment and Testing",
     "7 Security Operations": "7. Security Operations",
     "8 Software Development Security": "8. Software Development Security",
+}
+
+ALLOWED_SOURCE_HOSTS = {
+    "nist.gov",
+    "www.nist.gov",
+    "csrc.nist.gov",
+    "pages.nist.gov",
+    "isc2.org",
+    "www.isc2.org",
+    "iso.org",
+    "www.iso.org",
+    "rfc-editor.org",
+    "www.rfc-editor.org",
+    "pcisecuritystandards.org",
+    "www.pcisecuritystandards.org",
+    "isaca.org",
+    "www.isaca.org",
+    "aicpa-cima.com",
+    "www.aicpa-cima.com",
+    "eur-lex.europa.eu",
 }
 
 
@@ -63,15 +83,33 @@ def load_json(path: Path) -> Any:
 def validate(bank: dict[str, Any]) -> tuple[list[Finding], dict[str, Any]]:
     findings: list[Finding] = []
     items = bank.get("items")
+    source_catalog = bank.get("sourceCatalog")
 
     if not isinstance(items, list):
         findings.append(Finding("error", "Top-level 'items' must be a list."))
         return findings, {}
 
+    if not isinstance(source_catalog, dict):
+        findings.append(Finding("error", "Top-level 'sourceCatalog' must be an object."))
+        source_catalog = {}
+
+    for sid, src in source_catalog.items():
+        if not isinstance(src, dict):
+            findings.append(Finding("error", f"sourceCatalog entry '{sid}' must be an object."))
+            continue
+        url = src.get("url")
+        if not isinstance(url, str) or not url.strip():
+            findings.append(Finding("error", f"sourceCatalog entry '{sid}' missing URL."))
+            continue
+        host = (urlparse(url).hostname or "").lower()
+        if host not in ALLOWED_SOURCE_HOSTS:
+            findings.append(Finding("error", f"sourceCatalog entry '{sid}' uses non-ISC2/NIST host: {host or 'unknown'}"))
+
     ids: list[str] = []
     domains: list[str] = []
     correct_positions: list[int] = []
     diff_bands: list[str] = []
+    source_coverage = 0
 
     for i, item in enumerate(items, start=1):
         iid = item.get("id")
@@ -118,6 +156,16 @@ def validate(bank: dict[str, Any]) -> tuple[list[Finding], dict[str, Any]]:
         if not isinstance(explanation, str) or not explanation.strip():
             findings.append(Finding("warning", f"Item {iid or i} missing explanation text."))
 
+        source_ids = item.get("sourceIds")
+        if not isinstance(source_ids, list) or not source_ids:
+            findings.append(Finding("error", f"Item {iid or i} missing sourceIds citations."))
+        else:
+            unknown = [sid for sid in source_ids if sid not in source_catalog]
+            if unknown:
+                findings.append(Finding("error", f"Item {iid or i} references unknown sourceIds: {unknown}"))
+            else:
+                source_coverage += 1
+
     id_counts = Counter(ids)
     dup_ids = [k for k, v in id_counts.items() if v > 1]
     for dup in dup_ids:
@@ -146,6 +194,8 @@ def validate(bank: dict[str, Any]) -> tuple[list[Finding], dict[str, Any]]:
     summary = {
         "item_count": len(items),
         "unique_item_ids": len(id_counts),
+        "source_catalog_count": len(source_catalog),
+        "source_coverage_count": source_coverage,
         "domain_counts": dict(domain_counts),
         "correct_position_counts": dict(Counter(correct_positions)),
         "difficulty_band_counts": dict(Counter(diff_bands)),

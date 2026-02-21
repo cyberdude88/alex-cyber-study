@@ -1,9 +1,12 @@
 const STORAGE_KEY = "cissp_cat_session_v2";
-const RECENT_ITEMS_KEY = "cissp_cat_recent_items_v1";
-const RECENT_ITEMS_MAX = 350;
+const RECENT_ITEMS_KEY = "cissp_cat_recent_items_v2";
+const RECENT_ITEMS_MAX = 1200;
 const EXAM_DURATION_SEC = 3 * 60 * 60;
 const AUTOSTART_KEY = "cissp_cat_autostart";
 const AUTORESUME_KEY = "cissp_cat_autoresume";
+const PBQ_TYPES_SET = new Set(["dragdrop", "ordering", "hotspot"]);
+const PBQ_MAX_PER_ATTEMPT = 2;
+const PBQ_THETA_MIN = -0.25;
 const FORCED_MODE = document.body.dataset.mode === "cat" || document.body.dataset.mode === "fixed"
   ? document.body.dataset.mode
   : null;
@@ -76,6 +79,7 @@ const ui = {
   progressGraph: document.getElementById("progressGraph"),
   graphAllBtn: document.getElementById("graphAllBtn"),
   graphIncorrectBtn: document.getElementById("graphIncorrectBtn"),
+  graphCorrectBtn: document.getElementById("graphCorrectBtn"),
   finalSummary: document.getElementById("finalSummary"),
   outcomeBanner: document.getElementById("outcomeBanner"),
   domainBreakdown: document.getElementById("domainBreakdown"),
@@ -83,6 +87,7 @@ const ui = {
   analyticsNotes: document.getElementById("analyticsNotes"),
   reviewAllBtn: document.getElementById("reviewAllBtn"),
   reviewIncorrectBtn: document.getElementById("reviewIncorrectBtn"),
+  reviewCorrectBtn: document.getElementById("reviewCorrectBtn"),
   explanationReview: document.getElementById("explanationReview"),
   reviewText: document.getElementById("reviewText"),
   reviewTableBody: document.querySelector("#reviewTable tbody"),
@@ -93,11 +98,19 @@ const app = {
   bank: null,
   attempt: null,
   timerInterval: null,
+  bankStatusInterval: null,
   domainSelectorMap: new Map(),
   graphFilter: "all",
   reviewFilter: "all",
   recentItemIds: [],
 };
+
+function createAttemptId() {
+  if (globalThis.crypto && typeof globalThis.crypto.randomUUID === "function") {
+    return globalThis.crypto.randomUUID();
+  }
+  return `attempt-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
 
 function loadRecentItemIds() {
   try {
@@ -136,6 +149,15 @@ function filterRecentlySeen(items, minPool = 80) {
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function logistic(z) {
@@ -220,6 +242,10 @@ function validateBank(bank) {
     throw new Error("Bank must include at least 8 items.");
   }
 
+  if (!bank.sourceCatalog || typeof bank.sourceCatalog !== "object") {
+    bank.sourceCatalog = {};
+  }
+
   const seen = new Set();
   for (const item of bank.items) {
     if (!item.id || !item.domain || !item.stem) {
@@ -233,8 +259,15 @@ function validateBank(bank) {
     if (!Array.isArray(item.choices) || item.choices.length < 2) {
       throw new Error(`Item ${item.id} needs at least 2 choices.`);
     }
-    if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex >= item.choices.length) {
-      throw new Error(`Item ${item.id} has invalid correctIndex.`);
+    // PBQ types (dragdrop, ordering, hotspot) use correctAnswers/correctOrder
+    // instead of correctIndex. For MCQ, validate correctIndex strictly.
+    const PBQ_TYPES_PEEK = ["dragdrop", "ordering", "hotspot"];
+    if (!PBQ_TYPES_PEEK.includes(item.type)) {
+      if (typeof item.correctIndex !== "number" || item.correctIndex < 0 || item.correctIndex >= item.choices.length) {
+        throw new Error(`Item ${item.id} has invalid correctIndex.`);
+      }
+    } else {
+      if (typeof item.correctIndex !== "number") item.correctIndex = 0;
     }
 
     item.difficulty = typeof item.difficulty === "number" ? clamp(item.difficulty, -3, 3) : 0;
@@ -258,6 +291,12 @@ function validateBank(bank) {
     // insight not found in standard study guides. ISC2 deliberately includes these
     // to separate experienced practitioners from pure test-preppers.
     item.impliedKnowledge = item.impliedKnowledge === true;
+    item.pilotEligible = item.pilotEligible === true;
+
+    // Source citations are shown in analytics so explanations are auditable.
+    item.sourceIds = Array.isArray(item.sourceIds)
+      ? item.sourceIds.map((x) => String(x)).filter(Boolean)
+      : [];
 
     // Normalize item type. Unknown types fall back to "mcq" so existing banks load cleanly.
     const KNOWN_TYPES = ["mcq", "dragdrop", "ordering", "hotspot"];
@@ -283,6 +322,36 @@ function validateBank(bank) {
   }
 }
 
+function resolveItemSources(item) {
+  const ids = Array.isArray(item?.sourceIds) ? item.sourceIds : [];
+  const catalog = app.bank?.sourceCatalog && typeof app.bank.sourceCatalog === "object"
+    ? app.bank.sourceCatalog
+    : {};
+  return ids
+    .map((id) => ({ id, ...catalog[id] }))
+    .filter((ref) => typeof ref.url === "string" && ref.url.length > 0)
+    .map((ref) => ({
+      id: String(ref.id),
+      title: typeof ref.title === "string" && ref.title.trim() ? ref.title.trim() : String(ref.id),
+      url: ref.url,
+      publisher: typeof ref.publisher === "string" ? ref.publisher : "",
+    }));
+}
+
+function renderSourcesHtml(item) {
+  const sources = resolveItemSources(item);
+  if (!sources.length) {
+    return `<p class="small-note source-note">Sources: none provided in bank.</p>`;
+  }
+  const links = sources.map((ref) => {
+    const title = escapeHtml(ref.title);
+    const publisher = ref.publisher ? ` (${escapeHtml(ref.publisher)})` : "";
+    const url = escapeHtml(ref.url);
+    return `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>${publisher}</li>`;
+  }).join("");
+  return `<div class="source-block"><p class="small-note">Sources</p><ul class="source-list">${links}</ul></div>`;
+}
+
 function shuffleChoicesForItem(item) {
   const indexed = item.choices.map((choice, idx) => ({ choice, idx }));
   for (let i = indexed.length - 1; i > 0; i -= 1) {
@@ -294,10 +363,19 @@ function shuffleChoicesForItem(item) {
 
   const newChoices = indexed.map((x) => x.choice);
   const newCorrectIndex = indexed.findIndex((x) => x.idx === item.correctIndex);
+  // Remap PBQ answer keys to post-shuffle positions.
+  const newCorrectAnswers = Array.isArray(item.correctAnswers)
+    ? item.correctAnswers.map((origIdx) => indexed.findIndex((x) => x.idx === origIdx))
+    : undefined;
+  const newCorrectOrder = Array.isArray(item.correctOrder)
+    ? item.correctOrder.map((origIdx) => indexed.findIndex((x) => x.idx === origIdx))
+    : undefined;
   return {
     ...item,
     choices: newChoices,
     correctIndex: newCorrectIndex,
+    ...(newCorrectAnswers !== undefined && { correctAnswers: newCorrectAnswers }),
+    ...(newCorrectOrder !== undefined && { correctOrder: newCorrectOrder }),
   };
 }
 
@@ -318,13 +396,21 @@ function getDefaultConfig() {
 
 function saveSession() {
   if (!app.bank || !app.attempt) return;
-  sessionStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({
-      bank: app.bank,
-      attempt: app.attempt,
-    })
-  );
+  try {
+    const bankItems = Array.isArray(app.bank?.items) ? app.bank.items.length : 0;
+    const selectedBank = bankItems > 0 && bankItems <= 200 ? app.bank : null;
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        bank: selectedBank,
+        attempt: app.attempt,
+        savedAt: new Date().toISOString(),
+        bankItemCount: bankItems,
+      })
+    );
+  } catch (err) {
+    console.warn("Failed to persist session state.", err);
+  }
   refreshResumeVisibility();
 }
 
@@ -348,6 +434,35 @@ function clearSession() {
 function refreshResumeVisibility() {
   if (!ui.resumeBtn) return;
   ui.resumeBtn.classList.toggle("hidden", !loadSession());
+}
+
+function startBankStatusLoading() {
+  if (!ui.bankStatus) return;
+  stopBankStatusLoading();
+  const dots = [".", "..", "..."];
+  let i = 0;
+  ui.bankStatus.textContent = `Loading question bank${dots[i]}`;
+  app.bankStatusInterval = setInterval(() => {
+    i = (i + 1) % dots.length;
+    ui.bankStatus.textContent = `Loading question bank${dots[i]}`;
+  }, 350);
+}
+
+function stopBankStatusLoading() {
+  if (app.bankStatusInterval) {
+    clearInterval(app.bankStatusInterval);
+    app.bankStatusInterval = null;
+  }
+}
+
+function showSessionSetupPanel() {
+  if (PAGE_VIEW !== "session") return;
+  if (ui.setupPanel) ui.setupPanel.classList.remove("hidden");
+  if (ui.startBtn) ui.startBtn.classList.remove("hidden");
+  if (ui.sessionInfoBtn) ui.sessionInfoBtn.classList.remove("hidden");
+  if (ui.bankStatus) ui.bankStatus.classList.remove("hidden");
+  if (ui.modeSummaryText) ui.modeSummaryText.classList.remove("hidden");
+  if (ui.catMimicNote) ui.catMimicNote.classList.remove("hidden");
 }
 
 function getConfigFromUi() {
@@ -531,6 +646,30 @@ function buildDomainTargetPanel() {
   });
 }
 
+function isPbqItem(item) {
+  return Boolean(item && PBQ_TYPES_SET.has(item.type));
+}
+
+function countPbqSeen() {
+  if (!app.attempt || !app.bank) return 0;
+  const byId = new Map(app.bank.items.map((item) => [item.id, item]));
+  return app.attempt.itemsAnswered.reduce((sum, row) => {
+    const item = byId.get(row.itemId);
+    return sum + (isPbqItem(item) ? 1 : 0);
+  }, 0);
+}
+
+function isPbqAllowedNow() {
+  if (!app.attempt || app.attempt.config.mode !== "cat") return true;
+  const answered = app.attempt.itemsAnswered.length;
+  const nextQuestionNumber = answered + 1;
+  const midpoint = Math.ceil((app.attempt.config.minQuestions ?? 100) / 2);
+  const pbqSeen = countPbqSeen();
+  return nextQuestionNumber >= midpoint
+    && pbqSeen < PBQ_MAX_PER_ATTEMPT
+    && app.attempt.theta >= PBQ_THETA_MIN;
+}
+
 function selectNextItem() {
   if (app.attempt.config.mode === "fixed") {
     return selectNextItemFixed();
@@ -541,9 +680,16 @@ function selectNextItem() {
   if (!candidates.length) return null;
   const eligibleCandidates = filterRecentlySeen(candidates, 90);
 
+  // PBQ pacing: keep them sparse and later in the run so theta/confidence
+  // stabilizes first. Also cap to a couple per CAT attempt.
+  const scoringPool = isPbqAllowedNow()
+    ? eligibleCandidates
+    : eligibleCandidates.filter((item) => !PBQ_TYPES_SET.has(item.type));
+
   const domainStats = summarizeDomainStats(app.attempt.itemsAnswered);
   const nextQuestionNumber = app.attempt.itemsAnswered.length + 1;
-  const maxQuestions = app.attempt.config.maxQuestions;
+  const isUnscoredSlot = app.attempt.unscoredPositions.includes(nextQuestionNumber);
+  const pilotUnscoredBoost = 0.035; // intentionally slight; keeps realism without distorting CAT.
 
   // Theta-aware judgment weighting. As theta rises toward and above the pass cut
   // (theta ≈ 1.0 = scaled 700), the real CISSP deliberately presents more
@@ -553,7 +699,7 @@ function selectNextItem() {
   const passCutTheta = scaledToTheta(700); // ≈ 1.0
   const judgmentBoostStrength = clamp((app.attempt.theta - (-1)) / (passCutTheta - (-1)), 0, 1) * 0.18;
 
-  const scored = eligibleCandidates.map((item) => {
+  const scored = scoringPool.map((item) => {
     const domain = getCanonicalDomainName(item.domain);
     const blueprint = DOMAIN_BLUEPRINT.find((d) => d.name === domain);
 
@@ -574,10 +720,11 @@ function selectNextItem() {
     const jLevel = item.judgmentLevel ?? 2;
     const judgmentBoost = judgmentBoostStrength * (jLevel - 1) * 0.5;
     const impliedBoost = item.impliedKnowledge ? 0.04 : 0;
+    const pilotBoost = isUnscoredSlot && item.pilotEligible ? pilotUnscoredBoost : 0;
 
     return {
       item,
-      score: info + domainBoost + judgmentBoost + impliedBoost + Math.random() * 0.02,
+      score: info + domainBoost + judgmentBoost + impliedBoost + pilotBoost + Math.random() * 0.02,
     };
   });
 
@@ -757,7 +904,7 @@ function renderGraph() {
   polyline.setAttribute("stroke-width", "1.8");
   polyline.setAttribute("stroke-linecap", "round");
   polyline.setAttribute("stroke-linejoin", "round");
-  polyline.setAttribute("opacity", app.graphFilter === "incorrect" ? "0.35" : "1");
+  polyline.setAttribute("opacity", app.graphFilter === "all" ? "1" : "0.35");
   svg.appendChild(polyline);
 
   const dotRadius = maxQuestions > 120 ? 2.4 : 3.1;
@@ -769,7 +916,9 @@ function renderGraph() {
     const isCorrect = item?.correct === true;
     const isUncounted = item?.scored === false;
     const isIncorrectScored = item?.scored !== false && item?.correct === false;
-    const faded = app.graphFilter === "incorrect" && !isIncorrectScored;
+    const faded =
+      (app.graphFilter === "incorrect" && !isIncorrectScored)
+      || (app.graphFilter === "correct" && !isCorrect);
 
     const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     dot.setAttribute("cx", String(x));
@@ -907,6 +1056,89 @@ function refreshMetricsPanelVisibility() {
   ui.statsContent.classList.toggle("hidden", ui.hideMetricsPanel.checked);
 }
 
+// --- PBQ Rendering and Scoring Helpers ---
+
+function moveOrderingItem(li, direction) {
+  const list = li.parentElement;
+  if (direction === -1 && li.previousElementSibling) {
+    list.insertBefore(li, li.previousElementSibling);
+  } else if (direction === 1 && li.nextElementSibling) {
+    list.insertBefore(li.nextElementSibling, li);
+  }
+}
+
+function renderDragDropQuestion(item) {
+  const hint = document.createElement("p");
+  hint.className = "pbq-hint";
+  hint.textContent = "Select all correct answers — click each item to toggle selection.";
+  ui.choicesForm.appendChild(hint);
+  item.choices.forEach((choice, idx) => {
+    const chip = document.createElement("div");
+    chip.className = "dragdrop-chip";
+    chip.dataset.idx = String(idx);
+    chip.textContent = choice;
+    chip.addEventListener("click", () => chip.classList.toggle("dragdrop-selected"));
+    ui.choicesForm.appendChild(chip);
+  });
+}
+
+function renderOrderingQuestion(item) {
+  const hint = document.createElement("p");
+  hint.className = "pbq-hint";
+  hint.textContent = "Arrange items in the correct sequence — use ↑ ↓ to reorder.";
+  ui.choicesForm.appendChild(hint);
+  const list = document.createElement("ol");
+  list.className = "ordering-list";
+  list.id = "orderingList";
+  item.choices.forEach((choice, idx) => {
+    const li = document.createElement("li");
+    li.className = "ordering-item";
+    li.dataset.idx = String(idx);
+    const text = document.createElement("span");
+    text.className = "ordering-text";
+    text.textContent = choice;
+    const btns = document.createElement("div");
+    btns.className = "ordering-btns";
+    const upBtn = document.createElement("button");
+    upBtn.type = "button";
+    upBtn.className = "order-btn";
+    upBtn.textContent = "↑";
+    upBtn.addEventListener("click", () => moveOrderingItem(li, -1));
+    const downBtn = document.createElement("button");
+    downBtn.type = "button";
+    downBtn.className = "order-btn";
+    downBtn.textContent = "↓";
+    downBtn.addEventListener("click", () => moveOrderingItem(li, 1));
+    btns.append(upBtn, downBtn);
+    li.append(text, btns);
+    list.appendChild(li);
+  });
+  ui.choicesForm.appendChild(list);
+}
+
+function getDragDropAnswer() {
+  return Array.from(ui.choicesForm.querySelectorAll(".dragdrop-chip.dragdrop-selected"))
+    .map((chip) => Number(chip.dataset.idx))
+    .sort((a, b) => a - b);
+}
+
+function getOrderingAnswer() {
+  return Array.from(ui.choicesForm.querySelectorAll(".ordering-item"))
+    .map((li) => Number(li.dataset.idx));
+}
+
+function lockPbqInputs() {
+  ui.choicesForm.querySelectorAll(".dragdrop-chip").forEach((chip) => {
+    chip.style.pointerEvents = "none";
+    chip.style.cursor = "default";
+  });
+  ui.choicesForm.querySelectorAll(".order-btn").forEach((btn) => {
+    btn.disabled = true;
+  });
+}
+
+// --- End PBQ Helpers ---
+
 function renderCurrentQuestion() {
   const item = app.attempt.currentItem;
   if (!item) return;
@@ -926,24 +1158,31 @@ function renderCurrentQuestion() {
   ui.choicesForm.innerHTML = "";
   ui.feedbackText.textContent = "";
 
-  item.choices.forEach((choice, idx) => {
-    const label = document.createElement("label");
-    label.className = "choice";
+  if (item.type === "dragdrop") {
+    renderDragDropQuestion(item);
+  } else if (item.type === "ordering") {
+    renderOrderingQuestion(item);
+  } else {
+    item.choices.forEach((choice, idx) => {
+      const label = document.createElement("label");
+      label.className = "choice";
 
-    const input = document.createElement("input");
-    input.type = "radio";
-    input.name = "choice";
-    input.value = String(idx);
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "choice";
+      input.value = String(idx);
 
-    const span = document.createElement("span");
-    span.textContent = choice;
+      const span = document.createElement("span");
+      span.textContent = choice;
 
-    label.append(input, span);
-    ui.choicesForm.append(label);
-  });
+      label.append(input, span);
+      ui.choicesForm.append(label);
+    });
+  }
 
   app.attempt.currentPresentedAtMs = Date.now();
   ui.questionPanel.classList.remove("hidden");
+  if (ui.setupPanel) ui.setupPanel.classList.add("hidden");
   if (app.attempt.config.mode === "cat") {
     ui.statsPanel.classList.remove("hidden");
   } else {
@@ -963,17 +1202,38 @@ function renderCurrentQuestion() {
 }
 
 function showInlineAnswerFeedback(item, row) {
-  const labels = Array.from(ui.choicesForm.querySelectorAll("label.choice"));
-  labels.forEach((label, idx) => {
-    label.classList.remove("choice-correct", "choice-selected-wrong");
-    const input = label.querySelector("input");
-    if (input) input.disabled = true;
-    if (idx === row.correctIndex) {
-      label.classList.add("choice-correct");
-    } else if (idx === row.selectedIndex && row.selectedIndex !== row.correctIndex) {
-      label.classList.add("choice-selected-wrong");
-    }
-  });
+  if (item.type === "dragdrop") {
+    lockPbqInputs();
+    const correctSet = new Set(row.correctAnswers || []);
+    const selectedSet = new Set(row.selectedAnswers || []);
+    ui.choicesForm.querySelectorAll(".dragdrop-chip").forEach((chip) => {
+      const idx = Number(chip.dataset.idx);
+      chip.classList.remove("dragdrop-correct", "dragdrop-wrong", "dragdrop-missed");
+      if (correctSet.has(idx) && selectedSet.has(idx)) chip.classList.add("dragdrop-correct");
+      else if (!correctSet.has(idx) && selectedSet.has(idx)) chip.classList.add("dragdrop-wrong");
+      else if (correctSet.has(idx) && !selectedSet.has(idx)) chip.classList.add("dragdrop-missed");
+    });
+  } else if (item.type === "ordering") {
+    lockPbqInputs();
+    const correctOrder = row.correctOrder || item.correctOrder || [];
+    const submittedOrder = row.selectedOrder || [];
+    Array.from(ui.choicesForm.querySelectorAll(".ordering-item")).forEach((li, position) => {
+      li.classList.remove("ordering-correct", "ordering-wrong");
+      li.classList.add(submittedOrder[position] === correctOrder[position] ? "ordering-correct" : "ordering-wrong");
+    });
+  } else {
+    const labels = Array.from(ui.choicesForm.querySelectorAll("label.choice"));
+    labels.forEach((label, idx) => {
+      label.classList.remove("choice-correct", "choice-selected-wrong");
+      const input = label.querySelector("input");
+      if (input) input.disabled = true;
+      if (idx === row.correctIndex) {
+        label.classList.add("choice-correct");
+      } else if (idx === row.selectedIndex && row.selectedIndex !== row.correctIndex) {
+        label.classList.add("choice-selected-wrong");
+      }
+    });
+  }
 
   const verdict = row.correct ? "Correct." : "Incorrect.";
   const explanation = row.explanation || item.explanation || "No explanation provided in bank.";
@@ -1037,7 +1297,9 @@ function buildReviewText() {
   lines.push("");
   lines.push("Explanations");
   app.attempt.itemsAnswered.forEach((row) => {
-    lines.push(`Q${row.questionNumber} (${row.itemId}): ${row.explanation || "No explanation provided in bank."}`);
+    const item = app.bank?.items?.find((x) => x.id === row.itemId);
+    const src = item ? resolveItemSources(item).map((s) => s.url).join(" | ") : "";
+    lines.push(`Q${row.questionNumber} (${row.itemId}): ${row.explanation || "No explanation provided in bank."}${src ? ` | Sources: ${src}` : ""}`);
   });
 
   return lines.join("\n");
@@ -1065,35 +1327,63 @@ function renderReviewTable() {
 function renderExplanationReview() {
   if (!ui.explanationReview || !app.bank) return;
   const itemMap = new Map(app.bank.items.map((item) => [item.id, item]));
+  const matchesReviewFilter = (row) =>
+    app.reviewFilter === "all"
+    || (app.reviewFilter === "incorrect" && row.correct === false)
+    || (app.reviewFilter === "correct" && row.correct === true);
   ui.explanationReview.innerHTML = app.attempt.itemsAnswered
-    .filter((row) => app.reviewFilter === "all" || row.correct === false)
+    .filter(matchesReviewFilter)
     .map((row) => {
       const item = itemMap.get(row.itemId);
       if (!item) return "";
       const choices = item.choices || [];
-      const rows = choices
-        .map((choice, idx) => {
+      let rows;
+      if (item.type === "dragdrop") {
+        const correctSet = new Set(row.correctAnswers || []);
+        const selectedSet = new Set(row.selectedAnswers || []);
+        rows = choices.map((choice, idx) => {
+          const isCorr = correctSet.has(idx);
+          const isSel = selectedSet.has(idx);
+          let cls = "explain-choice";
+          let badge = "";
+          if (isCorr && isSel) { cls += " explain-correct"; badge = "Correct"; }
+          else if (!isCorr && isSel) { cls += " explain-selected-wrong"; badge = "Wrong selection"; }
+          else if (isCorr && !isSel) { cls += " explain-missed"; badge = "Should have selected"; }
+          return `<li class="${cls}"><span>${escapeHtml(choice)}</span>${badge ? `<em>${badge}</em>` : ""}</li>`;
+        }).join("");
+      } else if (item.type === "ordering") {
+        const correctOrder = row.correctOrder || item.correctOrder || [];
+        const submittedOrder = row.selectedOrder || [];
+        rows = correctOrder.map((correctIdx, position) => {
+          const submittedIdx = submittedOrder[position];
+          const isCorrectPos = submittedIdx === correctIdx;
+          const cls = "explain-choice" + (isCorrectPos ? " explain-correct" : " explain-selected-wrong");
+          const yourLabel = choices[submittedIdx] != null ? escapeHtml(choices[submittedIdx]) : "?";
+          const badge = isCorrectPos ? "Correct position" : `You placed: ${yourLabel}`;
+          return `<li class="${cls}"><span>${position + 1}. ${escapeHtml(choices[correctIdx])}</span><em>${badge}</em></li>`;
+        }).join("");
+      } else {
+        rows = choices.map((choice, idx) => {
           let cls = "explain-choice";
           if (idx === row.correctIndex) cls += " explain-correct";
           if (idx === row.selectedIndex && row.selectedIndex !== row.correctIndex) cls += " explain-selected-wrong";
           const badge = idx === row.correctIndex ? "Correct" : idx === row.selectedIndex ? "Your Answer" : "";
-          return `<li class="${cls}"><span>${choice}</span>${badge ? `<em>${badge}</em>` : ""}</li>`;
-        })
-        .join("");
-      return `<article class="explain-card"><h4>Q${row.questionNumber}</h4><p>${item.stem}</p><ul>${rows}</ul><p class="small-note">${row.explanation || "No explanation provided in bank."}</p></article>`;
+          return `<li class="${cls}"><span>${escapeHtml(choice)}</span>${badge ? `<em>${badge}</em>` : ""}</li>`;
+        }).join("");
+      }
+      const qTypeLabel = item.type === "dragdrop" ? " [Select All That Apply]" : item.type === "ordering" ? " [Order Response]" : "";
+      return `<article class="explain-card"><h4>Q${row.questionNumber}${qTypeLabel}</h4><p>${escapeHtml(item.stem)}</p><ul>${rows}</ul><p class="small-note">${escapeHtml(row.explanation || "No explanation provided in bank.")}</p>${renderSourcesHtml(item)}</article>`;
     })
     .join("");
 }
 
 function setActiveFilterButtons() {
-  if (ui.graphAllBtn && ui.graphIncorrectBtn) {
-    ui.graphAllBtn.classList.toggle("active", app.graphFilter === "all");
-    ui.graphIncorrectBtn.classList.toggle("active", app.graphFilter === "incorrect");
-  }
-  if (ui.reviewAllBtn && ui.reviewIncorrectBtn) {
-    ui.reviewAllBtn.classList.toggle("active", app.reviewFilter === "all");
-    ui.reviewIncorrectBtn.classList.toggle("active", app.reviewFilter === "incorrect");
-  }
+  if (ui.graphAllBtn) ui.graphAllBtn.classList.toggle("active", app.graphFilter === "all");
+  if (ui.graphIncorrectBtn) ui.graphIncorrectBtn.classList.toggle("active", app.graphFilter === "incorrect");
+  if (ui.graphCorrectBtn) ui.graphCorrectBtn.classList.toggle("active", app.graphFilter === "correct");
+  if (ui.reviewAllBtn) ui.reviewAllBtn.classList.toggle("active", app.reviewFilter === "all");
+  if (ui.reviewIncorrectBtn) ui.reviewIncorrectBtn.classList.toggle("active", app.reviewFilter === "incorrect");
+  if (ui.reviewCorrectBtn) ui.reviewCorrectBtn.classList.toggle("active", app.reviewFilter === "correct");
 }
 
 function renderDomainStrengthChart(domainStats, totalQuestions) {
@@ -1198,19 +1488,34 @@ function answerCurrentQuestion() {
     return;
   }
 
-  const selected = ui.choicesForm.querySelector("input[name='choice']:checked");
-  if (!selected) {
-    ui.feedbackText.textContent = "Select an answer first.";
-    return;
+  const item = app.attempt.currentItem;
+  let correct, selectedIndex, selectedAnswers, selectedOrder;
+
+  if (item.type === "dragdrop") {
+    selectedAnswers = getDragDropAnswer();
+    if (selectedAnswers.length === 0) {
+      ui.feedbackText.textContent = "Select at least one answer first.";
+      return;
+    }
+    const correctSorted = [...(item.correctAnswers || [])].sort((a, b) => a - b);
+    correct = correctSorted.length === selectedAnswers.length &&
+      correctSorted.every((v, i) => v === selectedAnswers[i]);
+    selectedIndex = -1;
+  } else if (item.type === "ordering") {
+    selectedOrder = getOrderingAnswer();
+    correct = (item.correctOrder || []).every((v, i) => v === selectedOrder[i]);
+    selectedIndex = -1;
+  } else {
+    const selected = ui.choicesForm.querySelector("input[name='choice']:checked");
+    if (!selected) {
+      ui.feedbackText.textContent = "Select an answer first.";
+      return;
+    }
+    selectedIndex = Number(selected.value);
+    correct = selectedIndex === item.correctIndex;
   }
 
-  const item = app.attempt.currentItem;
-  const selectedIndex = Number(selected.value);
-  const correct = selectedIndex === item.correctIndex;
   const elapsedSec = (Date.now() - app.attempt.currentPresentedAtMs) / 1000;
-
-  // partialScore: for MCQ this is always 0 or 1. PBQ items (dragdrop/ordering)
-  // will supply a numeric partial score (0..maxScore) once that UI is built.
   const partialScore = correct ? (item.maxScore ?? 1) : 0;
 
   const questionNumber = app.attempt.itemsAnswered.length + 1;
@@ -1234,11 +1539,14 @@ function answerCurrentQuestion() {
     scored,
     selectedIndex,
     correctIndex: item.correctIndex,
+    ...(selectedAnswers !== undefined && { selectedAnswers, correctAnswers: item.correctAnswers }),
+    ...(selectedOrder !== undefined && { selectedOrder, correctOrder: item.correctOrder }),
     elapsedSec,
     difficulty: item.difficulty,
     difficultyBand: difficultyBand(item.difficulty),
     discrimination: item.discrimination,
     explanation: item.explanation || "",
+    sourceIds: item.sourceIds || [],
     fastGuessSignal,
     answeredAt: new Date().toISOString(),
     scaledAfter,
@@ -1261,7 +1569,7 @@ function answerCurrentQuestion() {
 }
 
 function selectFirstItem(theta) {
-  const pool = filterRecentlySeen(app.bank.items, 110);
+  const pool = filterRecentlySeen(app.bank.items, 110).filter((item) => !isPbqItem(item));
   const scored = pool
     .map((item) => ({ item, score: itemInformation(theta, item) + Math.random() * 0.02 }))
     .sort((a, b) => b.score - a.score);
@@ -1304,7 +1612,7 @@ function startNewAttempt() {
   app.recentItemIds = loadRecentItemIds();
 
   app.attempt = {
-    attemptId: crypto.randomUUID(),
+    attemptId: createAttemptId(),
     config,
     startedAtMs: Date.now(),
     completedAt: null,
@@ -1354,6 +1662,7 @@ function loadBank(bank) {
   }));
 
   app.bank = bank;
+  stopBankStatusLoading();
   if (ui.bankStatus) {
     ui.bankStatus.textContent = "Question bank loaded | pass threshold: 700";
   }
@@ -1423,15 +1732,21 @@ function saveResults() {
 
 function restoreSavedSession() {
   const payload = loadSession();
-  if (!payload?.bank || !payload?.attempt) {
+  if (!payload?.attempt) {
     alert("No saved session found.");
     return;
   }
 
-  try {
-    loadBank(payload.bank);
-  } catch (err) {
-    alert(`Saved bank invalid: ${String(err.message || err)}`);
+  // Backward compatibility for older saved payloads that included bank.
+  if (payload?.bank) {
+    try {
+      loadBank(payload.bank);
+    } catch (err) {
+      alert(`Saved bank invalid: ${String(err.message || err)}`);
+      return;
+    }
+  } else if (!app.bank) {
+    alert("Question bank is still loading. Please try Resume again in a moment.");
     return;
   }
 
@@ -1574,6 +1889,13 @@ function wireEvents() {
       renderGraph();
     });
   }
+  if (ui.graphCorrectBtn) {
+    ui.graphCorrectBtn.addEventListener("click", () => {
+      app.graphFilter = "correct";
+      setActiveFilterButtons();
+      renderGraph();
+    });
+  }
   if (ui.reviewAllBtn) {
     ui.reviewAllBtn.addEventListener("click", () => {
       app.reviewFilter = "all";
@@ -1584,6 +1906,13 @@ function wireEvents() {
   if (ui.reviewIncorrectBtn) {
     ui.reviewIncorrectBtn.addEventListener("click", () => {
       app.reviewFilter = "incorrect";
+      setActiveFilterButtons();
+      renderExplanationReview();
+    });
+  }
+  if (ui.reviewCorrectBtn) {
+    ui.reviewCorrectBtn.addEventListener("click", () => {
+      app.reviewFilter = "correct";
       setActiveFilterButtons();
       renderExplanationReview();
     });
@@ -1607,15 +1936,19 @@ function init() {
   refreshModeUi();
   refreshResumeVisibility();
   refreshMetricsPanelVisibility();
+  showSessionSetupPanel();
 
   const existing = loadSession();
-  if (ui.bankStatus && existing?.bank && existing?.attempt) {
+  if (ui.bankStatus && existing?.attempt) {
     ui.bankStatus.textContent = "Saved CAT session found. Click Resume Session.";
   }
 }
 
 init();
+startBankStatusLoading();
 const bankLoadPromise = loadDefaultBank().catch((err) => {
+  stopBankStatusLoading();
+  showSessionSetupPanel();
   if (ui.bankStatus) {
     ui.bankStatus.textContent = `Question bank load failed: ${String(err.message || err)}`;
   }
@@ -1634,6 +1967,9 @@ if (PAGE_VIEW === "session") {
       startNewAttempt();
     } else if (loadSession()?.attempt) {
       restoreSavedSession();
+    } else {
+      // Direct-open fallback: avoid blank session page when no flags/session exist.
+      startNewAttempt();
     }
   });
 }

@@ -1,29 +1,31 @@
 {
   "bank_file": "cat/question-bank.sample.json",
-  "sha256": "dd50db3f7648ea3d35d4f9e16791040cd2a27135e3e3ef9ef433d10945987750",
+  "sha256": "1de2de1e6b911e9bba6754b5e39632b0a15279145de07f7ee410be300d7e396f",
   "summary": {
-    "item_count": 883,
-    "unique_item_ids": 883,
+    "item_count": 3582,
+    "unique_item_ids": 3582,
+    "source_catalog_count": 25,
+    "source_coverage_count": 3582,
     "domain_counts": {
-      "1. Security and Risk Management": 143,
-      "2. Asset Security": 88,
-      "3. Security Architecture and Engineering": 112,
-      "4. Communication and Network Security": 106,
-      "5. Identity and Access Management (IAM)": 116,
-      "6. Security Assessment and Testing": 117,
-      "7. Security Operations": 116,
-      "8. Software Development Security": 85
+      "1. Security and Risk Management": 596,
+      "2. Asset Security": 354,
+      "3. Security Architecture and Engineering": 452,
+      "4. Communication and Network Security": 429,
+      "5. Identity and Access Management (IAM)": 468,
+      "6. Security Assessment and Testing": 472,
+      "7. Security Operations": 468,
+      "8. Software Development Security": 343
     },
     "correct_position_counts": {
-      "0": 222,
-      "3": 203,
-      "2": 228,
-      "1": 230
+      "0": 926,
+      "3": 808,
+      "2": 920,
+      "1": 928
     },
     "difficulty_band_counts": {
-      "easy": 46,
-      "medium": 791,
-      "hard": 46
+      "easy": 184,
+      "medium": 3202,
+      "hard": 196
     },
     "warning_count": 0,
     "error_count": 0
