@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidence Collection — Order of Volatility</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0d0f14;
+  --surface: #161b25;
+  --border:  #1e2a3a;
+  --text:    #c9d5e0;
+  --dim:     #5a6a7a;
+  --accent:  #00aaff;
+  --gold:    #f5c842;
+  --green:   #2ecc71;
+  --red:     #e74c3c;
+  --cyan:    #00e5ff;
+  --purple:  #a855f7;
+  --r:       10px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+#app { max-width: 700px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* ── HUD ── */
+#hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  position: sticky; top: 10px; z-index: 100;
+  gap: 12px;
+}
+#back-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color .2s, color .2s;
+  text-decoration: none;
+  display: inline-block;
+}
+#back-btn:hover { border-color: var(--accent); color: var(--accent); }
+.hud-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  flex: 1;
+  text-align: center;
+}
+.hud-stats { display: flex; gap: 18px; }
+.hud-stat { display: flex; flex-direction: column; align-items: center; }
+.hud-stat .val { font-size: 18px; font-weight: 700; }
+.hud-stat .lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+#score-val { color: var(--green); }
+#round-val { color: var(--gold); }
+
+/* ── Round header ── */
+#round-header { margin-bottom: 20px; }
+#round-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 6px;
+}
+#round-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+#round-subtitle {
+  font-size: 13px;
+  color: var(--dim);
+}
+
+/* ── Volatility labels ── */
+.vol-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 6px 0;
+}
+.vol-label.top { color: var(--red); }
+.vol-label.bot { color: var(--green); }
+.vol-label .bar {
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+}
+.vol-label.top .bar { background: var(--red); opacity: .4; }
+.vol-label.bot .bar { background: var(--green); opacity: .4; }
+
+/* ── Drag list ── */
+#drag-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.drag-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  cursor: grab;
+  user-select: none;
+  transition: border-color .15s, background .15s, transform .1s;
+  position: relative;
+}
+.drag-item:hover { border-color: var(--accent); }
+.drag-item.dragging {
+  opacity: .4;
+  cursor: grabbing;
+}
+.drag-item.over {
+  border-color: var(--gold);
+  background: #1e2a14;
+  transform: scale(1.01);
+}
+.drag-item .grip {
+  color: var(--dim);
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.drag-item .pos-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dim);
+  width: 18px;
+  flex-shrink: 0;
+  text-align: center;
+}
+.drag-item .item-label {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+}
+.drag-item .item-sub {
+  font-size: 11px;
+  color: var(--dim);
+  margin-top: 2px;
+}
+
+/* ── Result states ── */
+.drag-item.correct {
+  border-color: var(--green);
+  background: rgba(46, 204, 113, .08);
+  cursor: default;
+}
+.drag-item.wrong {
+  border-color: var(--red);
+  background: rgba(231, 76, 60, .08);
+  cursor: default;
+}
+.drag-item .result-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.drag-item.correct .pos-num { color: var(--green); }
+.drag-item.wrong   .pos-num { color: var(--red); }
+
+/* ── Controls ── */
+#controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+  justify-content: center;
+}
+.btn {
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: opacity .2s, transform .1s;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .35; cursor: default; }
+#submit-btn { background: var(--accent); color: #000; }
+#next-btn   { background: var(--green);  color: #000; display: none; }
+
+/* ── Explanation panel ── */
+#explain-panel {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-top: 20px;
+}
+#explain-panel h3 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 14px;
+}
+.explain-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.explain-row:last-child { border-bottom: none; }
+.explain-pos {
+  font-weight: 700;
+  color: var(--gold);
+  width: 20px;
+  flex-shrink: 0;
+}
+.explain-name { font-weight: 600; color: var(--text); min-width: 160px; }
+.explain-why  { color: var(--dim); flex: 1; }
+
+/* ── Score summary (final) ── */
+#summary {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+}
+#summary h1 { font-size: 2.4rem; color: var(--gold); margin-bottom: 8px; }
+#summary .final-score { font-size: 4rem; font-weight: 900; color: var(--green); margin: 20px 0; }
+#summary p { color: var(--dim); margin-bottom: 30px; }
+#summary .btn { background: var(--accent); color: #000; }
+
+/* ── Score flash ── */
+#score-flash {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s;
+  z-index: 200;
+}
+#score-flash.show { opacity: 1; }
+#score-flash.good { background: var(--green); color: #000; }
+#score-flash.bad  { background: var(--red);   color: #fff; }
+
+/* ── Progress dots ── */
+#progress-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background .3s;
+}
+.dot.done    { background: var(--green); }
+.dot.current { background: var(--accent); }
+.dot.wrong   { background: var(--red); }
+.disclaimer-note { font-size: 12px; color: var(--dim); text-align: center; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HUD -->
+  <div id="hud">
+    <a id="back-btn" href="../index.html">← Home</a>
+    <span class="hud-title">Evidence Collection</span>
+    <div class="hud-stats">
+      <div class="hud-stat">
+        <span class="val" id="round-val">1/5</span>
+        <span class="lbl">Round</span>
+      </div>
+      <div class="hud-stat">
+        <span class="val" id="score-val">0</span>
+        <span class="lbl">Score</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress dots -->
+  <div id="progress-dots">
+    <div class="dot current" id="dot-0"></div>
+    <div class="dot" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+    <div class="dot" id="dot-4"></div>
+  </div>
+
+  <!-- Round header -->
+  <div id="round-header">
+    <div id="round-tag"></div>
+    <div id="round-title"></div>
+    <div id="round-subtitle">Drag to sort — most volatile at top, least volatile at bottom.</div>
+  </div>
+
+  <!-- Volatility top label -->
+  <div class="vol-label top">
+    <span>🔴 Collect FIRST (most volatile)</span>
+    <div class="bar"></div>
+  </div>
+
+  <!-- Sortable list -->
+  <ul id="drag-list"></ul>
+
+  <!-- Volatility bottom label -->
+  <div class="vol-label bot">
+    <div class="bar"></div>
+    <span>🟢 Collect LAST (least volatile)</span>
+  </div>
+
+  <!-- Controls -->
+  <div id="controls">
+    <button class="btn" id="submit-btn">Check Order</button>
+    <button class="btn" id="next-btn">Next Round →</button>
+  </div>
+
+  <!-- Explanation panel -->
+  <div id="explain-panel">
+    <h3>Volatility Rationale</h3>
+    <div id="explain-rows"></div>
+  </div>
+
+  <!-- Final summary -->
+  <div id="summary">
+    <h1>Drill Complete</h1>
+    <div class="final-score" id="final-score-val"></div>
+    <p id="final-msg"></p>
+    <button class="btn" onclick="restartGame()">Play Again</button>
+    &nbsp;
+    <a class="btn" href="../index.html" style="text-decoration:none; background: var(--surface); color: var(--text); border: 1px solid var(--border); display:inline-block;">← Home</a>
+  </div>
+
+</div>
+
+<p class="disclaimer-note">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+
+<!-- Score flash -->
+<div id="score-flash"></div>
+
+<script>
+/* ── ROUND DATA ─────────────────────────────────────────────────────────── */
+const ROUNDS = [
+  {
+    tag:      'Round 1 — The Classic',
+    title:    'Order of Volatility',
+    items: [
+      { label: 'CPU Registers & Cache',       sub: 'Processor state — nanosecond lifespan',    pos: 1, why: 'CPU registers and cache are the most volatile — lost the instant the CPU is powered down.' },
+      { label: 'RAM',                          sub: 'Random Access Memory — main memory',       pos: 2, why: 'DRAM loses content without power. Encryptions keys, running processes and passwords all live here.' },
+      { label: 'Network Connections & ARP Cache', sub: 'Live kernel routing/connection state', pos: 3, why: 'ARP entries expire in minutes; open sockets vanish when connections close or system reboots.' },
+      { label: 'Swap Space',                  sub: 'Overflow from RAM to disk',                pos: 4, why: 'Swap is paged-out RAM — still semi-volatile; overwritten as new pages are demanded.' },
+      { label: 'Hard Disk Drive',             sub: 'Magnetic spinning storage',               pos: 5, why: 'Non-volatile, but fragile to live write activity; image with write-blocker before analysis.' },
+      { label: 'Remote Syslog Logs',          sub: 'Off-system log server',                   pos: 6, why: 'Least volatile — persists on a separate server; capture last after local evidence secured.' },
+    ]
+  },
+  {
+    tag:   'Round 2 — Windows Server Room',
+    title: 'Virtual Memory & NVMe Variants',
+    items: [
+      { label: 'Processor Cache (L1/L2/L3)',    sub: 'On-die SRAM — fastest, smallest',         pos: 1, why: 'L1/L2/L3 cache is wiped the moment the CPU loses power — collect first or lose it forever.' },
+      { label: 'DRAM — Dynamic RAM Modules',    sub: 'DDR4/DDR5 memory sticks',                pos: 2, why: 'DRAM cells lose charge without constant refresh — gone on power-off. Contains live process data.' },
+      { label: 'Routing Table & Open Sockets',  sub: 'Kernel IP/TCP state tables',             pos: 3, why: 'Kernel routing tables and open TCP sockets exist only in memory — reboot and they vanish.' },
+      { label: 'pagefile.sys — Windows Virtual Memory', sub: 'Windows paging file on disk',   pos: 4, why: 'pagefile.sys can be overwritten by new page-outs; collect before further disk writes occur.' },
+      { label: 'NVMe SSD',                     sub: 'PCIe solid-state storage',               pos: 5, why: 'NVMe is non-volatile but TRIM/GC operations can overwrite deleted data; image promptly.' },
+      { label: 'Off-site Backup Tapes',        sub: 'LTO magnetic tape archive',              pos: 6, why: 'Tapes are the least volatile — stored off-site, overwritten only on scheduled rotation.' },
+    ]
+  },
+  {
+    tag:   'Round 3 — Mobile Forensics Lab',
+    title: 'Modern Embedded Memory Types',
+    items: [
+      { label: 'CPU Pipeline Registers',        sub: 'Architectural state inside the core',    pos: 1, why: 'Pipeline register state — instruction pointers, flags — is lost on any interrupt or power loss.' },
+      { label: 'LPDDR4 Main Memory',            sub: 'Low-power DRAM in phones/laptops',      pos: 2, why: 'LPDDR4 is still DRAM — volatile. Mobile devices auto-wipe RAM on power-off to protect keys.' },
+      { label: 'ARP Table & Active TCP Sessions', sub: 'Live kernel network state',           pos: 3, why: 'ARP entries expire in 1–4 minutes; open sessions vanish on reboot or network cut.' },
+      { label: 'Linux Swap Partition',          sub: '/dev/sdX swap — kernel-managed',        pos: 4, why: 'Swap is overflow RAM on disk — can hold passwords and keys paged out of memory.' },
+      { label: 'eMMC Flash Storage',            sub: 'Embedded MultiMediaCard (phones/IoT)',  pos: 5, why: 'eMMC is non-volatile flash; wear-leveling may still move data — image immediately.' },
+      { label: 'Cloud Backup Snapshots',        sub: 'Point-in-time replicas off-site',      pos: 6, why: 'Cloud snapshots are the most durable — persisted redundantly, overwritten only on policy.' },
+    ]
+  },
+  {
+    tag:   'Round 4 — Enterprise Data Center',
+    title: 'SAN, DDR5, and Tape Archives',
+    items: [
+      { label: 'Processor Register File (L1/L2 Cache)', sub: 'On-chip state — sub-nanosecond', pos: 1, why: 'The register file and L1 cache are the first things lost — no power, no data.' },
+      { label: 'DDR5 DIMM — System Memory',     sub: 'Latest-gen double data rate RAM',       pos: 2, why: 'DDR5 is still DRAM — volatile. Holds decrypted data, encryption keys, and session tokens.' },
+      { label: 'Active Network Sessions (Kernel State)', sub: 'conntrack, ARP, route cache',  pos: 3, why: 'Kernel connection-tracking table and ARP cache are in-memory structures — lost on reboot.' },
+      { label: 'Windows Virtual Memory File',   sub: 'pagefile.sys or hiberfil.sys',          pos: 4, why: 'hiberfil.sys can hold a full RAM snapshot from hibernation — valuable but can be overwritten.' },
+      { label: 'Enterprise SAN (iSCSI)',        sub: 'Storage Area Network block store',      pos: 5, why: 'SAN storage is non-volatile but shared; snapshot before other VMs cause block overwrites.' },
+      { label: 'Magnetic Tape Archive',         sub: 'LTO-8 or DLT cartridge offsite',       pos: 6, why: 'Tape is the least volatile storage medium — unchanged until deliberate overwrite or rotation.' },
+    ]
+  },
+  {
+    tag:   'Round 5 — Forensic Challenge',
+    title: 'Write-through Cache to Remote Logs',
+    items: [
+      { label: 'Write-through CPU Cache',       sub: 'Cache coherent with main memory',       pos: 1, why: 'Even write-through cache — although synced to RAM — is lost on power cut. Collect first.' },
+      { label: 'SODIMM — Laptop Physical Memory', sub: '260-pin laptop RAM module',           pos: 2, why: 'SODIMMs are DRAM — volatile. Laptops with BitLocker store decryption keys in RAM.' },
+      { label: 'Kernel ARP & Route Tables',     sub: 'In-memory kernel network structures',   pos: 3, why: 'ARP and route table entries live in kernel memory — lost on any restart or NIC reset.' },
+      { label: 'Virtual Memory / Page File',    sub: 'Disk-backed overflow from RAM',         pos: 4, why: 'Page file holds RAM spill-over — passwords and keys may be paged here; collect before writes.' },
+      { label: 'Encrypted SSD (BitLocker)',     sub: 'AES-256 full-disk encrypted NAND',      pos: 5, why: 'SSD is non-volatile, but encryption key is in RAM — image drive while still unlocked.' },
+      { label: 'Remote Event Log Server',       sub: 'Centralised Windows Event Log / SIEM',  pos: 6, why: 'Remote logs are persisted on a separate system — most stable, least likely to be lost.' },
+    ]
+  }
+];
+
+/* ── STATE ──────────────────────────────────────────────────────────────── */
+let currentRound = 0;
+let score = 0;
+let submitted = false;
+let roundResults = [];  // 'correct'|'wrong' per round
+
+/* ── INIT ───────────────────────────────────────────────────────────────── */
+function startRound(idx) {
+  submitted = false;
+  currentRound = idx;
+
+  const round = ROUNDS[idx];
+  document.getElementById('round-tag').textContent   = round.tag;
+  document.getElementById('round-title').textContent = round.title;
+  document.getElementById('round-val').textContent   = `${idx+1}/${ROUNDS.length}`;
+  document.getElementById('score-val').textContent   = score;
+
+  // Shuffle items
+  const items = shuffle([...round.items]);
+
+  // Build list
+  const list = document.getElementById('drag-list');
+  list.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'drag-item';
+    li.setAttribute('draggable', 'true');
+    li.dataset.pos = item.pos;
+    li.innerHTML = `
+      <span class="grip">⠿</span>
+      <span class="pos-num">—</span>
+      <div>
+        <div class="item-label">${item.label}</div>
+        <div class="item-sub">${item.sub}</div>
+      </div>
+    `;
+    list.appendChild(li);
+    attachDrag(li);
+  });
+
+  updatePositionNumbers();
+
+  // Hide explain panel, next btn
+  document.getElementById('explain-panel').style.display = 'none';
+  document.getElementById('explain-rows').innerHTML = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('submit-btn').style.display = '';
+  document.getElementById('submit-btn').disabled = false;
+
+  // Progress dots
+  for (let i = 0; i < ROUNDS.length; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    dot.className = 'dot';
+    if (i < idx)      dot.classList.add(roundResults[i] === 'correct' ? 'done' : 'wrong');
+    else if (i === idx) dot.classList.add('current');
+  }
+}
+
+/* ── DRAG & DROP ────────────────────────────────────────────────────────── */
+let dragSrc = null;
+
+function attachDrag(li) {
+  li.addEventListener('dragstart', e => {
+    dragSrc = li;
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => li.classList.add('dragging'), 0);
+  });
+  li.addEventListener('dragend', () => {
+    li.classList.remove('dragging');
+    document.querySelectorAll('.drag-item').forEach(i => i.classList.remove('over'));
+    updatePositionNumbers();
+  });
+  li.addEventListener('dragenter', e => {
+    e.preventDefault();
+    if (li !== dragSrc) li.classList.add('over');
+  });
+  li.addEventListener('dragleave', () => li.classList.remove('over'));
+  li.addEventListener('dragover', e => { e.preventDefault(); return false; });
+  li.addEventListener('drop', e => {
+    e.stopPropagation();
+    if (dragSrc && dragSrc !== li) {
+      const list = document.getElementById('drag-list');
+      const children = [...list.children];
+      const srcIdx  = children.indexOf(dragSrc);
+      const destIdx = children.indexOf(li);
+      if (srcIdx < destIdx) list.insertBefore(dragSrc, li.nextSibling);
+      else                  list.insertBefore(dragSrc, li);
+    }
+    li.classList.remove('over');
+    updatePositionNumbers();
+    return false;
+  });
+
+  // Touch support
+  let touchY = 0;
+  li.addEventListener('touchstart', e => {
+    dragSrc = li;
+    touchY = e.touches[0].clientY;
+    li.classList.add('dragging');
+  }, { passive: true });
+  li.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const y = e.touches[0].clientY;
+    const list = document.getElementById('drag-list');
+    const children = [...list.children];
+    let target = null;
+    for (const child of children) {
+      const rect = child.getBoundingClientRect();
+      if (y < rect.top + rect.height / 2) { target = child; break; }
+    }
+    children.forEach(c => c.classList.remove('over'));
+    if (target && target !== dragSrc) target.classList.add('over');
+    touchY = y;
+  }, { passive: false });
+  li.addEventListener('touchend', () => {
+    const over = document.querySelector('.drag-item.over');
+    if (over && over !== dragSrc) {
+      const list = document.getElementById('drag-list');
+      const children = [...list.children];
+      const srcIdx  = children.indexOf(dragSrc);
+      const destIdx = children.indexOf(over);
+      if (srcIdx < destIdx) list.insertBefore(dragSrc, over.nextSibling);
+      else                  list.insertBefore(dragSrc, over);
+    }
+    document.querySelectorAll('.drag-item').forEach(i => {
+      i.classList.remove('dragging', 'over');
+    });
+    updatePositionNumbers();
+  });
+}
+
+function updatePositionNumbers() {
+  const list = document.getElementById('drag-list');
+  [...list.children].forEach((li, i) => {
+    li.querySelector('.pos-num').textContent = i + 1;
+  });
+}
+
+/* ── SUBMIT ─────────────────────────────────────────────────────────────── */
+document.getElementById('submit-btn').addEventListener('click', () => {
+  if (submitted) return;
+  submitted = true;
+
+  const list = document.getElementById('drag-list');
+  const children = [...list.children];
+
+  let correct = 0;
+  const round = ROUNDS[currentRound];
+
+  // Build lookup: pos -> item data
+  const posMap = {};
+  round.items.forEach(item => { posMap[item.pos] = item; });
+
+  children.forEach((li, i) => {
+    const userPos   = i + 1;          // user placed it here (1-based)
+    const correctPos = parseInt(li.dataset.pos);
+    const isCorrect = userPos === correctPos;
+    if (isCorrect) correct++;
+
+    li.setAttribute('draggable', 'false');
+    li.classList.add(isCorrect ? 'correct' : 'wrong');
+
+    // Add result icon
+    const icon = document.createElement('span');
+    icon.className = 'result-icon';
+    icon.textContent = isCorrect ? '✓' : '✗';
+    li.appendChild(icon);
+
+    if (!isCorrect) {
+      const hint = document.createElement('div');
+      hint.style.cssText = 'font-size:11px; color:var(--gold); margin-top:4px;';
+      hint.textContent = `Correct position: ${correctPos}`;
+      li.querySelector('div').appendChild(hint);
+    }
+  });
+
+  const allCorrect = correct === children.length;
+  const pts = allCorrect ? 100 : Math.round((correct / children.length) * 100);
+  score += pts;
+  roundResults[currentRound] = allCorrect ? 'correct' : 'wrong';
+
+  document.getElementById('score-val').textContent = score;
+  showFlash(allCorrect ? `+${pts} Perfect!` : `+${pts} — ${correct}/${children.length} correct`, allCorrect ? 'good' : 'bad');
+
+  // Build explanation
+  buildExplanation(round.items);
+
+  document.getElementById('submit-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display   = 'block';
+
+  const isLast = currentRound === ROUNDS.length - 1;
+  document.getElementById('next-btn').textContent = isLast ? 'See Results' : 'Next Round →';
+
+  // Update dot
+  const dot = document.getElementById(`dot-${currentRound}`);
+  dot.className = 'dot ' + (allCorrect ? 'done' : 'wrong');
+});
+
+/* ── NEXT ───────────────────────────────────────────────────────────────── */
+document.getElementById('next-btn').addEventListener('click', () => {
+  const isLast = currentRound === ROUNDS.length - 1;
+  if (isLast) {
+    showSummary();
+  } else {
+    startRound(currentRound + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+
+/* ── EXPLAIN ────────────────────────────────────────────────────────────── */
+function buildExplanation(items) {
+  const sorted = [...items].sort((a, b) => a.pos - b.pos);
+  const container = document.getElementById('explain-rows');
+  container.innerHTML = '';
+  sorted.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'explain-row';
+    row.innerHTML = `
+      <span class="explain-pos">${item.pos}</span>
+      <span class="explain-name">${item.label}</span>
+      <span class="explain-why">${item.why}</span>
+    `;
+    container.appendChild(row);
+  });
+  document.getElementById('explain-panel').style.display = 'block';
+}
+
+/* ── SUMMARY ────────────────────────────────────────────────────────────── */
+function showSummary() {
+  document.getElementById('round-header').style.display    = 'none';
+  document.querySelector('.vol-label.top').style.display   = 'none';
+  document.getElementById('drag-list').style.display       = 'none';
+  document.querySelector('.vol-label.bot').style.display   = 'none';
+  document.getElementById('controls').style.display        = 'none';
+  document.getElementById('explain-panel').style.display   = 'none';
+
+  const maxScore = ROUNDS.length * 100;
+  const pct = Math.round((score / maxScore) * 100);
+
+  let msg = '';
+  if (pct === 100) msg = 'Flawless. You could teach this module.';
+  else if (pct >= 80) msg = 'Strong grasp of volatility hierarchy. Review any misses above.';
+  else if (pct >= 60) msg = 'Decent foundation — the swap/network ordering trips most people.';
+  else msg = 'Keep drilling — volatility order is pure memorisation. Run it again.';
+
+  document.getElementById('final-score-val').textContent = `${score} / ${maxScore}`;
+  document.getElementById('final-msg').textContent = msg;
+  document.getElementById('summary').style.display = 'block';
+  document.getElementById('progress-dots').style.display = 'none';
+}
+
+function restartGame() {
+  score = 0;
+  roundResults = [];
+  document.getElementById('round-header').style.display  = '';
+  document.querySelector('.vol-label.top').style.display = '';
+  document.getElementById('drag-list').style.display     = '';
+  document.querySelector('.vol-label.bot').style.display = '';
+  document.getElementById('controls').style.display      = '';
+  document.getElementById('summary').style.display       = 'none';
+  document.getElementById('progress-dots').style.display = '';
+  startRound(0);
+}
+
+/* ── FLASH ──────────────────────────────────────────────────────────────── */
+function showFlash(msg, type) {
+  const el = document.getElementById('score-flash');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.className = ''; }, 1800);
+}
+
+/* ── UTILS ──────────────────────────────────────────────────────────────── */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* ── START ──────────────────────────────────────────────────────────────── */
+startRound(0);
+</script>
+</body>
+</html>

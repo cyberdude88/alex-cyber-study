@@ -1,0 +1,370 @@
+:root {
+  --bg: #0c121c;
+  --bg-soft: #131b28;
+  --card: #172233;
+  --border: #27364c;
+  --text: #e6edf8;
+  --muted: #9db0cc;
+  --accent: #4b7bec;
+  --ok: #2fbf88;
+  --warn: #d7a64f;
+  --bad: #df5f5f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background: linear-gradient(160deg, #0f1724 0%, #0c121c 60%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.app-shell {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(24, 35, 52, 0.96), rgba(20, 30, 45, 0.96));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+h1, h2, h3, h4 {
+  margin: 0 0 0.5rem;
+}
+
+h4 {
+  font-size: 1.08rem;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+}
+
+.landing {
+  max-width: 700px;
+  margin: 8vh auto;
+  padding: 2rem;
+}
+
+.landing-controls {
+  margin: 1.2rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+label {
+  display: block;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+select {
+  width: 100%;
+  margin-top: 0.45rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 0.68rem;
+}
+
+.btn-primary {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 0.82rem 1rem;
+  background: linear-gradient(135deg, #5688ff, #3f6fdc);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-secondary {
+  margin-top: 0.4rem;
+  border: 1px solid #3a5175;
+  border-radius: 8px;
+  padding: 0.4rem 0.68rem;
+  background: #18263b;
+  color: #d7e3f6;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #213554;
+}
+
+.btn-link-home {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.topbar {
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.topbar-meta {
+  text-align: right;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.topbar-meta p {
+  margin: 0.1rem 0;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.9fr 1.1fr;
+  gap: 1rem;
+}
+
+.panel {
+  padding: 1rem;
+}
+
+.stakeholder-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.stakeholder-row {
+  background: rgba(13, 20, 31, 0.5);
+  border: 1px solid #24354e;
+  border-radius: 10px;
+  padding: 0.62rem;
+}
+
+.row-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-bottom: 0.42rem;
+}
+
+.track {
+  height: 8px;
+  background: #1e2c41;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  transition: width 260ms ease;
+  background: linear-gradient(90deg, #4f84ff, #2fbf88);
+}
+
+.brief-description {
+  color: #d3deef;
+  line-height: 1.5;
+  margin: 0 0 0.8rem;
+}
+
+.decision-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.decision-btn {
+  text-align: left;
+  border: 1px solid #2d4261;
+  border-radius: 9px;
+  background: #1a2b43;
+  color: var(--text);
+  padding: 0.72rem 0.8rem;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.decision-btn:hover {
+  background: #203756;
+  border-color: #4a73a8;
+}
+
+.decision-btn.decision-best {
+  border-color: rgba(47, 191, 136, 0.75);
+  box-shadow: 0 0 0 1px rgba(47, 191, 136, 0.35), 0 0 18px rgba(47, 191, 136, 0.18);
+}
+
+.decision-btn.decision-best:hover {
+  background: #1f3a38;
+  box-shadow: 0 0 0 1px rgba(47, 191, 136, 0.5), 0 0 24px rgba(47, 191, 136, 0.35);
+}
+
+.decision-btn.decision-second {
+  border-color: rgba(215, 166, 79, 0.8);
+  box-shadow: 0 0 0 1px rgba(215, 166, 79, 0.32), 0 0 14px rgba(215, 166, 79, 0.14);
+}
+
+.decision-btn.decision-second:hover {
+  background: #3a3021;
+  box-shadow: 0 0 0 1px rgba(215, 166, 79, 0.5), 0 0 22px rgba(215, 166, 79, 0.3);
+}
+
+.decision-btn.decision-risky {
+  border-color: rgba(223, 95, 95, 0.6);
+}
+
+.decision-btn.decision-risky:hover {
+  background: #3a2227;
+}
+
+.outcome-box {
+  margin-top: 0.8rem;
+  min-height: 54px;
+  padding: 0.74rem;
+  border-radius: 10px;
+  border: 1px solid #324966;
+  background: rgba(12, 19, 30, 0.7);
+  color: #c5d6eb;
+}
+
+.outcome-good {
+  border-color: rgba(47, 191, 136, 0.55);
+  color: #9be3c3;
+}
+
+.outcome-warn {
+  border-color: rgba(215, 166, 79, 0.55);
+  color: #f2d79f;
+}
+
+.outcome-bad {
+  border-color: rgba(223, 95, 95, 0.55);
+  color: #f0b2b2;
+}
+
+.meter-list {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 255px;
+}
+
+.meter-col {
+  flex: 1;
+  text-align: center;
+}
+
+.meter-track {
+  width: 100%;
+  height: 185px;
+  border-radius: 10px;
+  border: 1px solid #2a3f5f;
+  background: #121c2b;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.meter-fill {
+  width: 100%;
+  transition: height 280ms ease;
+  background: linear-gradient(180deg, #4f84ff, #2f61cd);
+}
+
+.meter-fill.warn {
+  background: linear-gradient(180deg, #d7a64f, #ad7f2f);
+}
+
+.meter-fill.bad {
+  background: linear-gradient(180deg, #df5f5f, #b54444);
+}
+
+.meter-value {
+  margin-top: 0.3rem;
+  font-size: 0.76rem;
+}
+
+.meter-name {
+  margin-top: 0.35rem;
+  font-size: 0.73rem;
+  color: var(--muted);
+  min-height: 2.1em;
+}
+
+.log-wrap {
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.incident-log {
+  max-height: 190px;
+  overflow-y: auto;
+  border-radius: 10px;
+  border: 1px solid #263b58;
+  background: rgba(9, 15, 24, 0.8);
+  padding: 0.58rem;
+}
+
+.log-line {
+  font-size: 0.87rem;
+  color: #bfd1e9;
+  padding: 0.38rem 0.2rem;
+  border-bottom: 1px solid rgba(52, 74, 106, 0.35);
+}
+
+.log-line:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 1100px) {
+  .main-grid {
+    grid-template-columns: 1fr 1.45fr;
+  }
+
+  .main-grid > :nth-child(3) {
+    grid-column: 1 / span 2;
+  }
+
+  .meter-track {
+    height: 150px;
+  }
+}
+
+@media (max-width: 760px) {
+  .landing-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-direction: column;
+  }
+
+  .topbar-meta {
+    text-align: left;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-grid > :nth-child(3) {
+    grid-column: auto;
+  }
+}

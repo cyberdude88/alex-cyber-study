@@ -1,0 +1,16 @@
+{
+  "bank_file": "cat/question-bank.sample.json",
+  "sha256": "f9b6dfa13076318e6eca00f86c60fad4be759cd3e8bb756f84549033bcad9658",
+  "item_count": 3599,
+  "unique_item_ids": 3599,
+  "domain_counts": {
+    "1. Security and Risk Management": 600,
+    "2. Asset Security": 356,
+    "3. Security Architecture and Engineering": 454,
+    "4. Communication and Network Security": 431,
+    "5. Identity and Access Management (IAM)": 470,
+    "6. Security Assessment and Testing": 474,
+    "7. Security Operations": 469,
+    "8. Software Development Security": 345
+  }
+}

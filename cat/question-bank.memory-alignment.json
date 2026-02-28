@@ -1,0 +1,448 @@
+{
+  "summary": {
+    "scoped_items": 268,
+    "focus_domains": [
+      "4. Communication and Network Security"
+    ],
+    "keyword_count": 34,
+    "warning_count": 0,
+    "info_count": 29
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "item": "d4-q51",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 0,
+      "kw_hits_sample": [],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q51__v1",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 0,
+      "kw_hits_sample": [],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q51__v2",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 0,
+      "kw_hits_sample": [],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q51__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "security"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q52",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q52__v1",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q52__v2",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q52__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q61",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q61__v1",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q61__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q66",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2",
+        "nist-sp-800-63-3"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q66__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2",
+        "nist-sp-800-63-3"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q78",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q78__v1",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q78__v2",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q78__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q84",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "subnet"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q96",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 0,
+      "kw_hits_sample": [],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q96__v1",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 0,
+      "kw_hits_sample": [],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q96__v2",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 0,
+      "kw_hits_sample": [],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q96__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 0,
+      "kw_hits_sample": [],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q97",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q97__v1",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q97__v2",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q97__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q105",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-61r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q105__v1",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-37r2",
+        "nist-sp-800-61r2"
+      ],
+      "message": "Low memory-topic overlap."
+    },
+    {
+      "severity": "info",
+      "item": "d4-q105__v3",
+      "domain": "4. Communication and Network Security",
+      "kw_hit_count": 1,
+      "kw_hits_sample": [
+        "network"
+      ],
+      "source_ids": [
+        "isc2-cissp-exam-outline-2024",
+        "nist-sp-800-53r5",
+        "ietf-rfc-8446",
+        "nist-sp-800-61r2"
+      ],
+      "message": "Low memory-topic overlap."
+    }
+  ]
+}

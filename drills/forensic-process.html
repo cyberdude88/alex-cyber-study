@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forensic Process Drill</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0d0f14;
+  --surface: #161b25;
+  --border:  #1e2a3a;
+  --text:    #c9d5e0;
+  --dim:     #5a6a7a;
+  --accent:  #00aaff;
+  --gold:    #f5c842;
+  --green:   #2ecc71;
+  --red:     #e74c3c;
+  --cyan:    #00e5ff;
+  --purple:  #a855f7;
+  --r:       10px;
+}
+
+body {
+  background: var(--bg); color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px; line-height: 1.5; min-height: 100vh;
+}
+#app { max-width: 960px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* ── HUD ── */
+#hud {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 18px;
+  margin-bottom: 22px; position: sticky; top: 10px; z-index: 100; gap: 12px;
+}
+#back-btn {
+  background: none; border: 1px solid var(--border); color: var(--dim);
+  border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+  white-space: nowrap; text-decoration: none; display: inline-block;
+  transition: border-color .2s, color .2s;
+}
+#back-btn:hover { border-color: var(--accent); color: var(--accent); }
+.hud-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent); flex: 1; text-align: center;
+}
+.hud-stats { display: flex; gap: 18px; }
+.hud-stat  { display: flex; flex-direction: column; align-items: center; }
+.hud-stat .val { font-size: 18px; font-weight: 700; }
+.hud-stat .lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+#score-val { color: var(--green); }
+#round-val { color: var(--gold); }
+
+/* ── START SCREEN ── */
+#start-screen { text-align: center; padding: 40px 20px; }
+#start-screen h1 { font-size: 1.9rem; color: var(--accent); letter-spacing: 3px; margin-bottom: 8px; }
+#start-screen .sub { color: var(--dim); font-size: 14px; margin-bottom: 36px; }
+
+.mode-cards {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; max-width: 700px; margin: 0 auto 20px;
+}
+.mode-card {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: 14px; padding: 26px 20px; cursor: pointer;
+  transition: border-color .25s, transform .15s;
+  text-align: left;
+}
+.mode-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.mode-card.nist:hover  { border-color: #3b82f6; }
+.mode-card.cbk:hover   { border-color: var(--purple); }
+.mode-card .mc-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.mode-card.nist .mc-label { color: #3b82f6; }
+.mode-card.cbk  .mc-label { color: var(--purple); }
+.mode-card .mc-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
+.mode-card .mc-phases {
+  display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px;
+}
+.mc-phase-row {
+  display: flex; align-items: center; gap: 8px; font-size: 12px;
+}
+.mc-phase-row .num {
+  font-size: 10px; font-weight: 700; color: var(--dim);
+  width: 16px; flex-shrink: 0;
+}
+.mc-phase-row .dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.mc-phase-row .name { font-weight: 600; }
+.mc-phase-row .desc { color: var(--dim); font-size: 11px; }
+.mode-card .mc-cta {
+  display: inline-block; padding: 9px 24px; border-radius: 7px;
+  font-size: 13px; font-weight: 700; letter-spacing: .8px;
+  text-transform: uppercase; border: none; cursor: pointer; width: 100%;
+  text-align: center;
+}
+.mode-card.nist .mc-cta { background: #3b82f6; color: #fff; }
+.mode-card.cbk  .mc-cta { background: var(--purple); color: #fff; }
+
+.start-cite { font-size: 11px; color: var(--dim); margin-top: 16px; }
+.start-cite a { color: var(--dim); }
+.disclaimer-note { font-size: 12px; color: var(--dim); text-align: center; margin-top: 14px; }
+
+/* ── GAME SCREEN ── */
+#game-screen { display: none; }
+
+/* Mode badge */
+#mode-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; padding: 4px 12px;
+  border-radius: 20px; margin-bottom: 6px;
+}
+
+/* Progress dots */
+#progress-dots {
+  display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background .3s; }
+.dot.done    { background: var(--green); }
+.dot.current { background: var(--accent); }
+.dot.wrong   { background: var(--red); }
+
+/* Round header */
+#round-header { margin-bottom: 16px; }
+#round-tag   { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--purple); margin-bottom: 5px; }
+#round-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 3px; }
+#round-sub   { font-size: 13px; color: var(--dim); }
+
+/* Phase reference bar */
+#phase-ref {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 7px; margin-bottom: 18px;
+}
+.phase-def {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 7px; padding: 9px 10px;
+  border-top: 3px solid var(--pc, var(--border));
+}
+.phase-def .ph-num  { font-size: 9px; color: var(--dim); margin-bottom: 2px; }
+.phase-def .ph-name { font-size: 10px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--pc, var(--text)); margin-bottom: 3px; }
+.phase-def .ph-desc { font-size: 10px; color: var(--dim); line-height: 1.35; }
+
+/* Source pile */
+#source-area { margin-bottom: 16px; }
+#source-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+#source-pile {
+  display: flex; flex-wrap: wrap; gap: 7px; min-height: 46px;
+  background: var(--surface); border: 1px dashed var(--border);
+  border-radius: var(--r); padding: 10px;
+  transition: border-color .15s, background .15s;
+}
+#source-pile.drag-over { border-color: var(--accent); background: rgba(0,170,255,.04); }
+
+/* Activity chip */
+.activity {
+  background: #1e2634; border: 1px solid var(--border);
+  border-radius: 6px; padding: 7px 11px;
+  font-size: 13px; font-weight: 500; cursor: grab;
+  user-select: none; transition: border-color .15s, background .15s, transform .1s;
+}
+.activity:hover { border-color: var(--accent); }
+.activity.dragging { opacity: .3; cursor: grabbing; }
+.activity.selected { border-color: var(--gold); background: rgba(245,200,66,.07); transform: scale(1.02); }
+
+/* Lanes grid */
+#lanes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; margin-bottom: 20px;
+}
+#lanes.lanes-7 { grid-template-columns: repeat(4, 1fr); }
+
+.lane {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); border-top: 3px solid var(--pc, var(--border));
+  padding: 9px; min-height: 110px;
+  transition: background .15s, border-color .15s;
+}
+.lane.drag-over { background: rgba(255,255,255,.04); border-color: var(--pc, var(--accent)); }
+.lane.tap-target { outline: 2px solid var(--gold); outline-offset: 2px; }
+.lane-name {
+  font-size: 10px; font-weight: 800; letter-spacing: .8px;
+  text-transform: uppercase; color: var(--pc, var(--text));
+  margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;
+}
+.lane-count { font-size: 10px; font-weight: 400; color: var(--dim); }
+.lane-items { display: flex; flex-direction: column; gap: 5px; }
+.lane-item {
+  background: #1e2634; border: 1px solid var(--border);
+  border-radius: 5px; padding: 5px 8px; font-size: 11px;
+  display: flex; align-items: flex-start; gap: 5px;
+  cursor: pointer; transition: border-color .15s; line-height: 1.35;
+}
+.lane-item:hover { border-color: var(--dim); }
+.lane-item .pdot { width: 5px; height: 5px; border-radius: 50%; background: var(--pc, var(--dim)); flex-shrink: 0; margin-top: 4px; }
+.lane-item.correct { border-color: var(--green); background: rgba(46,204,113,.08); }
+.lane-item.wrong   { border-color: var(--red);   background: rgba(231,76,60,.08); }
+.lane-item.wrong .wrong-label {
+  font-size: 10px; color: var(--gold); margin-left: auto;
+  white-space: nowrap; flex-shrink: 0; padding-left: 4px;
+}
+
+/* Controls */
+#controls { display: flex; gap: 12px; justify-content: center; margin-top: 4px; }
+.btn {
+  padding: 11px 28px; border-radius: 8px;
+  font-size: 14px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; border: none; cursor: pointer;
+  transition: opacity .2s, transform .1s;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .35; cursor: default; }
+#submit-btn   { background: var(--accent); color: #000; }
+#next-btn     { background: var(--green);  color: #000; display: none; }
+#switch-mode  {
+  background: none; border: 1px solid var(--border); color: var(--dim);
+  font-size: 12px; padding: 8px 16px;
+}
+#switch-mode:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Explanation panel */
+#explain-panel {
+  display: none; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 18px; margin-top: 18px;
+}
+#explain-panel h3 {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--cyan); margin-bottom: 12px;
+}
+#explain-cite { font-size: 11px; color: var(--dim); margin-bottom: 12px; }
+#explain-cite a { color: var(--accent); }
+.explain-row {
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px; display: flex; gap: 10px; align-items: flex-start;
+}
+.explain-row:last-child { border-bottom: none; }
+.expl-badge {
+  font-size: 9px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.expl-activity { font-weight: 600; min-width: 160px; flex-shrink: 0; font-size: 12px; }
+.expl-why { color: var(--dim); flex: 1; font-size: 12px; }
+
+/* Summary */
+#summary { display: none; text-align: center; padding: 56px 20px; }
+#summary h1 { font-size: 2.1rem; color: var(--gold); margin-bottom: 8px; }
+.final-score { font-size: 3.4rem; font-weight: 900; color: var(--green); margin: 18px 0; }
+#summary p { color: var(--dim); margin-bottom: 28px; }
+.sum-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* Flash */
+#score-flash {
+  position: fixed; top: 74px; left: 50%; transform: translateX(-50%);
+  padding: 8px 20px; border-radius: 8px; font-weight: 700; font-size: 16px;
+  pointer-events: none; opacity: 0; transition: opacity .3s; z-index: 200;
+}
+#score-flash.show { opacity: 1; }
+#score-flash.good { background: var(--green); color: #000; }
+#score-flash.bad  { background: var(--red);   color: #fff; }
+
+@media (max-width: 600px) {
+  #lanes { grid-template-columns: repeat(2, 1fr) !important; }
+  .mode-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="hud">
+    <a id="back-btn" href="../index.html">← Home</a>
+    <span class="hud-title">Forensic Process</span>
+    <div class="hud-stats">
+      <div class="hud-stat"><span class="val" id="round-val">—</span><span class="lbl">Round</span></div>
+      <div class="hud-stat"><span class="val" id="score-val">0</span><span class="lbl">Score</span></div>
+    </div>
+  </div>
+
+  <!-- ── START SCREEN ── -->
+  <div id="start-screen">
+    <h1>FORENSIC PROCESS</h1>
+    <p class="sub">Choose a framework — sort forensic activities into the correct phases.</p>
+    <div class="mode-cards">
+
+      <div class="mode-card nist" data-mode="nist">
+        <div class="mc-label">NIST SP 800-86</div>
+        <div class="mc-title">4-Phase Model</div>
+        <div class="mc-phases">
+          <div class="mc-phase-row"><span class="num">1</span><span class="dot" style="background:#3b82f6"></span><span class="name">Collection</span></div>
+          <div class="mc-phase-row"><span class="num">2</span><span class="dot" style="background:#f59e0b"></span><span class="name">Examination</span></div>
+          <div class="mc-phase-row"><span class="num">3</span><span class="dot" style="background:#a855f7"></span><span class="name">Analysis</span></div>
+          <div class="mc-phase-row"><span class="num">4</span><span class="dot" style="background:#2ecc71"></span><span class="name">Reporting</span></div>
+        </div>
+        <div class="mc-phase-row" style="font-size:11px;color:var(--dim);margin-bottom:14px">Trap: Examination ≠ Analysis</div>
+        <button class="mc-cta">Play NIST Mode</button>
+      </div>
+
+      <div class="mode-card cbk" data-mode="cbk">
+        <div class="mc-label">ISC2 CBK — Domain 7</div>
+        <div class="mc-title">7-Phase Model</div>
+        <div class="mc-phases">
+          <div class="mc-phase-row"><span class="num">1</span><span class="dot" style="background:#06b6d4"></span><span class="name">Identification</span></div>
+          <div class="mc-phase-row"><span class="num">2</span><span class="dot" style="background:#f59e0b"></span><span class="name">Preservation</span></div>
+          <div class="mc-phase-row"><span class="num">3</span><span class="dot" style="background:#3b82f6"></span><span class="name">Collection</span></div>
+          <div class="mc-phase-row"><span class="num">4</span><span class="dot" style="background:#f97316"></span><span class="name">Examination</span></div>
+          <div class="mc-phase-row"><span class="num">5</span><span class="dot" style="background:#a855f7"></span><span class="name">Analysis</span></div>
+          <div class="mc-phase-row"><span class="num">6</span><span class="dot" style="background:#2ecc71"></span><span class="name">Presentation</span></div>
+          <div class="mc-phase-row"><span class="num">7</span><span class="dot" style="background:#ef4444"></span><span class="name">Decision</span></div>
+        </div>
+        <button class="mc-cta">Play CBK Mode</button>
+      </div>
+
+    </div>
+    <p class="start-cite">
+      Sources: <a href="https://csrc.nist.gov/pubs/sp/800/86/final" target="_blank">NIST SP 800-86</a>
+      &nbsp;·&nbsp;
+      ISC2 CBK Domain 7
+    </p>
+  </div>
+
+  <!-- ── GAME SCREEN ── -->
+  <div id="game-screen">
+    <div id="mode-badge"></div>
+    <div id="progress-dots"></div>
+    <div id="round-header">
+      <div id="round-tag"></div>
+      <div id="round-title"></div>
+      <div id="round-sub">Drag each activity to the correct phase — or tap an activity then tap a lane.</div>
+    </div>
+    <div id="phase-ref"></div>
+    <div id="source-area">
+      <div id="source-label">Activities to sort</div>
+      <div id="source-pile"></div>
+    </div>
+    <div id="lanes"></div>
+    <div id="controls">
+      <button class="btn" id="switch-mode" type="button">⇄ Switch Mode</button>
+      <button class="btn" id="reset-round" type="button">Reset Round</button>
+      <button class="btn" id="submit-btn">Check Answers</button>
+      <button class="btn" id="next-btn">Next Round →</button>
+    </div>
+    <div id="explain-panel">
+      <h3>Phase Rationale</h3>
+      <div id="explain-cite"></div>
+      <div id="explain-rows"></div>
+    </div>
+    <div id="summary">
+      <h1>Drill Complete</h1>
+      <div class="final-score" id="final-score-val"></div>
+      <p id="final-msg"></p>
+      <div class="sum-btns">
+        <button class="btn" style="background:var(--accent);color:#000" id="play-again-btn">Play Again</button>
+        <button class="btn" id="summary-switch-mode-btn" type="button" style="background:var(--surface);color:var(--text);border:1px solid var(--border)">Switch Mode</button>
+        <a class="btn" href="../index.html" style="text-decoration:none;background:var(--surface);color:var(--text);border:1px solid var(--border)">← Home</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+<p class="disclaimer-note">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+<div id="score-flash"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   FRAMEWORK DEFINITIONS
+═══════════════════════════════════════════════════════════════════════════ */
+const FRAMEWORKS = {
+
+  nist: {
+    name:  'NIST SP 800-86',
+    color: '#3b82f6',
+    cite:  'NIST SP 800-86 — <a href="https://csrc.nist.gov/pubs/sp/800/86/final" target="_blank">csrc.nist.gov</a>',
+    phases: [
+      { id: 'collection',  label: 'Collection',  num: 1, color: '#3b82f6', desc: 'Identify, label, record and acquire data — preserve integrity' },
+      { id: 'examination', label: 'Examination', num: 2, color: '#f59e0b', desc: 'Extract data of interest using automated and manual tools' },
+      { id: 'analysis',    label: 'Analysis',    num: 3, color: '#a855f7', desc: 'Derive useful information — draw conclusions from examined data' },
+      { id: 'reporting',   label: 'Reporting',   num: 4, color: '#2ecc71', desc: 'Describe actions, justify tools, recommend improvements' },
+    ],
+    laneCols: 4,
+    rounds: [
+      {
+        tag: 'NIST · Round 1 — Core Activities', title: 'The Four Phases',
+        activities: [
+          { text: 'Write-block and image the suspect hard drive',           phase: 'collection',  why: 'Acquiring data while preserving integrity — the definition of Collection.' },
+          { text: 'Carve deleted files from unallocated disk space',        phase: 'examination', why: 'Extracting data of interest from collected media using forensic tools.' },
+          { text: 'Conclude the attacker used Pass-the-Hash',              phase: 'analysis',    why: 'Deriving a conclusion from examined artifacts — Analysis, not Examination.' },
+          { text: 'Document findings in the incident report',              phase: 'reporting',   why: 'Communicating results and recommending action — the Reporting phase.' },
+          { text: 'Capture RAM with a memory acquisition tool',            phase: 'collection',  why: 'Acquiring volatile evidence before power-off — Collection per order of volatility.' },
+          { text: 'Filter Event Logs by failed login events',              phase: 'examination', why: 'Processing collected logs to extract relevant entries — Examination.' },
+          { text: 'Identify the initial access vector',                    phase: 'analysis',    why: 'Answering "how did they get in?" from examined data — Analysis.' },
+          { text: 'Recommend deploying MFA to prevent recurrence',         phase: 'reporting',   why: 'Recommending security improvements is explicitly a Reporting output in NIST 800-86.' },
+        ]
+      },
+      {
+        tag: 'NIST · Round 2 — Examination vs Analysis', title: 'The Key Distinction',
+        activities: [
+          { text: 'Recover EXIF metadata from seized photographs',          phase: 'examination', why: 'Extracting embedded metadata from collected files — Examination.' },
+          { text: 'Determine photos were taken at the crime scene location', phase: 'analysis',   why: 'Interpreting extracted coordinates to draw a conclusion — Analysis.' },
+          { text: 'Index email archive by keyword search',                 phase: 'examination', why: 'Processing collected email to surface relevant messages — Examination.' },
+          { text: 'Conclude suspect communicated with an external co-conspirator', phase: 'analysis', why: 'Drawing a conclusion from indexed email content — Analysis, not Examination.' },
+          { text: 'Parse Windows Registry hive for autorun keys',          phase: 'examination', why: 'Extracting Registry artifacts using forensic tools — Examination.' },
+          { text: 'Establish persistence mechanism used by the malware',   phase: 'analysis',    why: 'Interpreting Registry artifacts to classify the persistence method — Analysis.' },
+          { text: 'Record hash values of all acquired media',              phase: 'collection',  why: 'Hashing at acquisition time preserves integrity — part of Collection.' },
+          { text: 'List additional data sources requiring investigation',  phase: 'reporting',   why: '"Determining what other actions need to be taken" is a Reporting deliverable per NIST 800-86.' },
+        ]
+      },
+      {
+        tag: 'NIST · Round 3 — Network Forensics', title: 'Packets, Logs, Conclusions',
+        activities: [
+          { text: 'Capture full packet data from the network tap',         phase: 'collection',  why: 'Acquiring network traffic before it is lost — Collection.' },
+          { text: 'Preserve firewall logs before scheduled rotation',      phase: 'collection',  why: 'Identifying and securing a data source before it disappears — Collection.' },
+          { text: 'Reassemble TCP streams from the PCAP file',             phase: 'examination', why: 'Reconstructing sessions from raw packets using forensic tools — Examination.' },
+          { text: 'Extract HTTP headers from captured traffic',            phase: 'examination', why: 'Pulling specific data fields from collected PCAP — Examination.' },
+          { text: 'Identify a C2 beacon pattern in the traffic',           phase: 'analysis',    why: 'Recognising a pattern and reaching the C2 conclusion — Analysis.' },
+          { text: 'Attribute the breach to a known threat actor group',    phase: 'analysis',    why: 'Correlating IOCs to derive attribution — a conclusion from data — Analysis.' },
+          { text: 'Document all tools and procedures used',                phase: 'reporting',   why: '"Description of actions employed" is an explicit Reporting output per NIST 800-86.' },
+          { text: 'Prepare the executive summary of findings',             phase: 'reporting',   why: 'Communicating results in appropriate format — Reporting.' },
+        ]
+      },
+      {
+        tag: 'NIST · Round 4 — Memory & Malware', title: 'Volatile Evidence',
+        activities: [
+          { text: 'Acquire memory dump using WinPmem before shutdown',     phase: 'collection',  why: 'Capturing RAM before power-off — volatile data acquisition — Collection.' },
+          { text: 'Run Volatility plugin to list running processes',        phase: 'examination', why: 'Using a forensic tool to extract process list from memory dump — Examination.' },
+          { text: 'Extract injected shellcode from a suspicious process',  phase: 'examination', why: 'Carving data of interest from the memory image — Examination.' },
+          { text: 'Classify the malware as a keylogger',                   phase: 'analysis',    why: 'Interpreting extracted code behaviour — a conclusion drawn from Examination.' },
+          { text: 'Reconstruct the attacker\'s full kill chain',           phase: 'analysis',    why: 'Correlating all examined artifacts into a narrative — Analysis.' },
+          { text: 'Photograph the physical state of the seized device',    phase: 'collection',  why: 'Recording physical state is part of labelling and recording in Collection.' },
+          { text: 'Recommend patching the exploited vulnerability',        phase: 'reporting',   why: 'Security improvement recommendations are a Reporting deliverable.' },
+          { text: 'Prepare expert witness testimony',                      phase: 'reporting',   why: 'Presenting findings in legal proceedings — Reporting.' },
+        ]
+      },
+      {
+        tag: 'NIST · Round 5 — Advanced Edge Cases', title: 'Cloud, MITRE & Timelines',
+        activities: [
+          { text: 'Snapshot a live cloud VM before isolating it',          phase: 'collection',  why: 'Acquiring evidence from a live system before isolation changes state — Collection.' },
+          { text: 'Build a filesystem timeline using mactime',              phase: 'examination', why: 'Generating a timeline artifact from collected disk data — Examination, not Analysis yet.' },
+          { text: 'Conclude the insider threat acted over a 6-month period', phase: 'analysis',  why: 'Interpreting the timeline to derive a conclusion about duration — Analysis.' },
+          { text: 'Map discovered TTPs to MITRE ATT&CK techniques',        phase: 'analysis',    why: 'Classifying attacker behaviour by interpreting artifacts — Analysis.' },
+          { text: 'Apply legal hold to prevent deletion of cloud logs',    phase: 'collection',  why: 'Preserving a data source from loss — still within Collection.' },
+          { text: 'Correlate logs across three systems to reconstruct attack path', phase: 'analysis', why: 'Cross-source correlation to derive a narrative — Analysis.' },
+          { text: 'Identify gaps in log coverage that hindered the investigation', phase: 'reporting', why: '"Improvements to policies and procedures" is an explicit Reporting output in NIST 800-86.' },
+          { text: 'Run strings on a malware binary to extract readable text', phase: 'examination', why: 'Extracting readable artifacts from collected malware — Examination.' },
+        ]
+      },
+    ]
+  },
+
+  cbk: {
+    name:  'ISC2 CBK',
+    color: '#a855f7',
+    cite:  'ISC2 CBK Domain 7',
+    phases: [
+      { id: 'identification', label: 'Identification', num: 1, color: '#06b6d4', desc: 'Recognise what evidence exists — Locard\'s Exchange Principle' },
+      { id: 'preservation',   label: 'Preservation',   num: 2, color: '#f59e0b', desc: 'Protect integrity — chain of custody, hashing, write-blockers' },
+      { id: 'collection',     label: 'Collection',     num: 3, color: '#3b82f6', desc: 'Acquire evidence — order of volatility, minimise handling' },
+      { id: 'examination',    label: 'Examination',    num: 4, color: '#f97316', desc: 'Extract raw data — attack signatures, audit logs, artefacts' },
+      { id: 'analysis',       label: 'Analysis',       num: 5, color: '#a855f7', desc: 'Draw conclusions — root cause, altered files, timeline' },
+      { id: 'presentation',   label: 'Presentation',   num: 6, color: '#2ecc71', desc: 'Interpret and communicate results — expert testimony, reports' },
+      { id: 'decision',       label: 'Decision',       num: 7, color: '#ef4444', desc: 'Corrective action — legal response, remediation, policy updates' },
+    ],
+    laneCols: 4,
+    rounds: [
+      {
+        tag: 'CBK · Round 1 — All Seven Steps', title: 'One Activity Per Phase',
+        activities: [
+          { text: 'Recognise that the server\'s audit logs may contain evidence', phase: 'identification', why: 'Noticing a potential evidence source — Identification, before anything is collected.' },
+          { text: 'Hash acquired media with SHA-256 before examination',   phase: 'preservation',   why: 'Verifying and locking in integrity before any examination — Preservation.' },
+          { text: 'Image the suspect hard drive using a write-blocker',    phase: 'collection',     why: 'Acquiring the evidence — Collection. Preservation happened before this.' },
+          { text: 'Carve deleted files from unallocated disk space',       phase: 'examination',    why: 'Extracting data of interest from acquired media — Examination.' },
+          { text: 'Determine attacker achieved persistence via scheduled task', phase: 'analysis',  why: 'Drawing a conclusion from examined artifacts — Analysis.' },
+          { text: 'Write the formal investigation findings report',        phase: 'presentation',   why: 'Communicating results in a formal format — Presentation.' },
+          { text: 'Recommend terminating the employee\'s access and pursuing litigation', phase: 'decision', why: 'Determining corrective actions and legal response — Decision.' },
+        ]
+      },
+      {
+        tag: 'CBK · Round 2 — Identification vs Collection', title: 'The First Trap',
+        activities: [
+          { text: 'Notice anomalous outbound traffic and flag network logs as relevant', phase: 'identification', why: 'Recognising a potential evidence source — Identification. Nothing acquired yet.' },
+          { text: 'Determine the suspect\'s workstation is an evidence source', phase: 'identification', why: 'Identifying a relevant source — still Identification, not Collection.' },
+          { text: 'Document chain of custody as evidence is taken into custody', phase: 'preservation', why: 'Chain of custody documentation is a Preservation activity.' },
+          { text: 'Acquire a forensic image of the suspect workstation',   phase: 'collection',     why: 'Now actually acquiring — this is Collection, not Identification.' },
+          { text: 'Capture live RAM before powering down the system',      phase: 'collection',     why: 'Acquiring volatile evidence per order of volatility — Collection.' },
+          { text: 'Parse network logs to extract connections to known-bad IPs', phase: 'examination', why: 'Extracting relevant data from acquired logs — Examination.' },
+          { text: 'Conclude data was exfiltrated to a C2 server',         phase: 'analysis',       why: 'Deriving the exfiltration conclusion from examined data — Analysis.' },
+          { text: 'Issue a legal hold notice to IT operations',           phase: 'decision',        why: 'A legal hold is a corrective/legal action — Decision phase output.' },
+        ]
+      },
+      {
+        tag: 'CBK · Round 3 — Preservation vs Collection', title: 'Integrity Before Acquisition',
+        activities: [
+          { text: 'Flag CCTV footage as corroborating physical evidence',  phase: 'identification', why: 'Recognising a new relevant source — Identification.' },
+          { text: 'Seal acquired media in tamper-evident packaging',       phase: 'preservation',   why: 'Protecting acquired evidence from tampering — Preservation.' },
+          { text: 'Verify log files using previously stored hash values',  phase: 'preservation',   why: 'Verifying integrity using hashes is a Preservation activity.' },
+          { text: 'Capture volatile memory from the live compromised server', phase: 'collection',  why: 'Acquiring the volatile memory — Collection.' },
+          { text: 'Run strings on memory dump to extract readable artifacts', phase: 'examination', why: 'Extracting readable data from acquired memory — Examination.' },
+          { text: 'Identify the malware family from extracted strings',    phase: 'analysis',       why: 'Classifying the malware from examination output — Analysis.' },
+          { text: 'Present findings and timeline to legal counsel',        phase: 'presentation',   why: 'Interpreting and communicating results to stakeholders — Presentation.' },
+          { text: 'Decide to notify law enforcement and regulatory bodies', phase: 'decision',      why: 'Notifying authorities is a corrective/legal action — Decision.' },
+        ]
+      },
+      {
+        tag: 'CBK · Round 4 — Presentation vs Decision', title: 'Communicating vs Acting',
+        activities: [
+          { text: 'Flag EDR alerts as relevant evidence of compromise',    phase: 'identification', why: 'Identifying a relevant evidence source — Identification.' },
+          { text: 'Apply legal hold to prevent log rotation',              phase: 'preservation',   why: 'Preventing evidence destruction — a Preservation action.' },
+          { text: 'Export and acquire firewall logs with hash verification', phase: 'collection',   why: 'Acquiring the logs — Collection. Hashing here is part of acquisition integrity.' },
+          { text: 'Filter exported logs to extract C2 communication patterns', phase: 'examination', why: 'Extracting patterns from acquired logs — Examination.' },
+          { text: 'Attribute the attack to a nation-state actor based on TTPs', phase: 'analysis',  why: 'Drawing an attribution conclusion from examined data — Analysis.' },
+          { text: 'Prepare expert witness testimony for court proceedings', phase: 'presentation',  why: 'Presenting findings in a legal forum — Presentation, not Decision.' },
+          { text: 'Testify about findings before a grand jury',            phase: 'presentation',  why: 'Communicating results — still Presentation. The jury makes the Decision.' },
+          { text: 'Authorise emergency patching of all affected systems',  phase: 'decision',       why: 'Taking corrective action on systems — Decision.' },
+        ]
+      },
+      {
+        tag: 'CBK · Round 5 — All Seven Under Pressure', title: 'Full Process Challenge',
+        activities: [
+          { text: 'Determine which cloud storage buckets may hold exfiltrated data', phase: 'identification', why: 'Identifying potential evidence sources — Identification.' },
+          { text: 'Apply a legal hold to prevent cloud log deletion',      phase: 'preservation',   why: 'Preventing loss of potential evidence — Preservation.' },
+          { text: 'Download cloud access logs with SHA-256 hash verification', phase: 'collection', why: 'Acquiring the logs with integrity verification — Collection.' },
+          { text: 'Reconstruct timeline of file uploads to the cloud bucket', phase: 'examination', why: 'Building a timeline from acquired log data — Examination.' },
+          { text: 'Conclude breach exposed 50,000 customer records over 3 months', phase: 'analysis', why: 'Deriving scope and duration from examined data — Analysis.' },
+          { text: 'Issue breach notification report to regulators',        phase: 'presentation',   why: 'Formally communicating findings to a regulatory audience — Presentation.' },
+          { text: 'Invoke business continuity plan and engage IR retainer', phase: 'decision',      why: 'Taking corrective operational action — Decision.' },
+        ]
+      },
+    ]
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════════════════ */
+let activeMode   = null;
+let currentRound = 0;
+let score        = 0;
+let submitted    = false;
+let roundResults = [];
+let selectedChip = null;
+let uidCounter   = 0;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODE SELECTION
+═══════════════════════════════════════════════════════════════════════════ */
+function selectMode(mode) {
+  if (!FRAMEWORKS[mode]) {
+    showFlash('Invalid mode selected.', 'bad');
+    return;
+  }
+
+  activeMode = mode;
+  score = 0; roundResults = []; currentRound = 0;
+  try {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display  = 'block';
+    document.getElementById('summary').style.display      = 'none';
+
+    showAllGameElements();
+    buildProgressDots();
+    buildModeHeader();
+    startRound(0);
+  } catch (err) {
+    console.error('Failed to initialize forensic mode:', err);
+    backToStart();
+    showFlash('Could not start selected mode. Try again.', 'bad');
+  }
+}
+
+function backToStart() {
+  document.getElementById('start-screen').style.display = '';
+  document.getElementById('game-screen').style.display  = 'none';
+}
+
+function buildModeHeader() {
+  const fw = FRAMEWORKS[activeMode];
+  const badge = document.getElementById('mode-badge');
+  badge.textContent = fw.name;
+  badge.style.background = fw.color + '22';
+  badge.style.color      = fw.color;
+  badge.style.border     = `1px solid ${fw.color}55`;
+}
+
+function buildProgressDots() {
+  const fw = FRAMEWORKS[activeMode];
+  const container = document.getElementById('progress-dots');
+  container.innerHTML = '';
+  fw.rounds.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' current' : '');
+    dot.id = `dot-${i}`;
+    container.appendChild(dot);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ROUND INIT
+═══════════════════════════════════════════════════════════════════════════ */
+function startRound(idx) {
+  submitted    = false;
+  currentRound = idx;
+  selectedChip = null;
+
+  const fw    = FRAMEWORKS[activeMode];
+  const round = fw.rounds[idx];
+
+  document.getElementById('round-tag').textContent   = round.tag;
+  document.getElementById('round-title').textContent = round.title;
+  document.getElementById('round-val').textContent   = `${idx+1}/${fw.rounds.length}`;
+  document.getElementById('score-val').textContent   = score;
+
+  buildPhaseRef(fw);
+  buildLanes(fw);
+  buildSourcePile(round.activities);
+
+  document.getElementById('explain-panel').style.display = 'none';
+  document.getElementById('next-btn').style.display      = 'none';
+  document.getElementById('submit-btn').style.display    = '';
+  document.getElementById('submit-btn').disabled         = false;
+
+  updateProgressDots(fw, idx);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─── Phase reference bar ─── */
+function buildPhaseRef(fw) {
+  const container = document.getElementById('phase-ref');
+  container.innerHTML = '';
+  fw.phases.forEach(ph => {
+    const div = document.createElement('div');
+    div.className = 'phase-def';
+    div.style.setProperty('--pc', ph.color);
+    div.innerHTML = `<div class="ph-num">${ph.num}</div><div class="ph-name">${ph.label}</div><div class="ph-desc">${ph.desc}</div>`;
+    container.appendChild(div);
+  });
+}
+
+/* ─── Lanes ─── */
+function buildLanes(fw) {
+  const container = document.getElementById('lanes');
+  container.innerHTML = '';
+  container.style.gridTemplateColumns = `repeat(${fw.laneCols}, 1fr)`;
+
+  fw.phases.forEach(ph => {
+    const lane = document.createElement('div');
+    lane.className     = 'lane';
+    lane.id            = `lane-${ph.id}`;
+    lane.dataset.phase = ph.id;
+    lane.style.setProperty('--pc', ph.color);
+    lane.innerHTML = `
+      <div class="lane-name">${ph.label} <span class="lane-count" id="cnt-${ph.id}">0</span></div>
+      <div class="lane-items" id="items-${ph.id}"></div>
+    `;
+
+    lane.addEventListener('dragover', e => { e.preventDefault(); lane.classList.add('drag-over'); });
+    lane.addEventListener('dragleave', () => lane.classList.remove('drag-over'));
+    lane.addEventListener('drop', e => {
+      e.preventDefault(); lane.classList.remove('drag-over');
+      if (submitted) return;
+      const chip = document.querySelector(`.activity[data-uid="${e.dataTransfer.getData('text/plain')}"]`);
+      if (chip) moveChipToLane(chip, ph.id, ph.color);
+    });
+    lane.addEventListener('click', () => {
+      if (submitted || !selectedChip) return;
+      moveChipToLane(selectedChip, ph.id, ph.color);
+      selectedChip.classList.remove('selected');
+      selectedChip = null;
+      document.querySelectorAll('.lane').forEach(l => l.classList.remove('tap-target'));
+    });
+
+    container.appendChild(lane);
+  });
+}
+
+/* ─── Source pile ─── */
+function buildSourcePile(activities) {
+  const pile = document.getElementById('source-pile');
+  pile.innerHTML = '';
+
+  shuffle([...activities]).forEach(act => {
+    const chip = document.createElement('div');
+    chip.className      = 'activity';
+    chip.draggable      = true;
+    chip.dataset.uid    = uidCounter++;
+    chip.dataset.phase  = act.phase;
+    chip.dataset.why    = act.why;
+    chip.textContent    = act.text;
+    pile.appendChild(chip);
+    attachChipEvents(chip);
+  });
+
+  pile.addEventListener('dragover', e => { e.preventDefault(); pile.classList.add('drag-over'); });
+  pile.addEventListener('dragleave', () => pile.classList.remove('drag-over'));
+  pile.addEventListener('drop', e => {
+    e.preventDefault(); pile.classList.remove('drag-over');
+    if (submitted) return;
+    const chip = document.querySelector(`.activity[data-uid="${e.dataTransfer.getData('text/plain')}"]`);
+    if (chip) pile.appendChild(chip);
+  });
+}
+
+/* ─── Chip events ─── */
+function attachChipEvents(chip) {
+  chip.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', chip.dataset.uid);
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => chip.classList.add('dragging'), 0);
+    if (selectedChip) { selectedChip.classList.remove('selected'); selectedChip = null; }
+    document.querySelectorAll('.lane').forEach(l => l.classList.remove('tap-target'));
+  });
+  chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+  chip.addEventListener('click', () => {
+    if (submitted) return;
+    if (selectedChip === chip) {
+      chip.classList.remove('selected'); selectedChip = null;
+      document.querySelectorAll('.lane').forEach(l => l.classList.remove('tap-target'));
+    } else {
+      if (selectedChip) selectedChip.classList.remove('selected');
+      selectedChip = chip; chip.classList.add('selected');
+      document.querySelectorAll('.lane').forEach(l => l.classList.add('tap-target'));
+    }
+  });
+}
+
+/* ─── Move chip to lane ─── */
+function moveChipToLane(chip, phaseId, phaseColor) {
+  chip.remove();
+  const laneItems = document.getElementById(`items-${phaseId}`);
+
+  const token = document.createElement('div');
+  token.className        = 'lane-item';
+  token.dataset.uid      = chip.dataset.uid;
+  token.dataset.correct  = chip.dataset.phase;
+  token.dataset.placed   = phaseId;
+  token.style.setProperty('--pc', phaseColor);
+  token.innerHTML = `<span class="pdot"></span><span class="token-text">${chip.textContent}</span>`;
+
+  token.addEventListener('click', () => {
+    if (submitted) return;
+    token.remove();
+    updateCount(phaseId);
+    document.getElementById('source-pile').appendChild(chip);
+  });
+
+  laneItems.appendChild(token);
+  updateCount(phaseId);
+}
+
+function updateCount(phaseId) {
+  const el = document.getElementById(`cnt-${phaseId}`);
+  if (el) el.textContent = document.getElementById(`items-${phaseId}`).children.length;
+}
+
+/* ─── Progress dots ─── */
+function updateProgressDots(fw, idx) {
+  fw.rounds.forEach((_, i) => {
+    const dot = document.getElementById(`dot-${i}`);
+    if (!dot) return;
+    dot.className = 'dot';
+    if (i < idx)       dot.classList.add(roundResults[i] === 'correct' ? 'done' : 'wrong');
+    else if (i === idx) dot.classList.add('current');
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SUBMIT
+═══════════════════════════════════════════════════════════════════════════ */
+document.getElementById('submit-btn').addEventListener('click', () => {
+  if (submitted) return;
+
+  const remaining = document.querySelectorAll('#source-pile .activity').length;
+  if (remaining > 0) { showFlash(`Place all ${remaining} remaining item${remaining > 1 ? 's' : ''}`, 'bad'); return; }
+
+  submitted = true;
+
+  const fw = FRAMEWORKS[activeMode];
+  let correct = 0, total = 0;
+
+  document.querySelectorAll('.lane-item').forEach(token => {
+    const ok = token.dataset.correct === token.dataset.placed;
+    total++; if (ok) correct++;
+    token.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) {
+      const ph = fw.phases.find(p => p.id === token.dataset.correct);
+      const lbl = document.createElement('span');
+      lbl.className   = 'wrong-label';
+      lbl.textContent = `→ ${ph ? ph.label : token.dataset.correct}`;
+      token.appendChild(lbl);
+    }
+  });
+
+  document.querySelectorAll('.activity').forEach(c => { c.draggable = false; c.style.pointerEvents = 'none'; });
+  document.querySelectorAll('.lane').forEach(l => l.style.pointerEvents = 'none');
+
+  const allCorrect = correct === total;
+  const pts = Math.round((correct / total) * 100);
+  score += pts;
+  roundResults[currentRound] = allCorrect ? 'correct' : 'wrong';
+
+  document.getElementById('score-val').textContent = score;
+  showFlash(allCorrect ? `+${pts} Perfect!` : `+${pts} — ${correct}/${total} correct`, allCorrect ? 'good' : 'bad');
+
+  buildExplanation(fw.rounds[currentRound].activities, fw);
+
+  document.getElementById('submit-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display   = '';
+  const isLast = currentRound === fw.rounds.length - 1;
+  document.getElementById('next-btn').textContent = isLast ? 'See Results' : 'Next Round →';
+
+  const dot = document.getElementById(`dot-${currentRound}`);
+  if (dot) dot.className = 'dot ' + (allCorrect ? 'done' : 'wrong');
+});
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEXT
+═══════════════════════════════════════════════════════════════════════════ */
+document.getElementById('next-btn').addEventListener('click', () => {
+  const fw = FRAMEWORKS[activeMode];
+  if (currentRound === fw.rounds.length - 1) { showSummary(); }
+  else { startRound(currentRound + 1); }
+});
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EXPLANATION
+═══════════════════════════════════════════════════════════════════════════ */
+function buildExplanation(activities, fw) {
+  const phaseOrder = fw.phases.map(p => p.id);
+  const sorted = [...activities].sort((a, b) => phaseOrder.indexOf(a.phase) - phaseOrder.indexOf(b.phase));
+
+  document.getElementById('explain-cite').innerHTML = `Source: ${fw.cite}`;
+  const container = document.getElementById('explain-rows');
+  container.innerHTML = '';
+
+  sorted.forEach(act => {
+    const ph = fw.phases.find(p => p.id === act.phase);
+    const row = document.createElement('div');
+    row.className = 'explain-row';
+
+    const badge = document.createElement('span');
+    badge.className = 'expl-badge';
+    badge.textContent = ph.label;
+    badge.style.background = ph.color + '22';
+    badge.style.color      = ph.color;
+    badge.style.border     = `1px solid ${ph.color}44`;
+
+    const name = document.createElement('span');
+    name.className   = 'expl-activity';
+    name.textContent = act.text;
+
+    const why = document.createElement('span');
+    why.className   = 'expl-why';
+    why.textContent = act.why;
+
+    row.append(badge, name, why);
+    container.appendChild(row);
+  });
+
+  document.getElementById('explain-panel').style.display = 'block';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SUMMARY
+═══════════════════════════════════════════════════════════════════════════ */
+function showSummary() {
+  ['round-header','phase-ref','source-area','lanes','explain-panel'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  document.getElementById('controls').style.display      = 'none';
+  document.getElementById('progress-dots').style.display = 'none';
+  document.getElementById('mode-badge').style.display    = 'none';
+
+  const fw = FRAMEWORKS[activeMode];
+  const max = fw.rounds.length * 100;
+  const pct = Math.round((score / max) * 100);
+  let msg = '';
+  if (pct === 100) msg = `Flawless on ${fw.name}. Every phase boundary locked in.`;
+  else if (pct >= 80) msg = `Strong. Review the phases where you lost points — check the rationale above.`;
+  else if (pct >= 60) msg = `Decent start. The boundary between adjacent phases is where points slip away.`;
+  else msg = `Run it again — focus on what separates Identification from Collection, and Examination from Analysis.`;
+
+  document.getElementById('final-score-val').textContent = `${score} / ${max}`;
+  document.getElementById('final-msg').textContent = msg;
+  document.getElementById('summary').style.display = 'block';
+}
+
+function showAllGameElements() {
+  ['round-header','phase-ref','source-area','lanes','controls'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = '';
+  });
+  document.getElementById('explain-panel').style.display = 'none';
+  document.getElementById('summary').style.display       = 'none';
+  document.getElementById('progress-dots').style.display = '';
+  document.getElementById('mode-badge').style.display    = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════════════════════════════ */
+function showFlash(msg, type) {
+  const el = document.getElementById('score-flash');
+  el.textContent = msg; el.className = `show ${type}`;
+  clearTimeout(el._t); el._t = setTimeout(() => { el.className = ''; }, 1900);
+}
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function wireModeSelector() {
+  document.querySelectorAll('.mode-card[data-mode]').forEach((card) => {
+    const mode = card.dataset.mode;
+    card.addEventListener('click', () => selectMode(mode));
+  });
+
+  const switchModeBtn = document.getElementById('switch-mode');
+  if (switchModeBtn) switchModeBtn.addEventListener('click', backToStart);
+
+  const resetRoundBtn = document.getElementById('reset-round');
+  if (resetRoundBtn) {
+    resetRoundBtn.addEventListener('click', () => {
+      if (!activeMode) return;
+      if (submitted) {
+        showFlash('Round already graded. Use Next Round or Play Again.', 'bad');
+        return;
+      }
+      startRound(currentRound);
+      showFlash('Round reset.', 'good');
+    });
+  }
+
+  const summarySwitchBtn = document.getElementById('summary-switch-mode-btn');
+  if (summarySwitchBtn) summarySwitchBtn.addEventListener('click', backToStart);
+
+  const playAgainBtn = document.getElementById('play-again-btn');
+  if (playAgainBtn) {
+    playAgainBtn.addEventListener('click', () => {
+      if (!activeMode) return;
+      score = 0;
+      roundResults = [];
+      currentRound = 0;
+      document.getElementById('summary').style.display = 'none';
+      showAllGameElements();
+      buildProgressDots();
+      startRound(0);
+    });
+  }
+}
+
+wireModeSelector();
+</script>
+</body>
+</html>

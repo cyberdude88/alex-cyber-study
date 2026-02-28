@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alex Cyber Study - CISSP Study Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .track-wheel {
+      position: relative;
+      padding: 0 2.25rem;
+    }
+
+    .track-wheel::before,
+    .track-wheel::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 52px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .track-wheel::before {
+      left: 0;
+      background: linear-gradient(to right, rgba(36,36,62,0.95), rgba(36,36,62,0));
+    }
+
+    .track-wheel::after {
+      right: 0;
+      background: linear-gradient(to left, rgba(36,36,62,0.95), rgba(36,36,62,0));
+    }
+
+    .track-grid.track-grid-home {
+      position: relative;
+      height: 304px;
+      overflow: hidden;
+      perspective: 1200px;
+      cursor: grab;
+    }
+
+    .track-grid.track-grid-home:active {
+      cursor: grabbing;
+    }
+
+    .track-grid.track-grid-home .track-card {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 232px;
+      height: 288px;
+      margin-left: -116px;
+      padding: 1.45rem 1.2rem;
+      transform-origin: center center;
+      transition: transform 0.45s cubic-bezier(.2,.8,.2,1), opacity 0.45s ease, filter 0.45s ease;
+      will-change: transform, opacity;
+    }
+
+    .track-grid.track-grid-home .track-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .track-grid.track-grid-home .track-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .track-grid.track-grid-home .track-card p {
+      font-size: 0.92rem;
+      line-height: 1.42;
+    }
+
+    .track-grid.track-grid-home .track-cta {
+      margin-top: auto;
+      padding: 0.68rem 1.15rem;
+      font-size: 0.9rem;
+      align-self: center;
+      white-space: nowrap;
+    }
+
+    .track-wheel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(15,23,42,0.75);
+      color: #fff;
+      font-size: 1.35rem;
+      line-height: 1;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+    }
+
+    .track-wheel-btn:hover {
+      transform: translateY(-50%) scale(1.06);
+      border-color: rgba(255,255,255,0.6);
+      background: rgba(30,41,59,0.92);
+    }
+
+    .track-wheel-btn.left {
+      left: 0.35rem;
+    }
+
+    .track-wheel-btn.right {
+      right: 0.35rem;
+    }
+
+    @media (max-width: 640px) {
+      .track-wheel {
+        padding: 0;
+      }
+
+      .track-wheel::before,
+      .track-wheel::after {
+        width: 36px;
+      }
+
+      .track-wheel-btn {
+        display: none;
+      }
+
+      .track-grid.track-grid-home {
+        height: 312px;
+      }
+
+      .track-grid.track-grid-home .track-card {
+        width: min(82vw, 300px);
+        margin-left: calc(-1 * min(82vw, 300px) / 2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="./">
+        <span class="logo-icon">🛡️</span> Alex Cyber Study
+      </a>
+      <ul class="nav-links">
+        <li><a href="./" class="active">Home</a></li>
+        <li><a href="domains.html">Domains</a></li>
+        <li><a href="frameworks/">Frameworks</a></li>
+        <li><a href="quiz/">Custom Quiz</a></li>
+        <li><a href="practice-exam/">Practice Exam</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1>Alex Cyber Study</h1>
+    <p class="tagline">Gamifying CISSP Study for Free</p>
+    <p class="sub-tagline">Independent study tool. Not affiliated with, endorsed by, or sponsored by ISC2.</p>
+    <span class="badge">100% FREE</span>
+  </div>
+
+  <div class="track-section">
+    <h2>Choose Study Mode</h2>
+    <div class="track-wheel">
+      <button class="track-wheel-btn left" id="wheelLeftBtn" type="button" aria-label="Rotate left">‹</button>
+      <button class="track-wheel-btn right" id="wheelRightBtn" type="button" aria-label="Rotate right">›</button>
+      <div class="track-grid track-grid-home">
+        <a class="track-card track-drills" href="quiz/">
+        <span class="track-icon">🎯</span>
+        <h3>Customized Quiz</h3>
+        <p>Open customizable domain-based quiz sessions for focused study.</p>
+        <span class="track-cta">Open Quiz</span>
+      </a>
+
+      <a class="track-card track-cat" href="practice-exam/">
+        <span class="track-icon">🧠</span>
+        <h3>Practice Exam</h3>
+        <p>CAT simulation.</p>
+        <span class="track-cta">Start Practice</span>
+      </a>
+
+      <a class="track-card track-games" href="domains.html">
+        <span class="track-icon">🕹️</span>
+        <h3>Gamified Domain Study</h3>
+        <p>Open drag-and-drop and matching tools by CISSP domain (D1 to D8).</p>
+        <span class="track-cta">Open Games</span>
+      </a>
+
+      <a class="track-card track-games" href="frameworks/ciso-architecture-arena/">
+        <span class="track-icon">🏛️</span>
+        <h3>CISO Architecture Arena</h3>
+        <p>Place decisions in the right framework layer and role. SABSA, TOGAF, Zachman, ITIL.</p>
+        <span class="track-cta">Launch Arena</span>
+      </a>
+
+      <a class="track-card track-cat" href="ciso-simulator/">
+        <span class="track-icon">📊</span>
+        <h3>The CISO Simulator</h3>
+        <p>Executive decision simulation: balance stakeholders, controls, budget, and regulatory risk.</p>
+        <span class="track-cta">Open Simulator</span>
+      </a>
+
+      <a class="track-card track-cat" href="frameworks/csa-star-levels/">
+        <span class="track-icon">☁️</span>
+        <h3>CSA STAR Scenarios</h3>
+        <p>Read cloud assurance scenarios and pick the correct STAR Level 1, 2, or 3.</p>
+        <span class="track-cta">Start CSA STAR</span>
+      </a>
+
+      <a class="track-card track-drills" href="drills/evidence-collection.html">
+        <span class="track-icon">🔬</span>
+        <h3>Evidence Collection</h3>
+        <p>Drag-and-drop Order of Volatility drill — 5 rounds with RAM, swap, and cache synonyms.</p>
+        <span class="track-cta">Start Drill</span>
+      </a>
+
+      <a class="track-card track-games" href="drills/forensic-process.html">
+        <span class="track-icon">🗂️</span>
+        <h3>Forensic Process</h3>
+        <p>Sort forensic activities into the correct NIST SP 800-86 phase — Collection, Examination, Analysis, Reporting.</p>
+        <span class="track-cta">Start Drill</span>
+      </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Alex Cyber Study - Free CISSP Study Games - Good luck on your exam.</p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script>
+    (function initTrackWheel() {
+      const wheel = document.querySelector(".track-grid-home");
+      const leftBtn = document.getElementById("wheelLeftBtn");
+      const rightBtn = document.getElementById("wheelRightBtn");
+      if (!wheel) return;
+
+      const cards = Array.from(wheel.querySelectorAll(".track-card"));
+      const n = cards.length;
+      if (n < 2) return;
+
+      let active = 0;
+      let timer = 0;
+      let pointerDown = false;
+      let startX = 0;
+      let lastX = 0;
+      let lastTime = 0;
+      let velocity = 0;
+      let dragMoved = false;
+      let pointerStartCard = null;
+
+      function shortestDelta(index) {
+        let d = index - active;
+        if (d > n / 2) d -= n;
+        if (d < -n / 2) d += n;
+        return d;
+      }
+
+      function render() {
+        cards.forEach((card, index) => {
+          const d = shortestDelta(index);
+          const abs = Math.abs(d);
+
+          if (abs > 3) {
+            card.style.opacity = "0";
+            card.style.pointerEvents = "none";
+            card.style.transform = "translateX(0) translateZ(-500px) scale(0.72)";
+            card.style.zIndex = "0";
+            return;
+          }
+
+          const x = d * 214;
+          const z = -abs * 120;
+          const ry = -d * 22;
+          const scale = 1 - abs * 0.12;
+          const opacity = 1 - abs * 0.22;
+
+          card.style.opacity = String(Math.max(0.18, opacity));
+          card.style.pointerEvents = abs <= 1 ? "auto" : "none";
+          card.style.zIndex = String(100 - abs);
+          card.style.filter = abs === 0 ? "none" : "saturate(0.88)";
+          card.style.transform = "translateX(" + x + "px) translateZ(" + z + "px) rotateY(" + ry + "deg) scale(" + scale + ")";
+        });
+      }
+
+      function step(direction, amount) {
+        const steps = amount || 1;
+        active = (active + direction * steps + n) % n;
+        render();
+      }
+
+      function startAuto() {
+        if (timer) clearInterval(timer);
+        timer = window.setInterval(() => step(1, 1), 4500);
+      }
+
+      function stopAuto() {
+        if (!timer) return;
+        clearInterval(timer);
+        timer = 0;
+      }
+
+      wheel.style.touchAction = "pan-y pinch-zoom";
+
+      wheel.addEventListener("pointerdown", (event) => {
+        pointerDown = true;
+        startX = event.clientX;
+        lastX = event.clientX;
+        lastTime = performance.now();
+        velocity = 0;
+        dragMoved = false;
+        pointerStartCard = event.target.closest("a.track-card");
+        stopAuto();
+      });
+
+      wheel.addEventListener("pointermove", (event) => {
+        if (!pointerDown) return;
+        if (Math.abs(event.clientX - startX) > 8) {
+          dragMoved = true;
+        }
+        const now = performance.now();
+        const dt = now - lastTime;
+        if (dt > 0) {
+          velocity = (event.clientX - lastX) / dt;
+        }
+        lastX = event.clientX;
+        lastTime = now;
+      });
+
+      function endDrag(event) {
+        if (!pointerDown) return;
+        pointerDown = false;
+
+        const dx = event.clientX - startX;
+        const absDx = Math.abs(dx);
+        const absVel = Math.abs(velocity);
+        const endCard = event.target.closest("a.track-card");
+
+        if (!dragMoved && pointerStartCard && endCard === pointerStartCard) {
+          window.location.href = pointerStartCard.href;
+        } else if (absDx > 32 || absVel > 0.25) {
+          const dir = dx > 0 ? -1 : 1;
+          const momentumSteps = Math.max(1, Math.min(3, Math.round(absDx / 140 + absVel * 1.6)));
+          step(dir, momentumSteps);
+        }
+        pointerStartCard = null;
+        startAuto();
+      }
+
+      wheel.addEventListener("pointerup", endDrag);
+      wheel.addEventListener("pointercancel", endDrag);
+
+      if (leftBtn) {
+        leftBtn.addEventListener("click", () => {
+          stopAuto();
+          step(-1, 1);
+          startAuto();
+        });
+      }
+
+      if (rightBtn) {
+        rightBtn.addEventListener("click", () => {
+          stopAuto();
+          step(1, 1);
+          startAuto();
+        });
+      }
+
+      wheel.addEventListener("mouseenter", stopAuto);
+      wheel.addEventListener("mouseleave", startAuto);
+
+      render();
+      startAuto();
+    })();
+  </script>
+
+</body>
+</html>

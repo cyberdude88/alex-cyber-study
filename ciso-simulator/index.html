@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The CISO Simulator</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section id="landingScreen" class="landing card">
+      <h1>The CISO Simulator</h1>
+      <p class="tagline">Every Control Delivers Different Outcomes.</p>
+
+      <div class="landing-controls">
+        <label>
+          Domain
+          <select id="domainSelect">
+            <option value="all">All Domains</option>
+            <option value="d1">Domain 1</option>
+            <option value="d2">Domain 2</option>
+            <option value="d3">Domain 3</option>
+            <option value="d4">Domain 4</option>
+            <option value="d5">Domain 5</option>
+            <option value="d6">Domain 6</option>
+            <option value="d7">Domain 7</option>
+            <option value="d8">Domain 8</option>
+          </select>
+        </label>
+
+        <label>
+          Difficulty
+          <select id="difficultySelect">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+      </div>
+
+      <button id="startBtn" class="btn-primary">Start Simulation</button>
+      <a href="/" class="btn-secondary btn-link-home">Back to Home</a>
+    </section>
+
+    <section id="simScreen" class="sim hidden">
+      <header class="topbar card">
+        <div>
+          <h2>The CISO Simulator</h2>
+          <p class="tagline">Every Control Delivers Different Outcomes.</p>
+        </div>
+        <div class="topbar-meta">
+          <p><strong>Domain:</strong> <span id="selectedDomain">All Domains</span></p>
+          <p><strong>Difficulty:</strong> <span id="selectedDifficulty">Medium</span></p>
+          <a href="/" class="btn-secondary btn-link-home">Home</a>
+          <button id="backBtn" class="btn-secondary" type="button">← Back</button>
+        </div>
+      </header>
+
+      <section class="main-grid">
+        <aside class="panel card">
+          <h3>Stakeholders</h3>
+          <div id="stakeholderList" class="stakeholder-list"></div>
+        </aside>
+
+        <section class="panel card">
+          <h3>Executive Brief</h3>
+          <h4 id="briefTitle">Brief Title</h4>
+          <p id="briefDescription" class="brief-description"></p>
+          <div id="decisionList" class="decision-list"></div>
+          <div id="outcomeBox" class="outcome-box">Select a decision to proceed.</div>
+        </section>
+
+        <aside class="panel card">
+          <h3>Enterprise Health</h3>
+          <div id="meterList" class="meter-list"></div>
+        </aside>
+      </section>
+
+      <section class="card log-wrap">
+        <h3>Incident Log</h3>
+        <div id="incidentLog" class="incident-log"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+name = "alex-cyber-cat-api"
+main = "src/worker.js"
+compatibility_date = "2026-02-21"
+
+[vars]
+# Point this to your GitHub raw URL or GitHub Pages URL for the full question bank JSON.
+BANK_URL = "https://raw.githubusercontent.com/REPO_OWNER/REPO_NAME/main/cat/question-bank.sample.json"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_KV_PREVIEW_ID"

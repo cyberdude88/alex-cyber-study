@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CISO Architecture Arena - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    .arena-shell {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .arena-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      padding: 1.4rem;
+    }
+
+    .arena-card h2 {
+      margin-bottom: 0.85rem;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    .framework-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .framework-btn {
+      border: 1px solid rgba(168,85,247,0.45);
+      border-radius: 999px;
+      padding: 0.7rem 1rem;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, rgba(168,85,247,0.9), rgba(59,130,246,0.9));
+      box-shadow: 0 0 14px rgba(168,85,247,0.35), 0 8px 18px rgba(0,0,0,0.25);
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    }
+
+    .framework-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 18px rgba(168,85,247,0.5), 0 10px 22px rgba(0,0,0,0.3);
+      filter: brightness(1.05);
+    }
+
+    .arena-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    .arena-form label {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .arena-form select {
+      width: 100%;
+      padding: 0.7rem 0.8rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(15,23,42,0.8);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .session-mode-controls {
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .session-mode-controls label {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .session-mode-controls select {
+      width: 100%;
+      padding: 0.7rem 0.8rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(15,23,42,0.8);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .arena-submit {
+      margin-top: 0.95rem;
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.98rem;
+      box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .arena-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102,126,234,0.55);
+    }
+
+    .arena-continue {
+      margin-top: 0.75rem;
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 0.72rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: background 0.2s, transform 0.2s;
+      display: none;
+    }
+
+    .arena-continue:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+
+    .feedback-panel {
+      display: none;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(15,23,42,0.55);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .feedback-panel.correct {
+      display: block;
+      color: #4ade80;
+      border-color: rgba(34,197,94,0.75);
+      box-shadow: 0 0 20px rgba(34,197,94,0.45);
+      animation: correctGlow 0.55s ease;
+    }
+
+    .feedback-panel.incorrect {
+      display: block;
+      color: #fca5a5;
+      border-color: rgba(239,68,68,0.78);
+      box-shadow: 0 0 16px rgba(239,68,68,0.3);
+      animation: wrongPulse 0.55s ease;
+    }
+
+    .answer-review-panel {
+      display: none;
+      margin-top: 0.9rem;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(15,23,42,0.55);
+    }
+
+    .answer-review-title {
+      margin: 0 0 0.55rem;
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.85);
+      font-weight: 800;
+    }
+
+    .answer-review-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .answer-review-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .answer-chip {
+      margin-top: 0;
+      padding: 0.7rem 0.8rem;
+      font-size: 0.95rem;
+      cursor: default;
+      opacity: 1;
+      box-shadow: 0 4px 15px rgba(102,126,234,0.2);
+    }
+
+    .answer-chip:disabled {
+      color: #fff;
+      opacity: 1;
+      filter: none;
+    }
+
+    .answer-chip-correct {
+      background: linear-gradient(135deg, #34d399, #22c55e);
+      box-shadow: 0 0 16px rgba(34,197,94,0.4);
+    }
+
+    .answer-chip-incorrect {
+      background: linear-gradient(135deg, #f87171, #ef4444);
+      box-shadow: 0 0 16px rgba(239,68,68,0.45);
+    }
+
+    .meters-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+    }
+
+    .meter-title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.84);
+      font-size: 0.92rem;
+    }
+
+    .meter-track {
+      height: 11px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    #alignmentFill {
+      background: linear-gradient(135deg, #34d399, #22c55e);
+      box-shadow: 0 0 16px rgba(34,197,94,0.4);
+    }
+
+    #riskFill {
+      background: linear-gradient(135deg, #f87171, #ef4444);
+      box-shadow: 0 0 14px rgba(239,68,68,0.35);
+    }
+
+    #gameOverBanner {
+      display: none;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(220,38,38,0.2));
+      border: 2px solid #ef4444;
+      color: #fecaca;
+      border-radius: 12px;
+      padding: 1rem;
+      font-weight: 800;
+      animation: wrongPulse 0.55s ease;
+    }
+
+    @keyframes correctGlow {
+      0% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 20px rgba(34,197,94,0.45); }
+    }
+
+    @keyframes wrongPulse {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .arena-form,
+      .meters-grid,
+      .answer-review-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../../index.html">
+        <span class="logo-icon">🛡️</span> Alex Cyber Study
+      </a>
+      <ul class="nav-links">
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../domains.html">Domains</a></li>
+        <li><a href="../index.html" class="active">Frameworks</a></li>
+        <li><a href="../../quiz/">Custom Quiz</a></li>
+        <li><a href="../../practice-exam/">Practice Exam</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🏛️ CISO Architecture Arena</h1>
+      <p class="game-subtitle">Who Decides What?</p>
+    </div>
+
+    <div class="game-controls">
+      <a href="../index.html" class="back-btn">← Back to Frameworks</a>
+      <a href="./dashboard.html" class="back-btn">View Performance Dashboard</a>
+      <button type="button" id="resetBtn" class="reset-btn">🔄 Reset Arena</button>
+    </div>
+
+    <div class="score-display">
+      Framework: <span id="activeFramework">Not Selected</span>
+    </div>
+
+    <div class="arena-shell">
+      <div class="arena-card">
+        <div class="session-mode-controls">
+          <label for="sessionMode">Session Mode</label>
+          <select id="sessionMode">
+            <option value="">Survival Mode</option>
+            <option value="5">5 Questions</option>
+            <option value="10">10 Questions</option>
+            <option value="20">20 Questions</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="frameworkSelector" class="arena-card">
+        <h2>Select Your Framework</h2>
+        <div class="framework-buttons">
+          <button type="button" class="framework-btn" data-framework="SABSA">SABSA</button>
+          <button type="button" class="framework-btn" data-framework="TOGAF">TOGAF</button>
+          <button type="button" class="framework-btn" data-framework="Zachman">Zachman</button>
+          <button type="button" class="framework-btn" data-framework="ITIL">ITIL</button>
+        </div>
+      </div>
+
+      <div class="arena-card">
+        <div class="meters-grid">
+          <div>
+            <div class="meter-title">
+              <span>Alignment Meter</span>
+              <span id="alignmentValue">50%</span>
+            </div>
+            <div class="meter-track">
+              <div id="alignmentFill" class="meter-fill"></div>
+            </div>
+          </div>
+          <div>
+            <div class="meter-title">
+              <span>Risk Meter</span>
+              <span id="riskValue">0%</span>
+            </div>
+            <div class="meter-track">
+              <div id="riskFill" class="meter-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="playArea" class="arena-card" style="display:none;">
+        <h2>Scenario</h2>
+        <div id="scenarioCard" class="scenario-box">
+          <div id="scenarioText" class="scenario-text"></div>
+        </div>
+
+        <div class="arena-form">
+          <div>
+            <label for="layerSelect">Layer / Phase</label>
+            <select id="layerSelect">
+              <option value="">Select a layer/phase...</option>
+            </select>
+          </div>
+          <div>
+            <label for="roleSelect">Role</label>
+            <select id="roleSelect">
+              <option value="">Select a role...</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" id="submitBtn" class="arena-submit">Submit Answer</button>
+
+        <div id="feedbackPanel" class="feedback-panel"></div>
+        <div id="answerReview" class="answer-review-panel"></div>
+        <button type="button" id="continueBtn" class="arena-continue">Continue</button>
+      </div>
+
+      <div id="gameOverBanner">Game Over: Risk reached 100%. Reset the arena to try again.</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Alex Cyber Study - Free CISSP Study Games - Good luck on your exam.</p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>

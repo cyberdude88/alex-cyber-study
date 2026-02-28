@@ -1,0 +1,2502 @@
+[
+  {
+    "framework": "SABSA",
+    "baseScenario": "A retail banking initiative for partner integration is aligning control themes across cross-border operations, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "retail banking": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "partner integration": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Contextual",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Logical",
+      "role": "Security Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A health network initiative for payments resilience is aligning service expectations across outsourced teams, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "health network": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "payments resilience": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A manufacturing group initiative for workforce access is aligning assurance objectives across regional business units, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "manufacturing group": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "workforce access": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Logical",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A telecom provider initiative for third-party onboarding is aligning trust attributes across shared platforms, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "telecom provider": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "third-party onboarding": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A public utility initiative for identity modernization is aligning risk statements across critical service lines, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "public utility": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "identity modernization": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Network Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A retail banking initiative for partner integration is aligning control themes across cross-border operations, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "retail banking": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "partner integration": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A health network initiative for payments resilience is aligning service expectations across outsourced teams, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "health network": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "payments resilience": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Contextual",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Logical",
+      "role": "Security Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A manufacturing group initiative for workforce access is aligning assurance objectives across regional business units, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "manufacturing group": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "workforce access": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A telecom provider initiative for third-party onboarding is aligning trust attributes across shared platforms, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "telecom provider": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "third-party onboarding": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Logical",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A public utility initiative for identity modernization is aligning risk statements across critical service lines, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "public utility": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "identity modernization": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A retail banking initiative for partner integration is aligning control themes across cross-border operations, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "retail banking": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "partner integration": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Network Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A health network initiative for payments resilience is aligning service expectations across outsourced teams, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "health network": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "payments resilience": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A manufacturing group initiative for workforce access is aligning assurance objectives across regional business units, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "manufacturing group": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "workforce access": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Contextual",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Logical",
+      "role": "Security Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A telecom provider initiative for third-party onboarding is aligning trust attributes across shared platforms, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "telecom provider": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "third-party onboarding": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A public utility initiative for identity modernization is aligning risk statements across critical service lines, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "public utility": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "identity modernization": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Logical",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A retail banking initiative for partner integration is aligning control themes across cross-border operations, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "retail banking": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "partner integration": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A health network initiative for payments resilience is aligning service expectations across outsourced teams, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "health network": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "payments resilience": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Network Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A manufacturing group initiative for workforce access is aligning assurance objectives across regional business units, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "manufacturing group": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "workforce access": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A telecom provider initiative for third-party onboarding is aligning trust attributes across shared platforms, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "telecom provider": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "third-party onboarding": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Contextual",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Logical",
+      "role": "Security Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A public utility initiative for identity modernization is aligning risk statements across critical service lines, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "public utility": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "identity modernization": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A retail banking initiative for partner integration is aligning control themes across cross-border operations, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "retail banking": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "partner integration": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Logical",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A health network initiative for payments resilience is aligning service expectations across outsourced teams, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "health network": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "payments resilience": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Physical",
+      "role": "Cloud Security Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A manufacturing group initiative for workforce access is aligning assurance objectives across regional business units, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "manufacturing group": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "workforce access": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Component",
+      "role": "Platform Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "Component",
+      "role": "Network Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A telecom provider initiative for third-party onboarding is aligning trust attributes across shared platforms, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "telecom provider": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "third-party onboarding": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Operational",
+      "role": "SOC Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Conceptual",
+      "role": "Security Architect"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "SABSA",
+    "baseScenario": "A public utility initiative for identity modernization is aligning risk statements across critical service lines, while teams debate who should formalize the next architecture decision.",
+    "synonyms": {
+      "public utility": [
+        "financial services org",
+        "consumer finance enterprise",
+        "regional lender"
+      ],
+      "identity modernization": [
+        "access transformation",
+        "service integration effort",
+        "platform refresh"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Contextual",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Logical",
+      "role": "Security Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a zero trust rollout program driven by acquisition integration, the team is refining a work package sequencing for shared services and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "zero trust rollout": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "work package sequencing": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Preliminary Phase",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Solution Architect"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a multi-cloud redesign program driven by service instability, the team is refining a stakeholder concern log for regional programs and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "multi-cloud redesign": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "stakeholder concern log": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase A: Architecture Vision",
+      "role": "CISO"
+    },
+    "engineerCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Solution Architect"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a identity consolidation program driven by cost exposure, the team is refining a architecture contract for enterprise portfolio and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "identity consolidation": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "architecture contract": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase B: Business Architecture",
+      "role": "Business Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Platform Engineer"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a security data lake program driven by board-level risk targets, the team is refining a capability map for customer channels and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "security data lake": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "capability map": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Solution Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase F: Migration Planning",
+      "role": "Program Manager"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a resilience uplift program driven by regulatory pressure, the team is refining a transition roadmap for platform domains and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "resilience uplift": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "transition roadmap": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Technology Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Release Engineer"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a zero trust rollout program driven by acquisition integration, the team is refining a work package sequencing for shared services and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "zero trust rollout": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "work package sequencing": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase E: Opportunities and Solutions",
+      "role": "Program Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Implementation Governance Lead"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a multi-cloud redesign program driven by service instability, the team is refining a stakeholder concern log for regional programs and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "multi-cloud redesign": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "stakeholder concern log": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase F: Migration Planning",
+      "role": "Portfolio Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Phase H: Architecture Change Management",
+      "role": "Site Reliability Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a identity consolidation program driven by cost exposure, the team is refining a architecture contract for enterprise portfolio and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "identity consolidation": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "architecture contract": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Implementation Governance Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Requirements Management",
+      "role": "Business Analyst"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a security data lake program driven by board-level risk targets, the team is refining a capability map for customer channels and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "security data lake": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "capability map": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase H: Architecture Change Management",
+      "role": "Change Advisory Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Data Architect"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a resilience uplift program driven by regulatory pressure, the team is refining a transition roadmap for platform domains and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "resilience uplift": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "transition roadmap": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Requirements Management",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Technology Architect"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a zero trust rollout program driven by acquisition integration, the team is refining a work package sequencing for shared services and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "zero trust rollout": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "work package sequencing": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Preliminary Phase",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Solution Architect"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a multi-cloud redesign program driven by service instability, the team is refining a stakeholder concern log for regional programs and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "multi-cloud redesign": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "stakeholder concern log": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase A: Architecture Vision",
+      "role": "CISO"
+    },
+    "engineerCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Solution Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a identity consolidation program driven by cost exposure, the team is refining a architecture contract for enterprise portfolio and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "identity consolidation": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "architecture contract": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase B: Business Architecture",
+      "role": "Business Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Platform Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a security data lake program driven by board-level risk targets, the team is refining a capability map for customer channels and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "security data lake": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "capability map": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Solution Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase F: Migration Planning",
+      "role": "Program Manager"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a resilience uplift program driven by regulatory pressure, the team is refining a transition roadmap for platform domains and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "resilience uplift": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "transition roadmap": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Technology Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Release Engineer"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a zero trust rollout program driven by acquisition integration, the team is refining a work package sequencing for shared services and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "zero trust rollout": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "work package sequencing": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase E: Opportunities and Solutions",
+      "role": "Program Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Implementation Governance Lead"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a multi-cloud redesign program driven by service instability, the team is refining a stakeholder concern log for regional programs and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "multi-cloud redesign": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "stakeholder concern log": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase F: Migration Planning",
+      "role": "Portfolio Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Phase H: Architecture Change Management",
+      "role": "Site Reliability Engineer"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a identity consolidation program driven by cost exposure, the team is refining a architecture contract for enterprise portfolio and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "identity consolidation": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "architecture contract": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Implementation Governance Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Requirements Management",
+      "role": "Business Analyst"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a security data lake program driven by board-level risk targets, the team is refining a capability map for customer channels and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "security data lake": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "capability map": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase H: Architecture Change Management",
+      "role": "Change Advisory Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Data Architect"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a resilience uplift program driven by regulatory pressure, the team is refining a transition roadmap for platform domains and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "resilience uplift": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "transition roadmap": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Requirements Management",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Technology Architect"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a zero trust rollout program driven by acquisition integration, the team is refining a work package sequencing for shared services and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "zero trust rollout": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "work package sequencing": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Preliminary Phase",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Solution Architect"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a multi-cloud redesign program driven by service instability, the team is refining a stakeholder concern log for regional programs and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "multi-cloud redesign": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "stakeholder concern log": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase A: Architecture Vision",
+      "role": "CISO"
+    },
+    "engineerCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Solution Architect"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a identity consolidation program driven by cost exposure, the team is refining a architecture contract for enterprise portfolio and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "identity consolidation": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "architecture contract": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase B: Business Architecture",
+      "role": "Business Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Platform Engineer"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a security data lake program driven by board-level risk targets, the team is refining a capability map for customer channels and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "security data lake": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "capability map": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase C: Information Systems Architectures",
+      "role": "Solution Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase F: Migration Planning",
+      "role": "Program Manager"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "TOGAF",
+    "baseScenario": "During a resilience uplift program driven by regulatory pressure, the team is refining a transition roadmap for platform domains and must decide which phase and role should steer the next action.",
+    "synonyms": {
+      "resilience uplift": [
+        "security transformation initiative",
+        "enterprise change effort",
+        "target state program"
+      ],
+      "transition roadmap": [
+        "architecture deliverable",
+        "planning artifact",
+        "governance output"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Phase D: Technology Architecture",
+      "role": "Technology Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Phase G: Implementation Governance",
+      "role": "Release Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on cross-enterprise data sharing is organizing a ownership matrix to improve consistent interpretation, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "cross-enterprise data sharing": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "consistent interpretation": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Scope (Planner)",
+      "role": "Planner"
+    },
+    "engineerCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on customer identity governance is organizing a system abstraction set to improve repeatable execution, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "customer identity governance": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "repeatable execution": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Business Model (Owner)",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on critical process continuity is organizing a implementation blueprint to improve audit-ready evidence, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "critical process continuity": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "audit-ready evidence": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "Platform Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on service accountability is organizing a production behavior baseline to improve clarity of decision rights, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "service accountability": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "clarity of decision rights": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Data Modeler"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on platform standardization is organizing a enterprise inventory to improve traceable accountability, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "platform standardization": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "traceable accountability": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on cross-enterprise data sharing is organizing a ownership matrix to improve consistent interpretation, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "cross-enterprise data sharing": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "consistent interpretation": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on customer identity governance is organizing a system abstraction set to improve repeatable execution, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "customer identity governance": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "repeatable execution": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Scope (Planner)",
+      "role": "Planner"
+    },
+    "engineerCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on critical process continuity is organizing a implementation blueprint to improve audit-ready evidence, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "critical process continuity": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "audit-ready evidence": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Business Model (Owner)",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on service accountability is organizing a production behavior baseline to improve clarity of decision rights, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "service accountability": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "clarity of decision rights": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "Platform Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on platform standardization is organizing a enterprise inventory to improve traceable accountability, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "platform standardization": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "traceable accountability": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Data Modeler"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on cross-enterprise data sharing is organizing a ownership matrix to improve consistent interpretation, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "cross-enterprise data sharing": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "consistent interpretation": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on customer identity governance is organizing a system abstraction set to improve repeatable execution, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "customer identity governance": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "repeatable execution": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on critical process continuity is organizing a implementation blueprint to improve audit-ready evidence, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "critical process continuity": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "audit-ready evidence": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Scope (Planner)",
+      "role": "Planner"
+    },
+    "engineerCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on service accountability is organizing a production behavior baseline to improve clarity of decision rights, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "service accountability": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "clarity of decision rights": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Business Model (Owner)",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on platform standardization is organizing a enterprise inventory to improve traceable accountability, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "platform standardization": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "traceable accountability": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "Platform Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on cross-enterprise data sharing is organizing a ownership matrix to improve consistent interpretation, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "cross-enterprise data sharing": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "consistent interpretation": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Data Modeler"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on customer identity governance is organizing a system abstraction set to improve repeatable execution, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "customer identity governance": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "repeatable execution": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on critical process continuity is organizing a implementation blueprint to improve audit-ready evidence, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "critical process continuity": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "audit-ready evidence": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on service accountability is organizing a production behavior baseline to improve clarity of decision rights, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "service accountability": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "clarity of decision rights": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Scope (Planner)",
+      "role": "Planner"
+    },
+    "engineerCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on platform standardization is organizing a enterprise inventory to improve traceable accountability, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "platform standardization": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "traceable accountability": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Business Model (Owner)",
+      "role": "Business Owner"
+    },
+    "engineerCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on cross-enterprise data sharing is organizing a ownership matrix to improve consistent interpretation, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "cross-enterprise data sharing": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "consistent interpretation": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "Platform Engineer"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on customer identity governance is organizing a system abstraction set to improve repeatable execution, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "customer identity governance": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "repeatable execution": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Data Modeler"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on critical process continuity is organizing a implementation blueprint to improve audit-ready evidence, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "critical process continuity": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "audit-ready evidence": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "engineerCorrect": {
+      "layer": "System Model (Designer)",
+      "role": "Enterprise Architect"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on service accountability is organizing a production behavior baseline to improve clarity of decision rights, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "service accountability": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "clarity of decision rights": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Functioning Enterprise",
+      "role": "Operations Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Technology Model (Builder)",
+      "role": "System Engineer"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "Zachman",
+    "baseScenario": "An enterprise workshop on platform standardization is organizing a enterprise inventory to improve traceable accountability, and participants need the correct perspective and owner for the current decision point.",
+    "synonyms": {
+      "platform standardization": [
+        "enterprise alignment effort",
+        "organizational architecture review",
+        "governance framing session"
+      ],
+      "traceable accountability": [
+        "decision coherence",
+        "operational consistency",
+        "management visibility"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Scope (Planner)",
+      "role": "Planner"
+    },
+    "engineerCorrect": {
+      "layer": "Detailed Representations (Subcontractor)",
+      "role": "Developer Lead"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a remote access service, leadership is reviewing frequent change collisions and revising the change record set for regional support hubs; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "remote access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "change record set": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Strategy",
+      "role": "Service Portfolio Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Service Desk Lead"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a vulnerability response service, leadership is reviewing unstable release quality and revising the operational runbook for executive stakeholders; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "vulnerability response service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "operational runbook": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Design",
+      "role": "Service Design Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Problem Manager"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a identity lifecycle service, leadership is reviewing audit escalation and revising the improvement register for regulated business units; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "identity lifecycle service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "improvement register": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Transition",
+      "role": "Change Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "Problem Manager"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a cloud logging service, leadership is reviewing repeat incident patterns and revising the service catalog entry for shared operations teams; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "cloud logging service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "service catalog entry": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Operation",
+      "role": "Incident Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Design",
+      "role": "Availability Manager"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a privileged access service, leadership is reviewing rising ticket volume and revising the support model for external partners; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "privileged access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "support model": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "CSI Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Transition",
+      "role": "Release Manager"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a remote access service, leadership is reviewing frequent change collisions and revising the change record set for regional support hubs; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "remote access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "change record set": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Strategy",
+      "role": "Service Portfolio Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Service Desk Lead"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a vulnerability response service, leadership is reviewing unstable release quality and revising the operational runbook for executive stakeholders; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "vulnerability response service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "operational runbook": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Design",
+      "role": "Service Design Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Problem Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a identity lifecycle service, leadership is reviewing audit escalation and revising the improvement register for regulated business units; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "identity lifecycle service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "improvement register": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Transition",
+      "role": "Change Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "Problem Manager"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a cloud logging service, leadership is reviewing repeat incident patterns and revising the service catalog entry for shared operations teams; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "cloud logging service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "service catalog entry": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Operation",
+      "role": "Incident Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Design",
+      "role": "Availability Manager"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a privileged access service, leadership is reviewing rising ticket volume and revising the support model for external partners; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "privileged access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "support model": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "CSI Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Transition",
+      "role": "Release Manager"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a remote access service, leadership is reviewing frequent change collisions and revising the change record set for regional support hubs; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "remote access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "change record set": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Strategy",
+      "role": "Service Portfolio Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Service Desk Lead"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a vulnerability response service, leadership is reviewing unstable release quality and revising the operational runbook for executive stakeholders; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "vulnerability response service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "operational runbook": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Design",
+      "role": "Service Design Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Problem Manager"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a identity lifecycle service, leadership is reviewing audit escalation and revising the improvement register for regulated business units; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "identity lifecycle service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "improvement register": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Transition",
+      "role": "Change Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "Problem Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a cloud logging service, leadership is reviewing repeat incident patterns and revising the service catalog entry for shared operations teams; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "cloud logging service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "service catalog entry": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Operation",
+      "role": "Incident Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Design",
+      "role": "Availability Manager"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a privileged access service, leadership is reviewing rising ticket volume and revising the support model for external partners; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "privileged access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "support model": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "CSI Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Transition",
+      "role": "Release Manager"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a remote access service, leadership is reviewing frequent change collisions and revising the change record set for regional support hubs; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "remote access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "change record set": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Strategy",
+      "role": "Service Portfolio Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Service Desk Lead"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a vulnerability response service, leadership is reviewing unstable release quality and revising the operational runbook for executive stakeholders; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "vulnerability response service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "operational runbook": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Design",
+      "role": "Service Design Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Problem Manager"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a identity lifecycle service, leadership is reviewing audit escalation and revising the improvement register for regulated business units; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "identity lifecycle service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "improvement register": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Transition",
+      "role": "Change Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "Problem Manager"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a cloud logging service, leadership is reviewing repeat incident patterns and revising the service catalog entry for shared operations teams; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "cloud logging service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "service catalog entry": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Operation",
+      "role": "Incident Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Design",
+      "role": "Availability Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a privileged access service, leadership is reviewing rising ticket volume and revising the support model for external partners; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "privileged access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "support model": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "CSI Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Transition",
+      "role": "Release Manager"
+    },
+    "trapType": "ownership ambiguity"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a remote access service, leadership is reviewing frequent change collisions and revising the change record set for regional support hubs; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "remote access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "change record set": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Strategy",
+      "role": "Service Portfolio Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Service Desk Lead"
+    },
+    "trapType": "artifact-driven misdirection"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a vulnerability response service, leadership is reviewing unstable release quality and revising the operational runbook for executive stakeholders; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "vulnerability response service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "operational runbook": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Design",
+      "role": "Service Design Lead"
+    },
+    "engineerCorrect": {
+      "layer": "Service Operation",
+      "role": "Problem Manager"
+    },
+    "trapType": "role-layer mismatch"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a identity lifecycle service, leadership is reviewing audit escalation and revising the improvement register for regulated business units; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "identity lifecycle service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "improvement register": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Transition",
+      "role": "Change Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "Problem Manager"
+    },
+    "trapType": "execution-stage bait"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a cloud logging service, leadership is reviewing repeat incident patterns and revising the service catalog entry for shared operations teams; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "cloud logging service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "service catalog entry": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Service Operation",
+      "role": "Incident Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Design",
+      "role": "Availability Manager"
+    },
+    "trapType": "governance-vs-delivery confusion"
+  },
+  {
+    "framework": "ITIL",
+    "baseScenario": "For a privileged access service, leadership is reviewing rising ticket volume and revising the support model for external partners; the team must identify who should take the next lifecycle decision.",
+    "synonyms": {
+      "privileged access service": [
+        "security support offering",
+        "managed security capability",
+        "service line"
+      ],
+      "support model": [
+        "service artifact",
+        "operational document",
+        "governance record"
+      ]
+    },
+    "cisoCorrect": {
+      "layer": "Continual Service Improvement",
+      "role": "CSI Manager"
+    },
+    "engineerCorrect": {
+      "layer": "Service Transition",
+      "role": "Release Manager"
+    },
+    "trapType": "strategy-vs-operations blend"
+  }
+]
