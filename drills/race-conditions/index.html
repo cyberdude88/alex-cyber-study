@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CISSP Domain 3 & 8 drill: identify race conditions, TOCTOU attacks, deadlock, mutex vs semaphore, and covert timing channels. Scenario-based NEXT/BEFORE questions.">
+<meta name="keywords" content="CISSP TOCTOU, race condition CISSP, deadlock CISSP, mutex semaphore, covert timing channel, CISSP domain 3 domain 8, parallel processing security">
+<meta name="author" content="Alex Cyber Study">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/drills/race-conditions">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alex Cyber Study">
+<meta property="og:title" content="Race Conditions & TOCTOU Drill — CISSP | Alex Cyber Study">
+<meta property="og:description" content="CISSP drill: TOCTOU, race conditions, deadlock, mutex vs semaphore, and covert timing channels. Scenario NEXT/BEFORE questions.">
+<meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/drills/race-conditions">
+<meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Race Conditions & TOCTOU Drill — CISSP | Alex Cyber Study">
+<meta name="twitter:description" content="CISSP drill: TOCTOU, race conditions, deadlock, mutex vs semaphore, covert timing channels. Scenario NEXT/BEFORE questions.">
+<meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+<title>Race Conditions & TOCTOU — CISSP Drill | Alex Cyber Study</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #0d0f14;
+  --surface: #161b25;
+  --border:  #1e2a3a;
+  --text:    #c9d5e0;
+  --dim:     #5a6a7a;
+  --accent:  #00aaff;
+  --gold:    #f5c842;
+  --green:   #2ecc71;
+  --red:     #e74c3c;
+  --orange:  #f39c12;
+  --r:       10px;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 16px; line-height: 1.5; min-height: 100vh; }
+#app { max-width: 820px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* HUD */
+#hud { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 18px; margin-bottom: 24px; position: sticky; top: 10px; z-index: 100; gap: 12px; flex-wrap: wrap; }
+#back-btn { background: none; border: 1px solid var(--border); color: var(--dim); border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color .2s, color .2s; }
+#back-btn:hover { border-color: var(--accent); color: var(--accent); }
+.hud-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+.hud-stats { display: flex; gap: 20px; }
+.hud-stat { text-align: center; }
+.hud-stat .val { font-size: 18px; font-weight: 700; color: var(--gold); }
+.hud-stat .lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.tab { padding: 8px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--dim); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; }
+.tab.active { border-color: var(--accent); color: var(--accent); background: rgba(0,170,255,.08); }
+
+/* Reference strip */
+.ref-strip { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 18px; margin-bottom: 20px; }
+.ref-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.ref-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ref-table th { color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+.ref-table td { padding: 6px 8px; border-bottom: 1px solid rgba(30,42,58,.5); }
+.ref-table td:first-child { color: var(--accent); font-weight: 700; white-space: nowrap; }
+.ref-table td:last-child { color: var(--dim); font-size: 12px; }
+.ref-toggle { font-size: 12px; color: var(--accent); cursor: pointer; margin-top: 8px; display: inline-block; }
+
+/* Match drag */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+@media (max-width: 600px) { .match-grid { grid-template-columns: 1fr; } }
+.match-col-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.chip-pool { display: flex; flex-direction: column; gap: 8px; }
+.chip { background: rgba(0,170,255,.1); border: 1px solid rgba(0,170,255,.3); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--accent); cursor: grab; user-select: none; transition: border-color .2s, background .2s, opacity .2s; }
+.chip:active { cursor: grabbing; }
+.chip.placed { opacity: .35; cursor: default; pointer-events: none; }
+.chip.dragging { opacity: .5; }
+.def-list { display: flex; flex-direction: column; gap: 8px; }
+.def-slot { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; min-height: 60px; transition: border-color .2s; }
+.def-slot.dragover { border-color: var(--accent); background: rgba(0,170,255,.05); }
+.def-slot.correct { border-color: var(--green); background: rgba(46,204,113,.06); }
+.def-slot.wrong { border-color: var(--red); background: rgba(231,76,60,.06); }
+.def-text { font-size: 13px; color: var(--text); line-height: 1.45; margin-bottom: 6px; }
+.slot-answer { font-size: 12px; font-weight: 700; margin-top: 4px; }
+.slot-answer.correct { color: var(--green); }
+.slot-answer.wrong { color: var(--red); }
+.slot-expected { font-size: 11px; color: var(--dim); margin-top: 2px; }
+
+/* Scenario */
+.scenario-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 22px; margin-bottom: 16px; }
+.sc-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+.sc-keyword { display: inline-block; background: rgba(245,200,66,.15); border: 1px solid rgba(245,200,66,.4); border-radius: 4px; padding: 1px 7px; font-size: 12px; font-weight: 700; color: var(--gold); margin-left: 6px; vertical-align: middle; }
+.sc-stem { font-size: 16px; line-height: 1.85; margin-bottom: 20px; }
+.sc-choices { display: flex; flex-direction: column; gap: 10px; }
+.sc-choice { display: flex; align-items: flex-start; gap: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: border-color .2s, background .2s; }
+.sc-choice:hover:not(.answered) { border-color: var(--accent); }
+.sc-choice .letter { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--dim); flex-shrink: 0; margin-top: 1px; }
+.sc-choice .choice-text { font-size: 14px; line-height: 1.55; }
+.sc-choice.correct-ans { border-color: var(--green); background: rgba(46,204,113,.07); }
+.sc-choice.correct-ans .letter { border-color: var(--green); color: var(--green); background: rgba(46,204,113,.15); }
+.sc-choice.wrong-ans { border-color: var(--red); background: rgba(231,76,60,.07); }
+.sc-choice.wrong-ans .letter { border-color: var(--red); color: var(--red); }
+.sc-choice.show-correct { border-color: var(--green); }
+.feedback { margin-top: 16px; padding: 14px 16px; border-radius: 8px; font-size: 14px; line-height: 1.6; display: none; }
+.feedback.show { display: block; }
+.feedback.correct { background: rgba(46,204,113,.08); border: 1px solid rgba(46,204,113,.25); color: var(--green); }
+.feedback.wrong { background: rgba(231,76,60,.08); border: 1px solid rgba(231,76,60,.25); color: #f1948a; }
+.trap-tag { display: inline-block; background: rgba(243,156,18,.15); border: 1px solid rgba(243,156,18,.4); border-radius: 4px; padding: 1px 7px; font-size: 11px; font-weight: 700; color: var(--orange); margin-right: 6px; }
+
+/* Buttons */
+.btn { padding: 10px 22px; border-radius: 8px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .2s, transform .15s; }
+.btn:hover { opacity: .88; transform: translateY(-1px); }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--dim); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+/* Section headings */
+.section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); margin-bottom: 16px; }
+
+/* Progress bar */
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .4s ease; }
+
+/* Footer */
+footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--dim); line-height: 1.7; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HUD -->
+  <div id="hud">
+    <a id="back-btn" href="../../">← Back</a>
+    <span class="hud-title">⚡ Race Conditions & TOCTOU</span>
+    <div class="hud-stats">
+      <div class="hud-stat"><div class="val" id="score-val">0</div><div class="lbl">Score</div></div>
+      <div class="hud-stat"><div class="val" id="total-val">0</div><div class="lbl">Answered</div></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('match')">Concept Match</button>
+    <button class="tab" onclick="switchTab('scenario')">Scenario Questions</button>
+  </div>
+
+  <!-- ── TAB 1: CONCEPT MATCH ── -->
+  <div id="tab-match">
+
+    <div class="ref-strip">
+      <div class="ref-label">Quick Reference</div>
+      <div id="ref-content" style="display:none">
+        <table class="ref-table">
+          <tr><th>Term</th><th>What it is</th><th>CISSP Trap</th></tr>
+          <tr><td>TOCTOU</td><td>Attacker exploits window between permission check and resource use</td><td>NOT a covert channel — it's an implementation vulnerability</td></tr>
+          <tr><td>Race Condition</td><td>Two threads compete for a shared resource; outcome depends on timing</td><td>Root cause of TOCTOU</td></tr>
+          <tr><td>Deadlock</td><td>Two threads each hold a resource the other needs — neither proceeds</td><td>Availability failure, not confidentiality</td></tr>
+          <tr><td>Starvation</td><td>A thread is perpetually denied resources by higher-priority threads</td><td>Also an availability issue</td></tr>
+          <tr><td>Mutex</td><td>Only ONE thread may access the resource at a time (binary lock)</td><td>Fix for race conditions</td></tr>
+          <tr><td>Semaphore</td><td>Controls access for up to N concurrent threads (counting signal)</td><td>More flexible than mutex; not binary</td></tr>
+          <tr><td>Atomic Operation</td><td>Executes as one indivisible unit — no thread can interrupt mid-execution</td><td>Strongest guarantee; eliminates race windows</td></tr>
+          <tr><td>Covert Timing Channel</td><td>Leaking data by varying response time (e.g., cache hit vs miss)</td><td>Sutherland model — different from TOCTOU</td></tr>
+        </table>
+      </div>
+      <span class="ref-toggle" onclick="toggleRef()">▶ Show reference table</span>
+    </div>
+
+    <div class="section-title">Drag each term onto its definition</div>
+
+    <div class="match-grid">
+      <div>
+        <div class="match-col-label">Terms</div>
+        <div class="chip-pool" id="chip-pool">
+          <div class="chip" draggable="true" data-term="TOCTOU">TOCTOU</div>
+          <div class="chip" draggable="true" data-term="Deadlock">Deadlock</div>
+          <div class="chip" draggable="true" data-term="Starvation">Starvation</div>
+          <div class="chip" draggable="true" data-term="Mutex">Mutex</div>
+          <div class="chip" draggable="true" data-term="Semaphore">Semaphore</div>
+          <div class="chip" draggable="true" data-term="Atomic Operation">Atomic Operation</div>
+          <div class="chip" draggable="true" data-term="Covert Timing Channel">Covert Timing Channel</div>
+          <div class="chip" draggable="true" data-term="Race Condition">Race Condition</div>
+        </div>
+      </div>
+      <div>
+        <div class="match-col-label">Definitions</div>
+        <div class="def-list" id="def-list">
+          <!-- slots injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkMatch()">Check Answers</button>
+      <button class="btn btn-ghost" onclick="resetMatch()">Reset</button>
+    </div>
+  </div>
+
+  <!-- ── TAB 2: SCENARIOS ── -->
+  <div id="tab-scenario" style="display:none">
+    <div class="progress-bar"><div class="progress-fill" id="sc-progress"></div></div>
+    <div id="scenarios-container"></div>
+  </div>
+
+  <footer>
+    <p>Alex Cyber Study — Free CISSP Study Tools</p>
+    <p>Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────────
+let score = 0;
+let answered = 0;
+
+function updateHUD() {
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('total-val').textContent = answered;
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.getElementById('tab-match').style.display = name === 'match' ? '' : 'none';
+  document.getElementById('tab-scenario').style.display = name === 'scenario' ? '' : 'none';
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && name === 'match') || (i === 1 && name === 'scenario'));
+  });
+}
+
+// ── Reference Toggle ──────────────────────────────────────────────────────────
+function toggleRef() {
+  const content = document.getElementById('ref-content');
+  const toggle = document.querySelector('.ref-toggle');
+  const visible = content.style.display !== 'none';
+  content.style.display = visible ? 'none' : '';
+  toggle.textContent = visible ? '▶ Show reference table' : '▼ Hide reference table';
+}
+
+// ── Match Data ─────────────────────────────────────────────────────────────────
+const MATCH_DEFS = [
+  {
+    term: 'TOCTOU',
+    def: 'An attacker replaces a file between when a process checks its permissions and when it actually uses it.',
+    trap: 'Implementation vulnerability — NOT a covert channel (covert channels use Sutherland model)'
+  },
+  {
+    term: 'Race Condition',
+    def: 'Two threads modify shared data concurrently; outcome depends on unpredictable execution order.',
+    trap: 'Root cause of TOCTOU; fixed by mutex or atomic operations'
+  },
+  {
+    term: 'Deadlock',
+    def: 'Thread A holds Lock 1 and waits for Lock 2; Thread B holds Lock 2 and waits for Lock 1. Neither proceeds.',
+    trap: 'Availability failure — not confidentiality or integrity'
+  },
+  {
+    term: 'Starvation',
+    def: 'A low-priority thread is perpetually blocked because higher-priority threads always preempt it.',
+    trap: 'Availability issue; different from deadlock — the system keeps running, this thread just never gets CPU'
+  },
+  {
+    term: 'Mutex',
+    def: 'A binary lock ensuring only one thread at a time can enter a critical section.',
+    trap: 'Binary (0 or 1 owner). Fix for race conditions. Not the same as semaphore.'
+  },
+  {
+    term: 'Semaphore',
+    def: 'A signaling mechanism that allows up to N threads to access a shared resource pool concurrently.',
+    trap: 'Counting (not binary). Mutex is a semaphore with N=1, but not every semaphore is a mutex.'
+  },
+  {
+    term: 'Atomic Operation',
+    def: 'An operation that executes as a single indivisible unit — no thread can observe it in a partial state.',
+    trap: 'Strongest guarantee. Eliminates the race window entirely — no lock needed.'
+  },
+  {
+    term: 'Covert Timing Channel',
+    def: 'Data is leaked by intentionally varying the response time of an operation (e.g., cache hit vs. miss timing).',
+    trap: 'Sutherland model — not TOCTOU. Attacker is reading timing, not replacing a resource.'
+  },
+];
+
+// ── Build Match UI ─────────────────────────────────────────────────────────────
+function buildMatch() {
+  const defList = document.getElementById('def-list');
+  defList.innerHTML = '';
+  // Shuffle defs
+  const shuffled = [...MATCH_DEFS].sort(() => Math.random() - 0.5);
+  shuffled.forEach(item => {
+    const slot = document.createElement('div');
+    slot.className = 'def-slot';
+    slot.dataset.answer = item.term;
+    slot.innerHTML = `<div class="def-text">${item.def}</div>`;
+    slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('dragover'); });
+    slot.addEventListener('dragleave', () => slot.classList.remove('dragover'));
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      slot.classList.remove('dragover');
+      if (slot.dataset.filled) return;
+      const term = e.dataTransfer.getData('text/plain');
+      slot.dataset.filled = term;
+      const ansDiv = document.createElement('div');
+      ansDiv.className = 'slot-answer';
+      ansDiv.textContent = term;
+      slot.appendChild(ansDiv);
+      // Mark chip as placed
+      document.querySelectorAll('.chip').forEach(c => {
+        if (c.dataset.term === term) c.classList.add('placed');
+      });
+    });
+    defList.appendChild(slot);
+  });
+
+  // Wire chip drag
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', chip.dataset.term);
+      chip.classList.add('dragging');
+    });
+    chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+  });
+}
+
+function checkMatch() {
+  let correct = 0;
+  document.querySelectorAll('.def-slot').forEach(slot => {
+    const filled = slot.dataset.filled;
+    const expected = slot.dataset.answer;
+    if (!filled) return;
+    const ansDiv = slot.querySelector('.slot-answer');
+    const trap = MATCH_DEFS.find(m => m.term === expected)?.trap || '';
+    if (filled === expected) {
+      slot.classList.add('correct');
+      ansDiv.classList.add('correct');
+      correct++;
+      score++;
+    } else {
+      slot.classList.add('wrong');
+      ansDiv.classList.add('wrong');
+      ansDiv.textContent = `✗ ${filled}`;
+      const exp = document.createElement('div');
+      exp.className = 'slot-expected';
+      exp.textContent = `✓ Correct: ${expected}`;
+      slot.appendChild(exp);
+    }
+    if (trap) {
+      const trapDiv = document.createElement('div');
+      trapDiv.style.cssText = 'font-size:11px;color:var(--orange);margin-top:4px;';
+      trapDiv.innerHTML = `<span style="font-weight:700">⚠ Exam trap:</span> ${trap}`;
+      slot.appendChild(trapDiv);
+    }
+    answered++;
+  });
+  updateHUD();
+  // Disable further drops
+  document.querySelectorAll('.def-slot').forEach(slot => {
+    slot.style.pointerEvents = 'none';
+  });
+}
+
+function resetMatch() {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('placed', 'dragging'));
+  buildMatch();
+}
+
+// ── Scenario Data ──────────────────────────────────────────────────────────────
+const SCENARIOS = [
+  {
+    label: 'SCENARIO 1',
+    keyword: 'NEXT',
+    stem: 'A developer discovers that their application checks a file\'s permissions and then opens the file in two separate, non-atomic steps. A security tester demonstrates that an attacker can replace the target file with a symbolic link between those two steps. What should the developer do NEXT to eliminate this vulnerability?',
+    choices: [
+      'Add logging around the file open operation to detect suspicious activity',
+      'Combine the permission check and file open into a single atomic system call',
+      'Implement a mutex lock around the entire file access routine',
+      'Apply the Sutherland model to prevent covert channel exploitation',
+    ],
+    correct: 1,
+    explanation: 'The root fix for TOCTOU is making the check and use a single atomic operation — no race window exists if they cannot be separated. A mutex (C) helps serialize access but does not close the TOCTOU window if the check and use remain separate steps. Logging (A) detects but does not prevent. Sutherland (D) addresses covert channels — TOCTOU is an implementation vulnerability, not a covert channel.',
+    trap: 'SEQUENCE TRAP — "what do you do NEXT" means the immediate technical fix, not the detective control.',
+  },
+  {
+    label: 'SCENARIO 2',
+    keyword: 'BEFORE',
+    stem: 'During a code review, an auditor identifies that a privileged process opens a temporary file by name after verifying ownership. An attacker with local access could substitute the file between verification and use. Which control should be implemented BEFORE deploying this code to production?',
+    choices: [
+      'Encrypt the temporary file contents at rest',
+      'Move the file check to a separate security daemon',
+      'Use a file descriptor obtained atomically at creation, bypassing name-based lookups after the initial open',
+      'Implement rate limiting on the file access API',
+    ],
+    correct: 2,
+    explanation: 'Using a file descriptor (a direct handle) obtained at creation time removes the name-based lookup entirely. The attacker cannot substitute a file the process already holds open by descriptor. This is the standard POSIX mitigation for TOCTOU on filesystem objects. Encryption (A) protects confidentiality but the attacker in this scenario is injecting content, not reading it. A separate daemon (B) does not eliminate the window. Rate limiting (D) is irrelevant.',
+    trap: 'WORDING TRAP — BEFORE deployment means the fix must go in now, not a post-deploy control.',
+  },
+  {
+    label: 'SCENARIO 3',
+    keyword: 'FIRST',
+    stem: 'An application has two database threads. Thread A holds a lock on the Accounts table and is waiting to acquire a lock on the Transactions table. Thread B holds a lock on the Transactions table and is waiting to acquire the Accounts table lock. The application is completely unresponsive. What should the system designer address FIRST?',
+    choices: [
+      'Implement encryption on the shared database tables',
+      'Enforce a consistent global lock acquisition order across all threads',
+      'Deploy a semaphore to limit concurrent database connections',
+      'Add a mutex to each individual database table',
+    ],
+    correct: 1,
+    explanation: 'This is a deadlock — the circular wait condition. The textbook fix is enforcing a total ordering on lock acquisition: if all threads always acquire Accounts before Transactions, circular waiting is impossible. A semaphore (C) limits concurrent access but does not prevent the circular wait. Adding more mutexes per table (D) makes the circular dependency worse. Encryption (A) has no bearing on deadlock.',
+    trap: 'AVAILABILITY TRAP — deadlock is an availability failure. Exam choices may include confidentiality controls (encryption) as distractors.',
+  },
+  {
+    label: 'SCENARIO 4',
+    keyword: 'NEXT',
+    stem: 'A security researcher notices that a web server\'s login endpoint responds 2ms faster when a username exists in the database than when it does not, even when the password is wrong. An attacker can use this timing difference to enumerate valid usernames. What is the NEXT BEST action?',
+    choices: [
+      'Apply the Sutherland model controls to remove the covert timing channel',
+      'Add a mutex to the authentication function to serialize login requests',
+      'Normalize response time using a constant-time comparison function and artificial delay',
+      'Implement TOCTOU mitigation on the authentication database query',
+    ],
+    correct: 2,
+    explanation: 'This is a covert timing channel — information is leaked through timing differences, not through a shared resource race. The fix is constant-time operations (so all responses take equal time) plus artificial delay normalization. Sutherland (A) is the theoretical model that describes this class of attack — but naming the model is not a control. A mutex (B) serializes requests but does not equalize timing. TOCTOU mitigation (D) is the wrong attack class entirely.',
+    trap: 'WORDING TRAP — this looks like TOCTOU (timing-based) but is actually a covert timing channel. Key difference: no shared resource is being swapped; information leaks through response time alone.',
+  },
+  {
+    label: 'SCENARIO 5',
+    keyword: 'BEFORE',
+    stem: 'A security architect is reviewing a multi-threaded payment processing system. A senior developer proposes using a semaphore to protect a shared transaction log. The architect notes the transaction log must never be written by more than one thread simultaneously. What should the architect clarify BEFORE approving the design?',
+    choices: [
+      'A semaphore allows N concurrent writers, which does not meet the single-writer requirement — a mutex is needed',
+      'A semaphore is always binary and is functionally identical to a mutex',
+      'Semaphores are only appropriate for read operations; mutexes must be used for all writes',
+      'The transaction log should use atomic file operations instead of any lock mechanism',
+    ],
+    correct: 0,
+    explanation: 'A general semaphore allows up to N threads simultaneously — if N > 1, multiple threads could write concurrently, corrupting the log. For a single-writer requirement, a mutex (binary semaphore with N=1, with strict ownership) is the correct choice. Choice B is wrong — semaphores are not always binary. Choice C is a fabricated rule. Choice D may be valid but does not address the immediate design flaw the architect must clarify BEFORE approval.',
+    trap: 'SEQUENCE TRAP — BEFORE approving means the critical issue to raise now, not a general improvement.',
+  },
+  {
+    label: 'SCENARIO 6',
+    keyword: 'NEXT',
+    stem: 'A penetration tester reports that a privileged setuid binary on a Linux server can be exploited via a race condition: between when it checks whether a file is writable and when it writes to it, a symlink can be substituted. The system owner wants to fix the underlying vulnerability. What should the developer do NEXT?',
+    choices: [
+      'Remove the setuid bit from the binary until a patch can be developed',
+      'Audit the system\'s file permission model and apply least privilege',
+      'Rewrite the check-then-act sequence using O_NOFOLLOW and atomic open flags to prevent symlink substitution',
+      'Apply SELinux labels to restrict the binary\'s file access to its own process context',
+    ],
+    correct: 2,
+    explanation: 'The developer\'s NEXT action to fix the vulnerability itself is using atomic open flags (O_CREAT | O_EXCL) and O_NOFOLLOW to prevent symlink following — this eliminates the race window at the code level. Removing setuid (A) is a compensating control that reduces privilege but does not fix the vulnerability. Least privilege audit (B) is a governance step, not the immediate fix. SELinux labels (D) add MAC controls but do not close the TOCTOU window in the code.',
+    trap: 'OPTION SEDUCTION — removing the setuid bit sounds decisive and specific, but the question asks to "fix the underlying vulnerability." A compensating control is not the same as a fix.',
+  },
+  {
+    label: 'SCENARIO 7',
+    keyword: 'FIRST',
+    stem: 'A Java application spawns multiple threads that share a HashMap for caching user session data. Under load, the application throws ConcurrentModificationException errors and occasionally returns data from the wrong user\'s session. What should the developer address FIRST?',
+    choices: [
+      'Replace HashMap with ConcurrentHashMap or wrap with synchronized blocks to ensure thread-safe access',
+      'Implement input validation on all session data before caching',
+      'Encrypt session data at rest to protect against data leakage between threads',
+      'Deploy a Web Application Firewall to block concurrent session attacks from external sources',
+    ],
+    correct: 0,
+    explanation: 'ConcurrentModificationException and cross-session data leakage are classic symptoms of a race condition on a non-thread-safe shared data structure. The FIRST fix is making the data structure thread-safe (ConcurrentHashMap or synchronized access). Input validation (B) addresses injection, not thread safety. Encryption (C) protects data at rest — the data is already in memory and the problem is concurrent access, not confidentiality. WAF (D) protects against external attacks; this is an internal threading defect.',
+    trap: 'KNOWLEDGE TRAP — recognize HashMap as non-thread-safe; ConcurrentHashMap is the thread-safe alternative in Java.',
+  },
+];
+
+// ── Build Scenarios ────────────────────────────────────────────────────────────
+function buildScenarios() {
+  const container = document.getElementById('scenarios-container');
+  container.innerHTML = '';
+  const total = SCENARIOS.length;
+
+  SCENARIOS.forEach((sc, idx) => {
+    const card = document.createElement('div');
+    card.className = 'scenario-card';
+    card.id = `sc-${idx}`;
+
+    const letters = ['A','B','C','D'];
+    const choicesHTML = sc.choices.map((c, ci) => `
+      <div class="sc-choice" data-idx="${ci}" onclick="answerScenario(${idx}, ${ci})">
+        <div class="letter">${letters[ci]}</div>
+        <div class="choice-text">${c}</div>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="sc-label">${sc.label} <span class="sc-keyword">${sc.keyword}</span></div>
+      <div class="sc-stem">${sc.stem}</div>
+      <div class="sc-choices" id="choices-${idx}">${choicesHTML}</div>
+      <div class="feedback" id="fb-${idx}"></div>
+    `;
+    container.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+let scAnswered = new Set();
+
+function answerScenario(scIdx, choiceIdx) {
+  if (scAnswered.has(scIdx)) return;
+  scAnswered.add(scIdx);
+
+  const sc = SCENARIOS[scIdx];
+  const choicesEl = document.getElementById(`choices-${scIdx}`);
+  const fbEl = document.getElementById(`fb-${scIdx}`);
+  const choices = choicesEl.querySelectorAll('.sc-choice');
+
+  const isCorrect = choiceIdx === sc.correct;
+  if (isCorrect) score++;
+  answered++;
+  updateHUD();
+
+  choices.forEach((el, ci) => {
+    el.style.cursor = 'default';
+    if (ci === sc.correct) el.classList.add('correct-ans');
+    else if (ci === choiceIdx && !isCorrect) el.classList.add('wrong-ans');
+  });
+
+  fbEl.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+  fbEl.innerHTML = `
+    ${isCorrect ? '<strong>Correct.</strong>' : '<strong>Incorrect.</strong>'} ${sc.explanation}
+    <br><br><span class="trap-tag">⚠ TRAP</span>${sc.trap}
+  `;
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const pct = scAnswered.size / SCENARIOS.length * 100;
+  document.getElementById('sc-progress').style.width = pct + '%';
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+buildMatch();
+buildScenarios();
+</script>
+</body>
+</html>
