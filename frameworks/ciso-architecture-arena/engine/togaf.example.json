@@ -1,0 +1,47 @@
+{
+  "id": "TOGAF",
+  "name": "TOGAF",
+  "type": "wheel",
+  "description": "Architecture governance and transformation decisions through ADM cycles.",
+  "renderData": {
+    "segments": [
+      { "label": "Preliminary", "focus": "Governance setup" },
+      { "label": "A", "focus": "Architecture Vision" },
+      { "label": "B", "focus": "Business Architecture" },
+      { "label": "C", "focus": "Data/Application" },
+      { "label": "D", "focus": "Technology Architecture" },
+      { "label": "E/F", "focus": "Roadmap & Migration" },
+      { "label": "G/H", "focus": "Implementation & Change" }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "TOGAF-1",
+      "prompt": "An enterprise is starting a multi-year zero-trust transformation. Leadership wants to lock architecture principles, governance checkpoints, and decision rights before detailed designs begin. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "In TOGAF, enterprise architecture governance and principle-setting are led at architecture board level to steer all subsequent ADM phases.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO must sponsor security outcomes and ensure board-level accountability for risk reduction.",
+          "strategicGap": "In TOGAF execution, the enterprise architect owns the architecture governance mechanism itself, while the CISO sets business security intent."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "The enterprise architect establishes architecture principles, governance gates, and cross-domain consistency.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architects provide the technical security architecture patterns and control models.",
+          "strategicGap": "At this stage the priority is enterprise-level governance design, not detailed control architecture."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management provides risk criteria and treatment priorities that should influence the program.",
+          "strategicGap": "Risk input is essential, but TOGAF governance structures are defined by architecture governance roles."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Audit/compliance validates policy conformance and evidence expectations.",
+          "strategicGap": "Assurance requirements inform governance, but they do not architect the transformation operating model."
+        }
+      }
+    }
+  ]
+}

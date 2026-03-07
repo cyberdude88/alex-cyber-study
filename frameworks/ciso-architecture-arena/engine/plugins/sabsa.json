@@ -1,0 +1,176 @@
+{
+  "id": "SABSA",
+  "name": "SABSA",
+  "type": "stack",
+  "description": "Business-driven security architecture from contextual intent to operational execution.",
+  "renderData": {
+    "layers": [
+      {
+        "label": "Contextual",
+        "focus": "Business attributes"
+      },
+      {
+        "label": "Conceptual",
+        "focus": "Security strategy"
+      },
+      {
+        "label": "Logical",
+        "focus": "Service design"
+      },
+      {
+        "label": "Physical",
+        "focus": "Technology mapping"
+      },
+      {
+        "label": "Component",
+        "focus": "Product selection"
+      },
+      {
+        "label": "Operational",
+        "focus": "Run and monitor"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "SABSA-1",
+      "prompt": "A board asks for security architecture justification tied directly to revenue-protection and customer-trust outcomes before approving funding. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "CISO",
+      "mostStrategicReason": "SABSA starts from business attributes, and the CISO is best placed to translate business risk intent into architecture sponsorship.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO links business risk appetite, strategic outcomes, and security investment rationale.",
+          "strategicGap": ""
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can ensure alignment with enterprise capability models.",
+          "strategicGap": "The board-level security value narrative is executive risk-accountability centric, not primarily architecture taxonomy centric."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can show how control patterns satisfy business attributes.",
+          "strategicGap": "At board approval stage, strategic sponsorship and risk-accountability framing must lead technical pattern detail."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can quantify potential downside and treatment urgency.",
+          "strategicGap": "Quantification helps, but executive commitment is most effectively driven by CISO-led strategic framing."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can show legal exposure if controls are underfunded.",
+          "strategicGap": "Compliance pressure is one factor; business-value articulation for architecture investment is broader."
+        }
+      }
+    },
+    {
+      "id": "SABSA-2",
+      "prompt": "A merger requires a unified identity trust model across two firms with conflicting control taxonomies. The next action is defining a coherent security service model. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Security Architect",
+      "mostStrategicReason": "The conceptual-to-logical SABSA transition depends on security service modeling and trust design, which is security architecture leadership.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can mandate strategic outcomes and integration urgency.",
+          "strategicGap": "The immediate challenge is technical service-model harmonization requiring architecture depth."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can harmonize enterprise capability and process models.",
+          "strategicGap": "Control taxonomy unification is primarily a security architecture service-definition task."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architects define canonical trust services, reusable control services, and integration constraints.",
+          "strategicGap": ""
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can compare residual risk between harmonization options.",
+          "strategicGap": "Risk analysis informs approval, but service model construction is architecture-led."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can identify mandatory control obligations during integration.",
+          "strategicGap": "Mandatory obligations constrain solutions, but they do not define the architecture service model."
+        }
+      }
+    },
+    {
+      "id": "SABSA-3",
+      "prompt": "Program leadership must decide which control domains to implement first after quantifying exposure concentration in privileged access and third-party connectivity. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Risk Manager",
+      "mostStrategicReason": "When sequencing control domains by exposure concentration, risk treatment prioritization is the principal decision framework.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO approves treatment direction and accountabilities.",
+          "strategicGap": "Approval follows from risk-based prioritization analysis rather than replacing it."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can assess cross-domain implementation dependencies.",
+          "strategicGap": "Dependency mapping supports execution, but domain prioritization must be risk-ranked first."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architects can estimate control efficacy and technical feasibility by domain.",
+          "strategicGap": "Technical efficacy is input; enterprise prioritization under exposure concentration is risk-led."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management ranks treatments against risk tolerance, impact, and likelihood to direct sequence decisions.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can elevate urgent obligations that affect sequencing.",
+          "strategicGap": "Obligations are constraints, but portfolio-level ordering remains a risk optimization decision."
+        }
+      }
+    },
+    {
+      "id": "SABSA-4",
+      "prompt": "An operations team deployed controls that differ from approved SABSA component standards. Leadership needs to decide whether to grant an exception with monitoring conditions. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Audit/Compliance",
+      "mostStrategicReason": "Exception governance in SABSA operationalization requires policy defensibility, control evidence, and assurance traceability.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can authorize exceptions when risk and urgency justify temporary variance.",
+          "strategicGap": "Authorization should be informed by assurance evidence that compliance teams formalize."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can measure standard drift and architecture debt impact.",
+          "strategicGap": "Debt assessment is relevant, but exception admissibility is a compliance governance decision."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can evaluate whether compensating controls meet intent.",
+          "strategicGap": "Control design is necessary but not sufficient for formal exception defensibility."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can quantify residual risk introduced by the deviation.",
+          "strategicGap": "Residual risk informs decisions, but evidence and policy conformance requirements are audit/compliance-led."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Audit/compliance validates exception criteria, evidence quality, and reporting obligations.",
+          "strategicGap": ""
+        }
+      }
+    },
+    {
+      "id": "SABSA-5",
+      "prompt": "A global business expansion introduces new jurisdictions and operating models. Security architecture must be recalibrated to preserve business attribute priorities without local fragmentation. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Cross-jurisdiction operating model harmonization is an enterprise architecture integration problem spanning business and security viewpoints.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO sets enterprise security intent and non-negotiable risk boundaries.",
+          "strategicGap": "The central challenge is harmonizing architecture structures across regions, which is enterprise architecture coordination."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture aligns target operating models, architecture governance, and shared standards across geographies.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can define reusable security building blocks for regional use.",
+          "strategicGap": "Reusable controls help, but macro-level operating model cohesion is enterprise architecture-led."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can map jurisdictional risk variances and treatment constraints.",
+          "strategicGap": "Risk context is essential, but cross-region architecture governance still needs enterprise architecture ownership."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can identify jurisdiction-specific legal obligations.",
+          "strategicGap": "Legal constraints shape design, but they do not orchestrate enterprise architecture harmonization."
+        }
+      }
+    }
+  ]
+}

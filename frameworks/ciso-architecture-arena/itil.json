@@ -1,0 +1,478 @@
+{
+  "framework": "ITIL",
+  "name": "ITIL Service Lifecycle Governance Simulator",
+  "version": "1.0.0",
+  "lifecycle": [
+    {
+      "id": "service-strategy",
+      "label": "Service Strategy",
+      "objective": "Define service value, risk appetite alignment, and portfolio direction.",
+      "governanceOutcomes": [
+        "Service portfolio prioritization aligned to enterprise risk appetite",
+        "Documented decision rights and funding guardrails",
+        "Business-aligned policy intent for downstream design and operation"
+      ]
+    },
+    {
+      "id": "service-design",
+      "label": "Service Design",
+      "objective": "Translate strategy into secure, resilient, and measurable service requirements.",
+      "governanceOutcomes": [
+        "Control requirements embedded in the service design package",
+        "Defined SLA, OLA, and underpinning contract expectations",
+        "Approved service risk treatment patterns and assurance criteria"
+      ]
+    },
+    {
+      "id": "service-transition",
+      "label": "Service Transition",
+      "objective": "Control change, release, and deployment risk before production entry.",
+      "governanceOutcomes": [
+        "Risk-based change authorization and evidence-backed go/no-go",
+        "Separation of emergency change and standard change governance paths",
+        "Traceable release accountability for security and compliance obligations"
+      ]
+    },
+    {
+      "id": "service-operation",
+      "label": "Service Operation",
+      "objective": "Deliver stable services while handling incidents, requests, and operations risk.",
+      "governanceOutcomes": [
+        "Incident ownership with measurable restoration and communication objectives",
+        "Problem governance for root-cause elimination across recurring incidents",
+        "Operational control monitoring tied to service-level commitments"
+      ]
+    },
+    {
+      "id": "continual-service-improvement",
+      "label": "Continual Service Improvement",
+      "objective": "Use performance and risk data to drive prioritized governance improvements.",
+      "governanceOutcomes": [
+        "Risk-adjusted CSI backlog tied to measurable business outcomes",
+        "Closed-loop governance feedback from incidents, problems, and audits",
+        "SLA and control maturity uplift tracked at executive level"
+      ]
+    }
+  ],
+  "visualization": {
+    "type": "lifecycle",
+    "clockwise": true,
+    "startNode": "service-strategy",
+    "nodes": [
+      { "id": "service-strategy", "label": "Service Strategy", "order": 1 },
+      { "id": "service-design", "label": "Service Design", "order": 2 },
+      { "id": "service-transition", "label": "Service Transition", "order": 3 },
+      { "id": "service-operation", "label": "Service Operation", "order": 4 },
+      { "id": "continual-service-improvement", "label": "Continual Service Improvement", "order": 5 }
+    ],
+    "edges": [
+      { "from": "service-strategy", "to": "service-design", "kind": "forward" },
+      { "from": "service-design", "to": "service-transition", "kind": "forward" },
+      { "from": "service-transition", "to": "service-operation", "kind": "forward" },
+      { "from": "service-operation", "to": "continual-service-improvement", "kind": "forward" },
+      { "from": "continual-service-improvement", "to": "service-strategy", "kind": "feedback" }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "ITIL-GOV-01",
+      "title": "Emergency Patch Pressure After Outage",
+      "enterpriseContext": "A global retail bank suffered a 42-minute authentication outage during quarterly earnings week. Operations wants to push an emergency patch to all regions immediately.",
+      "prompt": "The board risk committee asks whether the event should be treated as an incident response action, a problem-management investigation, or a change-governance decision before global rollout. Which perspective is MOST strategic to lead the next decision?",
+      "focusAreas": ["Incident vs problem vs change", "Governance oversight", "Service risk alignment"],
+      "mostStrategicAnswer": {
+        "perspective": "Risk Manager",
+        "decision": "Authorize a risk-based emergency change path with explicit residual-risk acceptance and mandatory post-implementation problem review.",
+        "rationale": "The decision is a governance tradeoff between restoration urgency and systemic service risk, requiring enterprise risk accountability rather than ad hoc technical escalation."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can mandate urgent containment and set security priorities.",
+          "strategicGap": "Security urgency alone does not balance enterprise service and operational risk tradeoffs."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can verify architecture consistency and cross-region dependency impact.",
+          "strategicGap": "Architecture fit supports decision quality but does not own risk acceptance authority."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can define technical safeguards and rollback patterns for the patch.",
+          "strategicGap": "Implementation controls are inputs; governance authorization is risk-led."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can determine whether emergency change risk is acceptable under current appetite and service criticality.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can define documentation requirements for emergency-change defensibility.",
+          "strategicGap": "Evidence requirements are downstream from the primary risk-governance choice."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "A global retail bank experienced a major identity outage, and executives must decide whether urgent restoration should proceed as incident handling, problem analysis, or an emergency change with explicit risk acceptance.",
+        "cisoCorrect": { "layer": "Service Transition", "role": "Change Advisory Board Chair" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "Incident Manager" },
+        "trapType": "strategy-vs-operations blend"
+      }
+    },
+    {
+      "id": "ITIL-GOV-02",
+      "title": "Recurring Fraud Alerts and Misclassified Tickets",
+      "enterpriseContext": "A payments processor sees weekly fraud-platform disruptions. Operations has been closing tickets as incidents without opening a formal problem record.",
+      "prompt": "Leadership asks who should direct the next governance step so the organization distinguishes immediate restoration from root-cause eradication while protecting SLA commitments. Which perspective is MOST strategic?",
+      "focusAreas": ["Incident vs problem vs change", "SLA compliance", "Governance oversight"],
+      "mostStrategicAnswer": {
+        "perspective": "CISO",
+        "decision": "Mandate problem-management governance with accountable ownership and board-level KPI reporting for recurrence reduction.",
+        "rationale": "The issue has crossed from operational noise to enterprise control effectiveness, requiring executive governance intervention and accountability reset."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can enforce enterprise accountability when recurring failures indicate governance breakdown.",
+          "strategicGap": ""
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can assess systemic design weaknesses contributing to repeated incidents.",
+          "strategicGap": "Structural diagnosis helps but does not establish enterprise accountability."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can strengthen control designs and detection logic in the platform.",
+          "strategicGap": "Technical remediation is necessary but not sufficient for governance ownership."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can quantify recurrence impact against tolerance and service risk.",
+          "strategicGap": "Risk quantification informs prioritization but does not reset control ownership."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can flag weak problem-record discipline as a control deficiency.",
+          "strategicGap": "Assurance findings identify gaps but do not direct enterprise operating model changes."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "A payments processor keeps restoring service after fraud-platform disruptions, but executives now require governance to separate incident closure from accountable problem elimination before SLA penalties increase.",
+        "cisoCorrect": { "layer": "Service Strategy", "role": "Service Portfolio Manager" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "Problem Manager" },
+        "trapType": "governance-vs-delivery confusion"
+      }
+    },
+    {
+      "id": "ITIL-GOV-03",
+      "title": "Designing a New Regulated Customer Portal",
+      "enterpriseContext": "An insurer is launching a customer claims portal in three jurisdictions with different breach-notification timelines and uptime obligations.",
+      "prompt": "Before procurement, the steering committee must decide who should define SLA, security control, and compliance requirements in the service design package so delivery does not drift from governance intent. Which perspective is MOST strategic?",
+      "focusAreas": ["SLA compliance", "Service risk alignment", "Governance oversight"],
+      "mostStrategicAnswer": {
+        "perspective": "Security Architect",
+        "decision": "Lead integrated control and nonfunctional requirement definition within the service design package with traceability to policy and regulatory obligations.",
+        "rationale": "At Service Design, governance intent must be translated into implementable, testable control architecture and service-level criteria."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Sets mandatory security outcomes and governance constraints.",
+          "strategicGap": "Outcome setting is essential, but design-package control specification is architecture work."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can align platform design to enterprise standards and integration patterns.",
+          "strategicGap": "Standards alignment is broader; control and SLA decomposition needs security architecture depth."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can specify enforceable control patterns, trust boundaries, and assurance checkpoints.",
+          "strategicGap": ""
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can prioritize controls by risk exposure and tolerance limits.",
+          "strategicGap": "Prioritization supports decisions but does not author the design package."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can map legal obligations into mandatory evidence requirements.",
+          "strategicGap": "Obligation mapping constrains design but does not build control architecture."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "A regulated insurer is defining a new customer portal and must lock down SLA and control requirements in the service design package before procurement and build activities begin.",
+        "cisoCorrect": { "layer": "Service Design", "role": "Service Design Authority" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "Service Desk Lead" },
+        "trapType": "execution-stage bait"
+      }
+    },
+    {
+      "id": "ITIL-GOV-04",
+      "title": "Failed Releases and CAB Bypass Requests",
+      "enterpriseContext": "A manufacturing conglomerate had two failed IAM releases in one quarter. Product teams now want broader standard-change exemptions to maintain deployment cadence.",
+      "prompt": "Executives require a decision on who should determine whether release failures are controlled through stronger transition gates or expanded operational workarounds. Which perspective is MOST strategic?",
+      "focusAreas": ["Change management controls", "Governance oversight", "Service risk alignment"],
+      "mostStrategicAnswer": {
+        "perspective": "Audit/Compliance",
+        "decision": "Set defensible gate-control evidence criteria and challenge exemption proposals that weaken required change governance controls.",
+        "rationale": "The core issue is control effectiveness and defensibility of transition governance, which requires assurance-led standard setting."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can direct stricter release governance across critical services.",
+          "strategicGap": "Executive direction is vital, but defensibility criteria for control evidence are assurance-led."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can redesign transition dependencies and release sequencing.",
+          "strategicGap": "Design improvements do not replace control-effectiveness assurance standards."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can tighten security acceptance tests for high-risk changes.",
+          "strategicGap": "Test content helps, but governance defensibility thresholds remain assurance-owned."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can quantify failure risk from exemption expansion.",
+          "strategicGap": "Risk estimates inform decisions but do not define control evidence sufficiency."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can define and enforce evidence standards that determine whether transition controls are operating effectively.",
+          "strategicGap": ""
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "After repeated IAM release failures, leadership must decide whether to tighten transition gate controls or allow broader change exemptions, with regulators likely to scrutinize control evidence.",
+        "cisoCorrect": { "layer": "Service Transition", "role": "Change Advisory Board Chair" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "Release Manager" },
+        "trapType": "artifact-driven misdirection"
+      }
+    },
+    {
+      "id": "ITIL-GOV-05",
+      "title": "SLA Breach Risk During SOC Vendor Consolidation",
+      "enterpriseContext": "A healthcare provider is consolidating SOC vendors and sees early warning indicators that response-time SLAs will be missed during cutover.",
+      "prompt": "The steering committee must determine who should decide if transition should pause, proceed with compensating controls, or rebaseline SLA commitments. Which perspective is MOST strategic?",
+      "focusAreas": ["SLA compliance", "Service risk alignment", "Change management controls"],
+      "mostStrategicAnswer": {
+        "perspective": "Risk Manager",
+        "decision": "Run a formal service-risk acceptance decision that compares SLA breach impact, compensating control strength, and tolerance thresholds before cutover authorization.",
+        "rationale": "The decision requires balanced treatment of contractual performance risk and security exposure under constrained transition timelines."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can set non-negotiable security outcomes for transition.",
+          "strategicGap": "Security outcomes alone do not resolve enterprise service-risk tradeoffs with SLA exposure."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can analyze dependency and integration risk from supplier consolidation.",
+          "strategicGap": "Technical dependency insight is input, not risk acceptance authority."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can define compensating controls to limit exposure during cutover.",
+          "strategicGap": "Compensating controls enable options but do not approve enterprise risk posture."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can determine whether temporary SLA degradation is acceptable relative to residual security and business risk.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can ensure change records preserve contractual and regulatory evidence.",
+          "strategicGap": "Evidence sufficiency is important but secondary to risk acceptance choice."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "During SOC vendor consolidation, executives must decide whether to continue transition despite rising SLA breach risk or pause until compensating controls and risk acceptance are formally approved.",
+        "cisoCorrect": { "layer": "Service Strategy", "role": "Risk and Assurance Lead" },
+        "engineerCorrect": { "layer": "Service Transition", "role": "Release Manager" },
+        "trapType": "ownership ambiguity"
+      }
+    },
+    {
+      "id": "ITIL-GOV-06",
+      "title": "Incident Surge With No Problem Prioritization",
+      "enterpriseContext": "A cloud identity service has tripled high-priority incidents in 60 days. Teams are responding quickly, but board metrics show no reduction in recurrence.",
+      "prompt": "Which perspective should lead governance to determine whether operations remains incident-centric or shifts capacity toward problem elimination and controlled change backlog execution?",
+      "focusAreas": ["Incident vs problem vs change", "Governance oversight", "Change management controls"],
+      "mostStrategicAnswer": {
+        "perspective": "Enterprise Architect",
+        "decision": "Lead a cross-service dependency review that ties recurring incidents to architectural debt and mandates a governance-backed problem-to-change roadmap.",
+        "rationale": "The pattern indicates systemic design debt requiring enterprise-level prioritization beyond tactical incident response."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can require measurable reduction in recurrence and enforce accountability.",
+          "strategicGap": "Executive direction is necessary, but root-cause dependency rationalization is architecture-led."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can connect service instability to shared architecture constraints and sequence governance-approved remediation.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can redesign controls to reduce direct exploitability and detection gaps.",
+          "strategicGap": "Control tuning helps, but enterprise dependency tradeoffs require architecture authority."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can rank backlog items by expected risk reduction.",
+          "strategicGap": "Risk ranking informs prioritization but not architecture decomposition decisions."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can identify control-operation evidence gaps tied to recurrence.",
+          "strategicGap": "Findings support action but do not define remediation architecture path."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "A cloud identity platform has recurring high-priority incidents, and leadership must choose whether to keep incident-heavy operations or govern a problem-to-change roadmap tied to systemic architecture debt.",
+        "cisoCorrect": { "layer": "Service Design", "role": "Enterprise Architect" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "Incident Manager" },
+        "trapType": "governance-vs-delivery confusion"
+      }
+    },
+    {
+      "id": "ITIL-GOV-07",
+      "title": "Board-Mandated Change Freeze Exception",
+      "enterpriseContext": "Following an acquisition, the board imposed a temporary change freeze on customer-data systems. A business unit requests an exception for a revenue-critical integration.",
+      "prompt": "Who should provide the MOST strategic decision on granting an exception while preserving governance credibility and documented risk acceptance?",
+      "focusAreas": ["Change management controls", "Governance oversight", "Service risk alignment"],
+      "mostStrategicAnswer": {
+        "perspective": "CISO",
+        "decision": "Chair an exception governance decision that enforces compensating controls, explicit risk owner sign-off, and time-bound revalidation.",
+        "rationale": "Because the freeze is board-directed and enterprise-wide, exception authority must be exercised at executive security governance level."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can reconcile board mandate, risk posture, and business urgency with accountable governance.",
+          "strategicGap": ""
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can identify integration alternatives with lower dependency risk.",
+          "strategicGap": "Options are valuable but do not carry board-level exception authority."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can define minimum control baseline for safe exception execution.",
+          "strategicGap": "Control baselines support implementation, not governance authorization."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can assess residual risk against stated tolerance.",
+          "strategicGap": "Risk analysis informs decision quality, but final governance authority is executive."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can ensure exception records satisfy assurance requirements.",
+          "strategicGap": "Documentation is necessary but not sufficient for strategic exception decisions."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "During a board-mandated change freeze, a revenue-critical integration requests exception approval, requiring enterprise governance authority instead of local operational prioritization.",
+        "cisoCorrect": { "layer": "Service Strategy", "role": "CISO" },
+        "engineerCorrect": { "layer": "Service Transition", "role": "Change Manager" },
+        "trapType": "strategy-vs-operations blend"
+      }
+    },
+    {
+      "id": "ITIL-GOV-08",
+      "title": "Misaligned SLA Targets Across Shared Services",
+      "enterpriseContext": "A multinational has overlapping security services where regional contracts define conflicting SLA targets, creating disputes during major incidents.",
+      "prompt": "Which perspective is MOST strategic to govern a lifecycle-level decision on whether to redesign service definitions, renegotiate SLAs, or absorb elevated operating risk?",
+      "focusAreas": ["SLA compliance", "Governance oversight", "Service risk alignment"],
+      "mostStrategicAnswer": {
+        "perspective": "Enterprise Architect",
+        "decision": "Lead service model rationalization to align shared-service boundaries and propose governance-backed SLA standardization options.",
+        "rationale": "The issue is structural service-definition misalignment across the portfolio, best resolved by enterprise architecture governance."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can set enterprise expectation for consistent service accountability.",
+          "strategicGap": "Direction is important, but structural decomposition and rationalization are architecture responsibilities."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can redesign service boundaries and dependency models that drive SLA feasibility.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can identify control design impacts from differing SLA obligations.",
+          "strategicGap": "Control impacts are downstream from service model decisions."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can quantify exposure from SLA inconsistency during critical events.",
+          "strategicGap": "Risk quantification supports prioritization but does not resolve structural service design."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can assess contract and control evidence implications of SLA conflicts.",
+          "strategicGap": "Assurance perspective is needed but not primary for service-model redesign."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "Regional security contracts define conflicting SLA targets across shared services, and executives must govern whether to redesign service definitions or accept sustained operational-risk tension.",
+        "cisoCorrect": { "layer": "Service Design", "role": "Enterprise Architect" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "Service Desk Lead" },
+        "trapType": "role-layer mismatch"
+      }
+    },
+    {
+      "id": "ITIL-GOV-09",
+      "title": "Regulator Requests Lifecycle Control Evidence",
+      "enterpriseContext": "Regulators request proof that incident handling, problem management, and change approval controls are consistently operating across the enterprise lifecycle.",
+      "prompt": "The response team must pick who should define what evidence is defensible before attestation is submitted. Which perspective is MOST strategic?",
+      "focusAreas": ["Governance oversight", "Change management controls", "Incident vs problem vs change"],
+      "mostStrategicAnswer": {
+        "perspective": "Audit/Compliance",
+        "decision": "Define evidentiary sufficiency criteria and assurance sampling standards before executive attestation.",
+        "rationale": "Defensible assurance criteria are an audit/compliance accountability and underpin credible regulatory response."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Owns final attestation accountability and remediation direction.",
+          "strategicGap": "Executive accountability relies on assurance-defined evidence standards."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can map evidence-producing processes to lifecycle components.",
+          "strategicGap": "Traceability supports response but does not define assurance sufficiency."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can ensure telemetry and control outputs support attestations.",
+          "strategicGap": "Telemetry capability is necessary, but evidence acceptance criteria are assurance-led."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can explain control performance implications in risk terms.",
+          "strategicGap": "Risk context is complementary to, not a replacement for, assurance defensibility."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can determine whether evidence is complete, reliable, and regulator-defensible.",
+          "strategicGap": ""
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "Regulators demand enterprise evidence that incident, problem, and change controls operate effectively, and leadership must choose who defines defensible assurance standards before attestation.",
+        "cisoCorrect": { "layer": "Continual Service Improvement", "role": "Audit and Compliance Lead" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "SOC Manager" },
+        "trapType": "artifact-driven misdirection"
+      }
+    },
+    {
+      "id": "ITIL-GOV-10",
+      "title": "CSI Backlog vs Urgent Change Requests",
+      "enterpriseContext": "An energy utility has a growing CSI backlog of control improvements while business units keep escalating urgent change requests tied to local outages.",
+      "prompt": "Which perspective should make the MOST strategic governance call on whether to prioritize long-term risk-reduction initiatives or short-term operational urgency across the portfolio?",
+      "focusAreas": ["Continual Service Improvement", "Service risk alignment", "Governance oversight"],
+      "mostStrategicAnswer": {
+        "perspective": "Risk Manager",
+        "decision": "Prioritize CSI and urgent changes using enterprise risk-reduction value, tolerance thresholds, and board-approved service criticality tiers.",
+        "rationale": "Portfolio-level prioritization under constrained capacity is fundamentally a risk optimization decision."
+      },
+      "perspectives": {
+        "CISO": {
+          "technicallyCorrect": "Can set overall security improvement direction and escalation posture.",
+          "strategicGap": "Direction setting needs risk-quantified sequencing to optimize enterprise outcomes."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can sequence initiatives by dependency and service-coupling constraints.",
+          "strategicGap": "Dependency sequencing alone does not optimize risk reduction."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can estimate technical risk reduction from each control uplift.",
+          "strategicGap": "Technical estimates are inputs; portfolio balancing remains risk governance."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can compare risk reduction per unit effort across CSI and urgent change options and align prioritization to tolerance.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can highlight improvement items needed for pending audits.",
+          "strategicGap": "Audit urgency is one factor, not the sole portfolio-prioritization lens."
+        }
+      },
+      "runtimeScenario": {
+        "baseScenario": "An energy utility must choose between urgent local change requests and strategic CSI improvements, and leadership needs a portfolio-level governance decision aligned to enterprise risk reduction.",
+        "cisoCorrect": { "layer": "Continual Service Improvement", "role": "CSI Manager" },
+        "engineerCorrect": { "layer": "Service Operation", "role": "Incident Manager" },
+        "trapType": "execution-stage bait"
+      }
+    }
+  ]
+}

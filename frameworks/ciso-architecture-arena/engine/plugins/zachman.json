@@ -1,0 +1,165 @@
+{
+  "id": "Zachman",
+  "name": "Zachman",
+  "type": "matrix",
+  "description": "Structured enterprise classification across perspectives and interrogatives.",
+  "renderData": {
+    "rows": [
+      "Planner",
+      "Owner",
+      "Designer",
+      "Builder",
+      "Operator"
+    ],
+    "columns": [
+      "What",
+      "How",
+      "Where",
+      "Who",
+      "When",
+      "Why"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "ZACHMAN-1",
+      "prompt": "A transformation office is mixing executive strategy statements with solution-level implementation artifacts. The team needs to restore clear ownership by enterprise perspective and abstraction level. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Zachman is fundamentally an enterprise classification framework, and enterprise architecture is best suited to enforce perspective separation and artifact discipline.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can enforce governance discipline for security-related artifacts and accountability.",
+          "strategicGap": "The problem spans all enterprise architecture artifacts, not only security governance."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture governs abstraction boundaries and ensures each Zachman cell is populated by the right stakeholder view.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can classify security artifacts across business-to-technology layers.",
+          "strategicGap": "Security scope is narrower than the enterprise-wide classification confusion being corrected."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can highlight risk from ambiguous ownership and incomplete artifacts.",
+          "strategicGap": "Risk framing supports urgency, but re-structuring artifacts in Zachman is architecture governance work."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Audit teams can identify control design evidence gaps caused by artifact mismatch.",
+          "strategicGap": "Audit can detect issues, but defining the classification model ownership is enterprise architecture-led."
+        }
+      }
+    },
+    {
+      "id": "ZACHMAN-2",
+      "prompt": "Business leaders disagree on which owner-view artifacts are required before design teams start IAM blueprinting. The goal is preventing premature technical design decisions. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Determining prerequisite owner-view artifacts is a governance and modeling concern tied directly to Zachman perspective sequencing.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can insist that strategic security intent be captured before design execution.",
+          "strategicGap": "Intent is necessary, but defining owner-view artifact completeness in Zachman is architecture governance."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture defines artifact readiness criteria between owner and designer perspectives.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architects can specify what design inputs they need for IAM blueprint quality.",
+          "strategicGap": "Input requirements do not replace authority over enterprise perspective gating."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can quantify consequences of skipping owner-view definition.",
+          "strategicGap": "Risk evidence supports the decision but does not set architecture artifact standards."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can require traceability from policy intent to technical controls.",
+          "strategicGap": "Traceability is a requirement, while perspective sequencing remains architecture governance."
+        }
+      }
+    },
+    {
+      "id": "ZACHMAN-3",
+      "prompt": "A security control catalog exists, but teams cannot map controls consistently to process, data, and role views. They need the perspective that can translate control intent into coherent cross-cell architecture models. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Security Architect",
+      "mostStrategicReason": "Cross-cell control interpretation requires security architecture expertise to map control intent into consistent model artifacts.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can enforce enterprise control consistency and accountability.",
+          "strategicGap": "The immediate need is technical modeling translation across cells, a security architecture function."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can ensure alignment of models across perspectives and domains.",
+          "strategicGap": "Alignment governance is important, but control-to-model translation detail is security architecture-led."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture maps control objectives into usable process, data, actor, and technology models.",
+          "strategicGap": ""
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk managers can identify where inconsistent mapping creates unmitigated exposure.",
+          "strategicGap": "Exposure analysis informs urgency, but model translation ownership is architectural."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Audit/compliance can define evidence expectations for each control objective.",
+          "strategicGap": "Evidence expectations do not by themselves create coherent architecture models."
+        }
+      }
+    },
+    {
+      "id": "ZACHMAN-4",
+      "prompt": "Executives request prioritization of which incomplete Zachman cells should be filled first to reduce near-term business disruption risk. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Risk Manager",
+      "mostStrategicReason": "Prioritizing incomplete artifacts under disruption pressure is a risk-driven triage decision rather than a pure modeling preference.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO must ensure the chosen prioritization aligns with security strategy and accountability.",
+          "strategicGap": "Strategic oversight is key, but prioritization criteria should be risk-ranked first."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can identify dependency-critical cells and modeling sequencing.",
+          "strategicGap": "Dependency awareness supports planning; disruption reduction priority should be risk-optimized."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architects can estimate technical control blind spots from incomplete cells.",
+          "strategicGap": "Technical blind spots are input, while enterprise triage priority is a risk management call."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can rank cell completion by expected disruption impact and residual risk change.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can elevate legally sensitive cells requiring immediate completeness.",
+          "strategicGap": "Legal urgency is one criterion, but enterprise disruption prioritization is broader risk triage."
+        }
+      }
+    },
+    {
+      "id": "ZACHMAN-5",
+      "prompt": "An internal audit finds that architecture artifacts exist but cannot be traced cleanly to policy obligations. Leadership must decide who should define the remediation approach for defensible evidence chains. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Audit/Compliance",
+      "mostStrategicReason": "When the objective is defensible evidence lineage to obligations, audit/compliance provides the strongest assurance-driven remediation lens.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO is accountable for remediating governance weaknesses and ensuring management action.",
+          "strategicGap": "Executive accountability remains, but evidence-chain design should be assurance-led."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can map artifact lineage and model handoffs.",
+          "strategicGap": "Lineage mapping is useful, but obligation defensibility criteria are compliance-driven."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can align control design artifacts to policy intent.",
+          "strategicGap": "Control mapping helps remediation, but assurance acceptance criteria are set by audit/compliance."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can quantify exposure from weak traceability.",
+          "strategicGap": "Quantifying exposure does not define evidentiary standards for remediation closure."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Audit/compliance defines evidence sufficiency and policy-to-control traceability needed for defensible remediation.",
+          "strategicGap": ""
+        }
+      }
+    }
+  ]
+}

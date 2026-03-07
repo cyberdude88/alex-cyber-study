@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/sabsa-stack-visualization.schema.json",
+  "title": "SABSA Stack Visualization Schema",
+  "type": "object",
+  "required": ["visualization", "nodes", "edges", "trace_links"],
+  "properties": {
+    "visualization": {
+      "type": "object",
+      "required": ["layout", "orientation", "title"],
+      "properties": {
+        "layout": { "type": "string", "enum": ["layered", "hierarchical"] },
+        "orientation": { "type": "string", "enum": ["vertical"] },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "type", "layer_order"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["layer", "attribute", "risk", "requirement", "control", "metric", "owner"]
+          },
+          "layer_order": { "type": "integer", "minimum": 1, "maximum": 6 },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "cissp_domains": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "owner_role": { "type": "string" },
+              "criticality": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "relation"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "derives_to",
+              "maps_to",
+              "implemented_by",
+              "measured_by",
+              "owned_by",
+              "governed_by"
+            ]
+          },
+          "evidence_ref": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "trace_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "business_attribute_id",
+          "risk_id",
+          "requirement_id",
+          "control_id",
+          "metric_id",
+          "business_owner",
+          "technical_owner"
+        ],
+        "properties": {
+          "business_attribute_id": { "type": "string" },
+          "risk_id": { "type": "string" },
+          "requirement_id": { "type": "string" },
+          "control_id": { "type": "string" },
+          "metric_id": { "type": "string" },
+          "business_owner": { "type": "string" },
+          "technical_owner": { "type": "string" },
+          "residual_risk_decision_id": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "implemented", "validated", "accepted"]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

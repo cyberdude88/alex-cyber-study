@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alex-cyber-study.local/frameworks/ciso-architecture-arena/framework-schema.json",
+  "title": "CISSP Framework Simulator Schema",
+  "type": "object",
+  "required": ["frameworks"],
+  "additionalProperties": false,
+  "properties": {
+    "frameworks": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "$ref": "#/$defs/framework" }
+    }
+  },
+  "$defs": {
+    "perspective": {
+      "type": "string",
+      "enum": [
+        "CISO",
+        "Enterprise Architect",
+        "Security Architect",
+        "Risk Manager",
+        "Audit/Compliance"
+      ]
+    },
+    "analysisEntry": {
+      "type": "object",
+      "required": ["technicallyCorrect", "strategicGap"],
+      "additionalProperties": false,
+      "properties": {
+        "technicallyCorrect": { "type": "string", "minLength": 8 },
+        "strategicGap": { "type": "string" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": [
+        "id",
+        "prompt",
+        "mostCorrectPerspective",
+        "mostStrategicReason",
+        "perspectiveAnalysis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 3 },
+        "prompt": { "type": "string", "minLength": 20 },
+        "difficulty": { "type": "string", "enum": ["easy", "medium", "hard", "expert"] },
+        "mostCorrectPerspective": { "$ref": "#/$defs/perspective" },
+        "mostStrategicReason": { "type": "string", "minLength": 20 },
+        "perspectiveAnalysis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "CISO",
+            "Enterprise Architect",
+            "Security Architect",
+            "Risk Manager",
+            "Audit/Compliance"
+          ],
+          "properties": {
+            "CISO": { "$ref": "#/$defs/analysisEntry" },
+            "Enterprise Architect": { "$ref": "#/$defs/analysisEntry" },
+            "Security Architect": { "$ref": "#/$defs/analysisEntry" },
+            "Risk Manager": { "$ref": "#/$defs/analysisEntry" },
+            "Audit/Compliance": { "$ref": "#/$defs/analysisEntry" }
+          }
+        }
+      }
+    },
+    "framework": {
+      "type": "object",
+      "required": ["id", "name", "type", "description", "renderData", "scenarios"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "enum": ["TOGAF", "SABSA", "Zachman", "ITIL"] },
+        "name": { "type": "string", "minLength": 3 },
+        "type": { "type": "string", "enum": ["wheel", "stack", "matrix", "lifecycle"] },
+        "description": { "type": "string", "minLength": 10 },
+        "renderData": { "type": "object" },
+        "scenarios": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/scenario" }
+        }
+      }
+    }
+  }
+}

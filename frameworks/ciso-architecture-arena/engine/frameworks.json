@@ -1,0 +1,630 @@
+{
+  "frameworks": [
+    {
+      "id": "TOGAF",
+      "name": "TOGAF",
+      "type": "wheel",
+      "description": "Architecture governance and transformation decisions through ADM cycles.",
+      "renderData": {
+        "segments": [
+          { "label": "Preliminary", "focus": "Governance setup" },
+          { "label": "A", "focus": "Architecture Vision" },
+          { "label": "B", "focus": "Business Architecture" },
+          { "label": "C", "focus": "Data/Application" },
+          { "label": "D", "focus": "Technology Architecture" },
+          { "label": "E/F", "focus": "Roadmap & Migration" },
+          { "label": "G/H", "focus": "Implementation & Change" }
+        ]
+      },
+      "scenarios": [
+        {
+          "id": "TOGAF-1",
+          "prompt": "An enterprise is starting a multi-year zero-trust transformation. Leadership wants to lock architecture principles, governance checkpoints, and decision rights before detailed designs begin. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Enterprise Architect",
+          "mostStrategicReason": "In TOGAF, enterprise architecture governance and principle-setting are led at architecture board level to steer all subsequent ADM phases.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO must sponsor security outcomes and ensure board-level accountability for risk reduction.",
+              "strategicGap": "In TOGAF execution, the enterprise architect owns the architecture governance mechanism itself, while the CISO sets business security intent."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "The enterprise architect establishes architecture principles, governance gates, and cross-domain consistency.",
+              "strategicGap": ""
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architects provide the technical security architecture patterns and control models.",
+              "strategicGap": "At this stage the priority is enterprise-level governance design, not detailed control architecture."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management provides risk criteria and treatment priorities that should influence the program.",
+              "strategicGap": "Risk input is essential, but TOGAF governance structures are defined by architecture governance roles."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance validates policy conformance and evidence expectations.",
+              "strategicGap": "Assurance requirements inform governance, but they do not architect the transformation operating model."
+            }
+          }
+        },
+        {
+          "id": "TOGAF-2",
+          "prompt": "During ADM Phase B, business capability owners disagree on identity lifecycle scope for contractors versus employees. The team needs one viewpoint to set target-state business architecture boundaries. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Enterprise Architect",
+          "mostStrategicReason": "Phase B centers on business architecture scoping and capability boundaries, which the enterprise architect coordinates across stakeholders.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO defines required control outcomes for identity governance and accountability.",
+              "strategicGap": "The immediate decision is enterprise capability boundary design, which is an architecture integration task."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "The enterprise architect aligns capability maps, business actors, and process scope into a coherent target state.",
+              "strategicGap": ""
+            },
+            "Security Architect": {
+              "technicallyCorrect": "The security architect can map controls to lifecycle processes and roles.",
+              "strategicGap": "Control design follows once business architecture boundaries are formally set."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can highlight exposure from poor contractor lifecycle decisions.",
+              "strategicGap": "Risk concerns guide prioritization but do not replace architecture boundary authority in Phase B."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can identify obligations for contractor access and retention controls.",
+              "strategicGap": "Regulatory interpretation supports design but does not define the architecture structure."
+            }
+          }
+        },
+        {
+          "id": "TOGAF-3",
+          "prompt": "In Phases C and D, teams are choosing between centralized and federated policy decision points for cloud and on-prem systems. They need the perspective that best balances integration feasibility and security architecture coherence. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Security Architect",
+          "mostStrategicReason": "At detailed architecture phases, the security architect is best positioned to define reference architectures that preserve control consistency across platforms.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO should ensure the architecture still meets strategic risk appetite and governance mandates.",
+              "strategicGap": "The decision requires deep control pattern design and integration tradeoff analysis, which is architectural engineering leadership."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "The enterprise architect assures consistency with enterprise standards and target-state architecture.",
+              "strategicGap": "The core decision is security pattern depth and technical control topology, led by security architecture."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "The security architect defines trust boundaries, PDP/PEP patterns, and control inheritance strategy across environments.",
+              "strategicGap": ""
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk teams can compare residual risk between centralized and federated options.",
+              "strategicGap": "Residual risk analysis informs approval, but architecture blueprint ownership remains with security architecture."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance can ensure traceability and evidence design are feasible.",
+              "strategicGap": "Assurance design is downstream from selecting the control architecture operating model."
+            }
+          }
+        },
+        {
+          "id": "TOGAF-4",
+          "prompt": "In Phase E/F migration planning, multiple security work packages compete for funding. Leadership asks which perspective should prioritize initiatives based on enterprise risk tolerance and business impact. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Risk Manager",
+          "mostStrategicReason": "Migration prioritization under constrained budget is fundamentally a risk treatment sequencing decision tied to tolerance and impact.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO is accountable for security outcomes and should sponsor final decisions.",
+              "strategicGap": "The prioritization method itself should be risk-model driven before executive sign-off."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can map dependencies and sequencing constraints across work packages.",
+              "strategicGap": "Dependency logic is necessary, but prioritization under risk appetite is led by risk management discipline."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can estimate control effectiveness and technical debt reduction per initiative.",
+              "strategicGap": "Technical impact is one input; enterprise risk treatment priority is the strategic driver."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management quantifies residual risk reduction versus cost and aligns treatment sequence to approved tolerance.",
+              "strategicGap": ""
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can highlight non-negotiable regulatory deadlines.",
+              "strategicGap": "Regulatory deadlines are constraints, but optimization across all initiatives is a risk prioritization exercise."
+            }
+          }
+        },
+        {
+          "id": "TOGAF-5",
+          "prompt": "During implementation governance, a major deviation from approved security architecture is discovered. The organization needs the perspective MOST suited to determine if a formal waiver with compensating controls is acceptable. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Audit/Compliance",
+          "mostStrategicReason": "Formal waivers, control exceptions, and compensating evidence must satisfy policy and assurance obligations, which is the strongest audit/compliance lens.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can authorize high-impact exceptions and set risk acceptance boundaries.",
+              "strategicGap": "Exception acceptance requires assurance-grade evidence and control mapping rigor before executive approval."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can assess architectural drift from the baseline.",
+              "strategicGap": "Drift identification is necessary, but waiver admissibility is principally a compliance and evidence decision."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architects can propose compensating controls and evaluate effectiveness.",
+              "strategicGap": "Designing compensating controls is technical; determining formal waiver defensibility is an assurance governance function."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk managers can estimate residual risk if waiver is granted.",
+              "strategicGap": "Risk quantification supports decisioning, but policy/legal defensibility of the waiver is compliance-led."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance validates exception criteria, control evidence, and policy/regulatory defensibility.",
+              "strategicGap": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "SABSA",
+      "name": "SABSA",
+      "type": "stack",
+      "description": "Business-driven security architecture from contextual intent to operational execution.",
+      "renderData": {
+        "layers": [
+          { "label": "Contextual", "focus": "Business attributes" },
+          { "label": "Conceptual", "focus": "Security strategy" },
+          { "label": "Logical", "focus": "Service design" },
+          { "label": "Physical", "focus": "Technology mapping" },
+          { "label": "Component", "focus": "Product selection" },
+          { "label": "Operational", "focus": "Run and monitor" }
+        ]
+      },
+      "scenarios": [
+        {
+          "id": "SABSA-1",
+          "prompt": "A board asks for security architecture justification tied directly to revenue-protection and customer-trust outcomes before approving funding. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "CISO",
+          "mostStrategicReason": "SABSA starts from business attributes, and the CISO is best placed to translate business risk intent into architecture sponsorship.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO links business risk appetite, strategic outcomes, and security investment rationale.",
+              "strategicGap": ""
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can ensure alignment with enterprise capability models.",
+              "strategicGap": "The board-level security value narrative is executive risk-accountability centric, not primarily architecture taxonomy centric."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can show how control patterns satisfy business attributes.",
+              "strategicGap": "At board approval stage, strategic sponsorship and risk-accountability framing must lead technical pattern detail."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can quantify potential downside and treatment urgency.",
+              "strategicGap": "Quantification helps, but executive commitment is most effectively driven by CISO-led strategic framing."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can show legal exposure if controls are underfunded.",
+              "strategicGap": "Compliance pressure is one factor; business-value articulation for architecture investment is broader."
+            }
+          }
+        },
+        {
+          "id": "SABSA-2",
+          "prompt": "A merger requires a unified identity trust model across two firms with conflicting control taxonomies. The next action is defining a coherent security service model. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Security Architect",
+          "mostStrategicReason": "The conceptual-to-logical SABSA transition depends on security service modeling and trust design, which is security architecture leadership.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can mandate strategic outcomes and integration urgency.",
+              "strategicGap": "The immediate challenge is technical service-model harmonization requiring architecture depth."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can harmonize enterprise capability and process models.",
+              "strategicGap": "Control taxonomy unification is primarily a security architecture service-definition task."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architects define canonical trust services, reusable control services, and integration constraints.",
+              "strategicGap": ""
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can compare residual risk between harmonization options.",
+              "strategicGap": "Risk analysis informs approval, but service model construction is architecture-led."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can identify mandatory control obligations during integration.",
+              "strategicGap": "Mandatory obligations constrain solutions, but they do not define the architecture service model."
+            }
+          }
+        },
+        {
+          "id": "SABSA-3",
+          "prompt": "Program leadership must decide which control domains to implement first after quantifying exposure concentration in privileged access and third-party connectivity. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Risk Manager",
+          "mostStrategicReason": "When sequencing control domains by exposure concentration, risk treatment prioritization is the principal decision framework.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO approves treatment direction and accountabilities.",
+              "strategicGap": "Approval follows from risk-based prioritization analysis rather than replacing it."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can assess cross-domain implementation dependencies.",
+              "strategicGap": "Dependency mapping supports execution, but domain prioritization must be risk-ranked first."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architects can estimate control efficacy and technical feasibility by domain.",
+              "strategicGap": "Technical efficacy is input; enterprise prioritization under exposure concentration is risk-led."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management ranks treatments against risk tolerance, impact, and likelihood to direct sequence decisions.",
+              "strategicGap": ""
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can elevate urgent obligations that affect sequencing.",
+              "strategicGap": "Obligations are constraints, but portfolio-level ordering remains a risk optimization decision."
+            }
+          }
+        },
+        {
+          "id": "SABSA-4",
+          "prompt": "An operations team deployed controls that differ from approved SABSA component standards. Leadership needs to decide whether to grant an exception with monitoring conditions. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Audit/Compliance",
+          "mostStrategicReason": "Exception governance in SABSA operationalization requires policy defensibility, control evidence, and assurance traceability.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can authorize exceptions when risk and urgency justify temporary variance.",
+              "strategicGap": "Authorization should be informed by assurance evidence that compliance teams formalize."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can measure standard drift and architecture debt impact.",
+              "strategicGap": "Debt assessment is relevant, but exception admissibility is a compliance governance decision."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can evaluate whether compensating controls meet intent.",
+              "strategicGap": "Control design is necessary but not sufficient for formal exception defensibility."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can quantify residual risk introduced by the deviation.",
+              "strategicGap": "Residual risk informs decisions, but evidence and policy conformance requirements are audit/compliance-led."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance validates exception criteria, evidence quality, and reporting obligations.",
+              "strategicGap": ""
+            }
+          }
+        },
+        {
+          "id": "SABSA-5",
+          "prompt": "A global business expansion introduces new jurisdictions and operating models. Security architecture must be recalibrated to preserve business attribute priorities without local fragmentation. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Enterprise Architect",
+          "mostStrategicReason": "Cross-jurisdiction operating model harmonization is an enterprise architecture integration problem spanning business and security viewpoints.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO sets enterprise security intent and non-negotiable risk boundaries.",
+              "strategicGap": "The central challenge is harmonizing architecture structures across regions, which is enterprise architecture coordination."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture aligns target operating models, architecture governance, and shared standards across geographies.",
+              "strategicGap": ""
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can define reusable security building blocks for regional use.",
+              "strategicGap": "Reusable controls help, but macro-level operating model cohesion is enterprise architecture-led."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can map jurisdictional risk variances and treatment constraints.",
+              "strategicGap": "Risk context is essential, but cross-region architecture governance still needs enterprise architecture ownership."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can identify jurisdiction-specific legal obligations.",
+              "strategicGap": "Legal constraints shape design, but they do not orchestrate enterprise architecture harmonization."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "Zachman",
+      "name": "Zachman",
+      "type": "matrix",
+      "description": "Structured enterprise classification across perspectives and interrogatives.",
+      "renderData": {
+        "rows": ["Planner", "Owner", "Designer", "Builder", "Operator"],
+        "columns": ["What", "How", "Where", "Who", "When", "Why"]
+      },
+      "scenarios": [
+        {
+          "id": "ZACHMAN-1",
+          "prompt": "A transformation office is mixing executive strategy statements with solution-level implementation artifacts. The team needs to restore clear ownership by enterprise perspective and abstraction level. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Enterprise Architect",
+          "mostStrategicReason": "Zachman is fundamentally an enterprise classification framework, and enterprise architecture is best suited to enforce perspective separation and artifact discipline.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can enforce governance discipline for security-related artifacts and accountability.",
+              "strategicGap": "The problem spans all enterprise architecture artifacts, not only security governance."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture governs abstraction boundaries and ensures each Zachman cell is populated by the right stakeholder view.",
+              "strategicGap": ""
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can classify security artifacts across business-to-technology layers.",
+              "strategicGap": "Security scope is narrower than the enterprise-wide classification confusion being corrected."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can highlight risk from ambiguous ownership and incomplete artifacts.",
+              "strategicGap": "Risk framing supports urgency, but re-structuring artifacts in Zachman is architecture governance work."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit teams can identify control design evidence gaps caused by artifact mismatch.",
+              "strategicGap": "Audit can detect issues, but defining the classification model ownership is enterprise architecture-led."
+            }
+          }
+        },
+        {
+          "id": "ZACHMAN-2",
+          "prompt": "Business leaders disagree on which owner-view artifacts are required before design teams start IAM blueprinting. The goal is preventing premature technical design decisions. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Enterprise Architect",
+          "mostStrategicReason": "Determining prerequisite owner-view artifacts is a governance and modeling concern tied directly to Zachman perspective sequencing.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can insist that strategic security intent be captured before design execution.",
+              "strategicGap": "Intent is necessary, but defining owner-view artifact completeness in Zachman is architecture governance."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture defines artifact readiness criteria between owner and designer perspectives.",
+              "strategicGap": ""
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architects can specify what design inputs they need for IAM blueprint quality.",
+              "strategicGap": "Input requirements do not replace authority over enterprise perspective gating."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can quantify consequences of skipping owner-view definition.",
+              "strategicGap": "Risk evidence supports the decision but does not set architecture artifact standards."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can require traceability from policy intent to technical controls.",
+              "strategicGap": "Traceability is a requirement, while perspective sequencing remains architecture governance."
+            }
+          }
+        },
+        {
+          "id": "ZACHMAN-3",
+          "prompt": "A security control catalog exists, but teams cannot map controls consistently to process, data, and role views. They need the perspective that can translate control intent into coherent cross-cell architecture models. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Security Architect",
+          "mostStrategicReason": "Cross-cell control interpretation requires security architecture expertise to map control intent into consistent model artifacts.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can enforce enterprise control consistency and accountability.",
+              "strategicGap": "The immediate need is technical modeling translation across cells, a security architecture function."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can ensure alignment of models across perspectives and domains.",
+              "strategicGap": "Alignment governance is important, but control-to-model translation detail is security architecture-led."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture maps control objectives into usable process, data, actor, and technology models.",
+              "strategicGap": ""
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk managers can identify where inconsistent mapping creates unmitigated exposure.",
+              "strategicGap": "Exposure analysis informs urgency, but model translation ownership is architectural."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance can define evidence expectations for each control objective.",
+              "strategicGap": "Evidence expectations do not by themselves create coherent architecture models."
+            }
+          }
+        },
+        {
+          "id": "ZACHMAN-4",
+          "prompt": "Executives request prioritization of which incomplete Zachman cells should be filled first to reduce near-term business disruption risk. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Risk Manager",
+          "mostStrategicReason": "Prioritizing incomplete artifacts under disruption pressure is a risk-driven triage decision rather than a pure modeling preference.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO must ensure the chosen prioritization aligns with security strategy and accountability.",
+              "strategicGap": "Strategic oversight is key, but prioritization criteria should be risk-ranked first."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can identify dependency-critical cells and modeling sequencing.",
+              "strategicGap": "Dependency awareness supports planning; disruption reduction priority should be risk-optimized."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architects can estimate technical control blind spots from incomplete cells.",
+              "strategicGap": "Technical blind spots are input, while enterprise triage priority is a risk management call."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can rank cell completion by expected disruption impact and residual risk change.",
+              "strategicGap": ""
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can elevate legally sensitive cells requiring immediate completeness.",
+              "strategicGap": "Legal urgency is one criterion, but enterprise disruption prioritization is broader risk triage."
+            }
+          }
+        },
+        {
+          "id": "ZACHMAN-5",
+          "prompt": "An internal audit finds that architecture artifacts exist but cannot be traced cleanly to policy obligations. Leadership must decide who should define the remediation approach for defensible evidence chains. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Audit/Compliance",
+          "mostStrategicReason": "When the objective is defensible evidence lineage to obligations, audit/compliance provides the strongest assurance-driven remediation lens.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO is accountable for remediating governance weaknesses and ensuring management action.",
+              "strategicGap": "Executive accountability remains, but evidence-chain design should be assurance-led."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can map artifact lineage and model handoffs.",
+              "strategicGap": "Lineage mapping is useful, but obligation defensibility criteria are compliance-driven."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can align control design artifacts to policy intent.",
+              "strategicGap": "Control mapping helps remediation, but assurance acceptance criteria are set by audit/compliance."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can quantify exposure from weak traceability.",
+              "strategicGap": "Quantifying exposure does not define evidentiary standards for remediation closure."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance defines evidence sufficiency and policy-to-control traceability needed for defensible remediation.",
+              "strategicGap": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ITIL",
+      "name": "ITIL",
+      "type": "lifecycle",
+      "description": "Service lifecycle governance for secure, reliable, and continuously improving delivery.",
+      "renderData": {
+        "phases": [
+          { "label": "Service Strategy", "focus": "Value and policy direction" },
+          { "label": "Service Design", "focus": "Service design package" },
+          { "label": "Service Transition", "focus": "Change and release governance" },
+          { "label": "Service Operation", "focus": "Run and support governance" },
+          { "label": "Continual Service Improvement", "focus": "CSI feedback loop" }
+        ]
+      },
+      "scenarios": [
+        {
+          "id": "ITIL-1",
+          "prompt": "A service owner wants to bypass change governance to accelerate a security tooling rollout after a recent incident. The organization needs a perspective that preserves service reliability while enabling security urgency. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Risk Manager",
+          "mostStrategicReason": "Balancing incident-driven urgency with controlled change in ITIL is a risk tradeoff decision across availability, integrity, and business impact.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can mandate urgent security actions to reduce active exposure.",
+              "strategicGap": "Urgency is valid, but ITIL governance balance requires explicit risk tradeoff analysis."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can ensure tooling fits target service architecture.",
+              "strategicGap": "Architectural fit is secondary to immediate risk-balanced change governance choice."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can propose safer implementation patterns and controls.",
+              "strategicGap": "Technical safeguards are inputs; decision to bypass governance is risk-governance centric."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management evaluates urgency versus service disruption and defines acceptable expedited control paths.",
+              "strategicGap": ""
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can clarify mandatory change-control requirements.",
+              "strategicGap": "Requirement interpretation is needed, but balancing speed and reliability under threat is risk-led."
+            }
+          }
+        },
+        {
+          "id": "ITIL-2",
+          "prompt": "A new customer-facing platform requires security requirements embedded into the service design package before procurement and implementation. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Security Architect",
+          "mostStrategicReason": "In ITIL Design, security architecture is central to embedding control requirements into service design artifacts.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO sets mandatory security outcomes and governance expectations.",
+              "strategicGap": "Outcomes are strategic; service design package control integration is architecture detail."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can align design package decisions to enterprise standards.",
+              "strategicGap": "Alignment is important, but control integration inside the package is security architecture-led."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture defines concrete control requirements, trust boundaries, and assurance hooks for the design package.",
+              "strategicGap": ""
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management can prioritize high-impact controls for inclusion.",
+              "strategicGap": "Prioritization helps, but authoring control architecture content is not a risk function."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can map required controls to legal and policy obligations.",
+              "strategicGap": "Obligation mapping constrains design, but architecture integration decisions remain security architecture work."
+            }
+          }
+        },
+        {
+          "id": "ITIL-3",
+          "prompt": "Post-implementation reviews show recurring privileged access incidents despite completed change records. Leadership must decide who should reshape governance so service transition gates enforce meaningful security outcomes. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "CISO",
+          "mostStrategicReason": "Transition gate redesign with enterprise-wide accountability and security outcome ownership is an executive security governance decision.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can reset governance expectations, accountability, and enterprise control effectiveness criteria.",
+              "strategicGap": ""
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can adjust gate artifacts and architecture approval dependencies.",
+              "strategicGap": "Artifact updates help, but cross-service accountability reset is executive security governance-led."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can strengthen technical acceptance criteria in transition checklists.",
+              "strategicGap": "Technical criteria are necessary but insufficient without governance authority and accountability reset."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk teams can evidence that current gates leave material residual exposure.",
+              "strategicGap": "Risk evidence supports change, but governance restructuring authority is executive."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance can flag ineffective control operation and nonconformance patterns.",
+              "strategicGap": "Findings identify failure points; strategic governance redesign is led by CISO accountability."
+            }
+          }
+        },
+        {
+          "id": "ITIL-4",
+          "prompt": "An ITSM dashboard shows control-related incidents trending upward across multiple services. The organization must choose the perspective MOST suitable to prioritize CSI initiatives for measurable risk reduction. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Risk Manager",
+          "mostStrategicReason": "CSI initiative prioritization under constrained capacity should be risk-ranked to maximize reduction of enterprise exposure.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO can direct strategic focus areas for enterprise improvement.",
+              "strategicGap": "Strategic direction is key, but initiative ordering should be risk-optimized first."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can identify service dependencies that affect rollout ordering.",
+              "strategicGap": "Dependency-aware scheduling is useful, but prioritization objective here is risk reduction efficiency."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architects can estimate control uplift impact of candidate CSI actions.",
+              "strategicGap": "Impact estimates are technical inputs; portfolio priority remains a risk decision."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk management compares expected risk reduction per initiative and aligns CSI backlog to tolerance thresholds.",
+              "strategicGap": ""
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Compliance can spotlight improvements needed to close recurring audit observations.",
+              "strategicGap": "Observation closure is important, but broader risk reduction optimization is risk-led."
+            }
+          }
+        },
+        {
+          "id": "ITIL-5",
+          "prompt": "Regulators request evidence that incident, change, and access-management controls are operating effectively across the service lifecycle. The team must select the perspective MOST appropriate to define evidence defensibility standards. Which perspective is MOST correct?",
+          "mostCorrectPerspective": "Audit/Compliance",
+          "mostStrategicReason": "Defining defensible evidence standards and assurance criteria for regulators is a core audit/compliance responsibility.",
+          "perspectiveAnalysis": {
+            "CISO": {
+              "technicallyCorrect": "The CISO remains accountable for external assurance outcomes and leadership response.",
+              "strategicGap": "Accountability is executive, but evidence sufficiency standards are assurance-specialist domain."
+            },
+            "Enterprise Architect": {
+              "technicallyCorrect": "Enterprise architecture can map evidence-producing processes to service architecture components.",
+              "strategicGap": "Mapping supports defensibility, but criterion-setting is compliance-led."
+            },
+            "Security Architect": {
+              "technicallyCorrect": "Security architecture can ensure technical telemetry supports control attestations.",
+              "strategicGap": "Telemetry design is needed, yet regulatory defensibility thresholds are defined by assurance roles."
+            },
+            "Risk Manager": {
+              "technicallyCorrect": "Risk teams can contextualize control effectiveness outcomes in business risk terms.",
+              "strategicGap": "Risk context helps reporting, but evidentiary acceptance standards remain audit/compliance territory."
+            },
+            "Audit/Compliance": {
+              "technicallyCorrect": "Audit/compliance defines evidence quality, traceability, and testing expectations to satisfy regulators.",
+              "strategicGap": ""
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

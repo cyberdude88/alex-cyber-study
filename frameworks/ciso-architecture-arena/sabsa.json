@@ -1,0 +1,463 @@
+{
+  "module": {
+    "name": "SABSA CISSP-Aligned Framework Module",
+    "version": "1.0.0",
+    "created_date": "2026-02-25",
+    "alignment": {
+      "primary": "SABSA",
+      "secondary": "CISSP",
+      "focus_areas": [
+        "Business attributes",
+        "Traceability",
+        "Risk-to-control mapping",
+        "Requirement derivation"
+      ]
+    }
+  },
+  "sabsa_vertical_stack": [
+    {
+      "layer": "Contextual",
+      "order": 1,
+      "intent": "Define business context, mission-critical assets, stakeholders, and business risk appetite.",
+      "core_questions": ["Why", "What business outcomes", "Who owns risk"],
+      "primary_artifacts": [
+        "Business attribute profile",
+        "Business risk register",
+        "Ownership model (business vs technical)"
+      ],
+      "cissp_alignment": ["Security and Risk Management", "Asset Security"],
+      "input_types": ["Business strategy", "Regulatory obligations", "Enterprise risk appetite"],
+      "output_types": ["Prioritized business attributes", "Initial control objectives"]
+    },
+    {
+      "layer": "Conceptual",
+      "order": 2,
+      "intent": "Translate business attributes into security concepts and service objectives.",
+      "core_questions": ["How should security enable business", "Which services are needed"],
+      "primary_artifacts": [
+        "Security attribute taxonomy",
+        "Security service catalog",
+        "Control objective statements"
+      ],
+      "cissp_alignment": ["Security Architecture and Engineering", "Security Operations"],
+      "input_types": ["Business attributes", "Risk themes", "Threat scenarios"],
+      "output_types": ["Security service requirements", "Conceptual control patterns"]
+    },
+    {
+      "layer": "Logical",
+      "order": 3,
+      "intent": "Develop technology-agnostic security logic, trust boundaries, and control logic.",
+      "core_questions": ["Which logical controls", "How to enforce policy consistently"],
+      "primary_artifacts": [
+        "Logical control model",
+        "Trust-zone model",
+        "Policy decision and enforcement model"
+      ],
+      "cissp_alignment": ["Communication and Network Security", "Identity and Access Management"],
+      "input_types": ["Security service requirements", "Data classification model"],
+      "output_types": ["Logical control requirements", "Traceable policy assertions"]
+    },
+    {
+      "layer": "Physical",
+      "order": 4,
+      "intent": "Map logical controls to specific technologies, platforms, and deployment patterns.",
+      "core_questions": ["Which technologies", "Where implemented"],
+      "primary_artifacts": [
+        "Technology reference architecture",
+        "Product/control mapping",
+        "Deployment topology"
+      ],
+      "cissp_alignment": ["Security Architecture and Engineering", "Communication and Network Security"],
+      "input_types": ["Logical model", "Platform constraints", "Budget and sourcing constraints"],
+      "output_types": ["Physical control design", "Implementation standards"]
+    },
+    {
+      "layer": "Component",
+      "order": 5,
+      "intent": "Specify component-level configurations, integration patterns, and build requirements.",
+      "core_questions": ["How exactly configured", "What integration dependencies"],
+      "primary_artifacts": [
+        "Configuration baselines",
+        "Integration control specs",
+        "Automation and hardening requirements"
+      ],
+      "cissp_alignment": ["Security Assessment and Testing", "Software Development Security"],
+      "input_types": ["Physical design", "Vendor capabilities", "Engineering constraints"],
+      "output_types": ["Component implementation requirements", "Verification test cases"]
+    },
+    {
+      "layer": "Operational",
+      "order": 6,
+      "intent": "Operate, monitor, assure, and improve controls through governance and metrics.",
+      "core_questions": ["How measured", "How governed", "How improved"],
+      "primary_artifacts": [
+        "Operational control procedures",
+        "Assurance metrics and KRIs/KPIs",
+        "Exception and risk acceptance workflow"
+      ],
+      "cissp_alignment": ["Security Operations", "Security and Risk Management"],
+      "input_types": ["Component controls", "Telemetry", "Audit results"],
+      "output_types": ["Control effectiveness evidence", "Governance reporting", "Continuous improvement backlog"]
+    }
+  ],
+  "business_attributes": {
+    "attribute_catalog": [
+      {
+        "id": "BA-01",
+        "name": "Confidentiality of regulated data",
+        "business_owner_role": "Chief Data Officer",
+        "metric_examples": ["Unauthorized disclosure incidents", "Regulatory breach notifications"],
+        "risk_theme": "Data exposure",
+        "service_alignment": ["Data protection service", "Identity assurance service"]
+      },
+      {
+        "id": "BA-02",
+        "name": "Service availability for revenue systems",
+        "business_owner_role": "Line of Business Executive",
+        "metric_examples": ["Revenue system downtime", "Customer abandonment rate"],
+        "risk_theme": "Business interruption",
+        "service_alignment": ["Resilience service", "Incident response service"]
+      },
+      {
+        "id": "BA-03",
+        "name": "Transaction integrity",
+        "business_owner_role": "CFO",
+        "metric_examples": ["Reconciliation discrepancies", "Fraud loss rate"],
+        "risk_theme": "Fraud and tampering",
+        "service_alignment": ["Integrity assurance service", "Monitoring service"]
+      },
+      {
+        "id": "BA-04",
+        "name": "Regulatory demonstrability",
+        "business_owner_role": "General Counsel",
+        "metric_examples": ["Audit findings", "Evidence completeness"],
+        "risk_theme": "Compliance failure",
+        "service_alignment": ["Governance and compliance service", "Assurance reporting service"]
+      },
+      {
+        "id": "BA-05",
+        "name": "Trusted third-party ecosystem",
+        "business_owner_role": "Chief Procurement Officer",
+        "metric_examples": ["Third-party incidents", "Vendor remediation cycle time"],
+        "risk_theme": "Supply chain compromise",
+        "service_alignment": ["Third-party risk service", "Continuous assurance service"]
+      }
+    ]
+  },
+  "traceability_model": {
+    "objective": "Provide end-to-end evidence from business attribute to operational control effectiveness.",
+    "trace_link_structure": [
+      "Business Attribute ID",
+      "Business Risk ID",
+      "Security Requirement ID",
+      "Logical Control Objective ID",
+      "Physical/Component Control ID",
+      "Operational Metric ID",
+      "Owner and Approver IDs",
+      "Residual Risk Decision ID"
+    ],
+    "governance_rules": [
+      "Every security control must trace back to at least one business attribute.",
+      "Every accepted risk must cite business owner approval and residual-risk rationale.",
+      "Every technical exception must include an expiry date and compensating control evidence.",
+      "Every strategic security service must map to one or more board-level risk statements."
+    ],
+    "evidence_requirements": [
+      "Design-time: requirement derivation matrix",
+      "Build-time: control implementation records",
+      "Run-time: control telemetry and effectiveness metrics",
+      "Governance-time: risk committee decisions and attestations"
+    ]
+  },
+  "risk_to_control_mapping": {
+    "derivation_method": [
+      "1. Identify business attribute impact and tolerance thresholds.",
+      "2. Define business risk scenario with owner and consequence horizon.",
+      "3. Derive security requirement statements measurable at the conceptual layer.",
+      "4. Select logical controls that directly reduce likelihood or impact.",
+      "5. Map to physical/component controls considering feasibility and constraints.",
+      "6. Define operational metrics and governance checkpoints for assurance.",
+      "7. Evaluate residual risk and document business acceptance/escalation."
+    ],
+    "mapping_examples": [
+      {
+        "risk_id": "R-BA01-EXFIL",
+        "business_attribute": "BA-01",
+        "risk_statement": "Unauthorized exfiltration of regulated customer data.",
+        "derived_requirements": [
+          "REQ-001: Enforce least privilege on sensitive data stores.",
+          "REQ-002: Detect and block abnormal outbound data patterns."
+        ],
+        "logical_controls": ["LC-01 Attribute-based access policy", "LC-02 Data egress anomaly detection"],
+        "physical_component_controls": ["PC-01 CASB DLP policy", "PC-02 Database row-level security", "PC-03 SIEM exfiltration use cases"],
+        "operational_assurance": ["M-01 Weekly privileged access review", "M-02 Mean time to detect egress anomalies < 15 min"],
+        "ownership": {
+          "business": "Chief Data Officer",
+          "technical": "Security Engineering Manager"
+        }
+      },
+      {
+        "risk_id": "R-BA02-OUTAGE",
+        "business_attribute": "BA-02",
+        "risk_statement": "Revenue channel outage during peak demand.",
+        "derived_requirements": [
+          "REQ-101: Maintain defined service continuity objective.",
+          "REQ-102: Automate failover and validate restoration procedures."
+        ],
+        "logical_controls": ["LC-11 Multi-zone service architecture", "LC-12 Incident severity policy and runbooks"],
+        "physical_component_controls": ["PC-11 Load balancer health checks", "PC-12 Immutable backup and restore workflow", "PC-13 DDoS mitigation service"],
+        "operational_assurance": ["M-11 Quarterly resilience exercises", "M-12 RTO/RPO dashboard attested by business owner"],
+        "ownership": {
+          "business": "Line of Business Executive",
+          "technical": "Site Reliability Engineering Lead"
+        }
+      }
+    ]
+  },
+  "attribute_traceability_explanation_logic": {
+    "logic_steps": [
+      {
+        "step": "Attribute Qualification",
+        "description": "Define each business attribute with measurable business language (impact, tolerance, owner)."
+      },
+      {
+        "step": "Risk Binding",
+        "description": "Attach explicit risk scenarios to each attribute, including event, actor, and consequence."
+      },
+      {
+        "step": "Requirement Derivation",
+        "description": "Convert each risk into security requirements with objective pass/fail conditions."
+      },
+      {
+        "step": "Control Realization",
+        "description": "Implement layered controls logically then physically, preserving reference IDs."
+      },
+      {
+        "step": "Operational Evidence",
+        "description": "Collect telemetry and audit evidence proving control effectiveness against original attribute intent."
+      },
+      {
+        "step": "Governance Closure",
+        "description": "Review residual risk with business ownership and formally accept, mitigate, or escalate."
+      }
+    ],
+    "traceability_validation_tests": [
+      "Can a board stakeholder trace any control to a business attribute in under 5 minutes?",
+      "Do all risk acceptances identify business owner and expiration date?",
+      "Are security service KPIs linked to business attribute thresholds?",
+      "Can failed controls be tied to attribute degradation and decision logs?"
+    ]
+  },
+  "cissp_calibrated_scenarios": [
+    {
+      "scenario_id": "SABSA-CISSP-01",
+      "title": "Data residency expansion under strict privacy law",
+      "prompt": "A global retailer enters a jurisdiction with strict data residency requirements. Engineering proposes rapid cloud deployment using shared tenancy. The business owner is worried about regulatory penalties but wants a 90-day launch.",
+      "perspectives": {
+        "contextual": "Business attribute BA-04 (regulatory demonstrability) and BA-01 (confidentiality) are both high-criticality.",
+        "conceptual": "Security service priorities: compliance assurance, data protection, and jurisdictional control.",
+        "logical": "Need logical separation, residency policy constraints, and legal hold traceability.",
+        "physical": "Select region-locked tenancy, key management in-jurisdiction, and policy-enforced data routing.",
+        "operational": "Continuous compliance attestations and audit-ready evidence mapped to legal obligations."
+      },
+      "answer_options": [
+        "A. Approve shared tenancy and rely on contractual clauses later.",
+        "B. Delay launch until all global standards are harmonized.",
+        "C. Define residency attributes, derive mandatory controls, launch only with traceable jurisdictional enforcement.",
+        "D. Delegate decision to cloud operations due to technical complexity."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "Strategic governance requires business-attribute-led control derivation and demonstrable traceability. Option C balances time-to-market with accountable risk ownership and enforceable controls.",
+      "attribute_traceability_logic": "BA-04/BA-01 -> risk of unlawful processing/disclosure -> residency and key-control requirements -> region-locked architecture -> compliance telemetry and board assurance."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-02",
+      "title": "M&A integration with identity sprawl",
+      "prompt": "After an acquisition, duplicate identities and privileged accounts exist across both firms. IT wants immediate directory consolidation. Business leaders demand uninterrupted operations.",
+      "perspectives": {
+        "contextual": "BA-03 integrity and BA-02 availability are at risk due to uncontrolled identity merges.",
+        "conceptual": "Required services: identity assurance, segregation of duties, privileged access governance.",
+        "logical": "Implement identity correlation, risk-based authentication, and SoD policy model.",
+        "physical": "Phased federation before hard merge; PAM controls for inherited admin accounts.",
+        "operational": "Weekly exception review with business application owners and risk committee oversight."
+      },
+      "answer_options": [
+        "A. Merge directories immediately and fix access conflicts later.",
+        "B. Freeze all privileged access for 30 days.",
+        "C. Use phased trust model with traceable role mapping and business-approved exceptions.",
+        "D. Let each business unit keep separate identity standards indefinitely."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C preserves continuity while maintaining attribute-led control integrity. Governance requires transparent exceptions and explicit business approval, not purely technical consolidation.",
+      "attribute_traceability_logic": "BA-03/BA-02 -> fraud/outage risk from identity errors -> IAM and SoD requirements -> phased federation and PAM -> audit trail for exception expiry and owner sign-off."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-03",
+      "title": "Ransomware pressure on manufacturing uptime",
+      "prompt": "A manufacturer experiences repeated ransomware attempts. Operations requests broad local admin rights to speed recovery. CFO prioritizes plant uptime and revenue continuity.",
+      "perspectives": {
+        "contextual": "BA-02 availability must be protected without undermining BA-03 integrity.",
+        "conceptual": "Resilience plus privileged control services required together.",
+        "logical": "Separate recovery authority from routine admin and enforce immutable restore workflow.",
+        "physical": "EDR containment, privileged elevation broker, offline/immutable backups.",
+        "operational": "Tabletop plus restoration drills with business-defined RTO thresholds."
+      },
+      "answer_options": [
+        "A. Grant permanent local admin to plant engineers.",
+        "B. Disable endpoint protections during peak production windows.",
+        "C. Implement just-in-time privilege and resilient recovery controls tied to uptime attributes.",
+        "D. Accept ransomware risk as a cost of doing business."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C aligns availability objectives with controlled privilege and auditable recovery capability. Governance must prevent emergency shortcuts from becoming systemic risk.",
+      "attribute_traceability_logic": "BA-02 -> outage risk; BA-03 -> tampering risk -> controlled recovery requirements -> JIT privilege + immutable backup controls -> resilience KPIs and executive risk review."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-04",
+      "title": "Third-party API dependence and opaque controls",
+      "prompt": "A critical customer workflow now depends on a third-party API. The vendor provides only annual SOC reports. Product leadership wants immediate go-live.",
+      "perspectives": {
+        "contextual": "BA-05 trusted ecosystem and BA-02 service continuity are primary.",
+        "conceptual": "Need third-party assurance and continuity service contracts.",
+        "logical": "Define dependency risk tiers and compensating verification logic.",
+        "physical": "Token scoping, API gateway policy, failover path and graceful degradation.",
+        "operational": "Continuous vendor risk scoring and contractual control attestations."
+      },
+      "answer_options": [
+        "A. Accept annual SOC as sufficient for all critical workflows.",
+        "B. Delay all integrations until direct vendor audits are possible.",
+        "C. Launch with tiered assurance controls, compensating telemetry, and business-owned residual risk decision.",
+        "D. Let engineering own third-party risk entirely."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C recognizes business ownership of supplier risk while implementing technical compensating controls and measurable assurance.",
+      "attribute_traceability_logic": "BA-05 -> supply-chain disruption risk -> assurance and resilience requirements -> gateway controls and fallback design -> vendor risk KPIs tied to business acceptance thresholds."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-05",
+      "title": "Insider trading surveillance in financial services",
+      "prompt": "A brokerage introduces a new trading platform. Compliance flags weak monitoring for privileged analysts who can access market-sensitive data before execution windows.",
+      "perspectives": {
+        "contextual": "BA-03 transaction integrity and BA-04 regulatory demonstrability dominate.",
+        "conceptual": "Monitoring, non-repudiation, and legal evidence preservation services are required.",
+        "logical": "Separation of duties, behavior baselines, and immutable event lineage.",
+        "physical": "UEBA, WORM log storage, strict session recording for privileged functions.",
+        "operational": "Cross-functional surveillance committee with legal/compliance sign-off on alert thresholds."
+      },
+      "answer_options": [
+        "A. Rely on annual ethics training without control redesign.",
+        "B. Block analyst access to all pre-trade data.",
+        "C. Derive surveillance controls from integrity attributes and enforce evidentiary traceability.",
+        "D. Delegate monitoring thresholds solely to SOC analysts."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C enables regulated business operations while preserving demonstrable integrity controls and legal defensibility.",
+      "attribute_traceability_logic": "BA-03/BA-04 -> market abuse and compliance risk -> surveillance requirements -> UEBA + immutable logs -> governance attestation on monitoring efficacy."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-06",
+      "title": "Hospital modernization with legacy clinical systems",
+      "prompt": "A hospital must connect legacy diagnostic systems to a new patient portal. Biomedical teams resist patching due to patient safety concerns.",
+      "perspectives": {
+        "contextual": "BA-02 availability and BA-01 confidentiality have direct patient and legal impact.",
+        "conceptual": "Clinical safety-aligned security service plus data protection service.",
+        "logical": "Compensating segmentation and strict data-flow constraints for legacy nodes.",
+        "physical": "Micro-segmentation, protocol break proxies, and monitored jump-host access.",
+        "operational": "Joint clinical-security governance for risk acceptance and maintenance windows."
+      },
+      "answer_options": [
+        "A. Keep legacy systems flat-networked to avoid downtime.",
+        "B. Force immediate full patching regardless of clinical impact.",
+        "C. Apply compensating controls tied to patient-safety attributes with explicit business and clinical ownership.",
+        "D. Exempt clinical systems from enterprise security governance."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C balances patient safety, confidentiality, and operational continuity through attribute-driven risk management and shared accountability.",
+      "attribute_traceability_logic": "BA-02/BA-01 -> care disruption and privacy risk -> compensating control requirements -> segmentation/proxy/jump-host pattern -> clinical governance sign-off and periodic review."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-07",
+      "title": "Board mandate for zero trust without business mapping",
+      "prompt": "The board mandates 'zero trust in 6 months.' Security engineering proposes broad tooling purchases but cannot map them to business outcomes.",
+      "perspectives": {
+        "contextual": "Attributes must be prioritized by business value before architecture commitments.",
+        "conceptual": "Service definition should precede tool procurement.",
+        "logical": "Identity, policy, and telemetry models need explicit requirement lineage.",
+        "physical": "Tool selection follows validated control objectives and integration constraints.",
+        "operational": "Governance dashboard reports attribute impact, not tool deployment counts."
+      },
+      "answer_options": [
+        "A. Purchase full zero trust suite immediately to meet deadline optics.",
+        "B. Postpone initiative until all domains are fully documented.",
+        "C. Establish attribute-prioritized roadmap and phase controls with measurable business risk reduction.",
+        "D. Delegate program to infrastructure team without business owners."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C converts a slogan into accountable governance by linking investments to attribute outcomes and residual risk reduction.",
+      "attribute_traceability_logic": "Prioritized BAs -> defined risk reductions -> requirement backlog -> phased logical/physical controls -> operational metrics presented to board risk committee."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-08",
+      "title": "Cloud cost optimization undermines logging",
+      "prompt": "FinOps proposes reducing telemetry retention to cut cloud cost. Security warns this may impair incident investigation and regulatory response.",
+      "perspectives": {
+        "contextual": "BA-04 demonstrability and BA-03 integrity require evidentiary sufficiency.",
+        "conceptual": "Assurance reporting service and incident response service must define minimum evidence standards.",
+        "logical": "Data lifecycle controls need differentiated retention by risk class.",
+        "physical": "Tiered storage with immutable retention for high-risk events.",
+        "operational": "Quarterly evidence adequacy reviews with legal, finance, and risk owners."
+      },
+      "answer_options": [
+        "A. Cut all logs to 30 days to meet cost targets.",
+        "B. Keep all logs forever regardless of value.",
+        "C. Implement risk-tiered retention derived from business attributes and regulatory obligations.",
+        "D. Let FinOps finalize retention policy independently."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C provides defensible, business-owned tradeoff decisions with traceable evidence adequacy and cost control.",
+      "attribute_traceability_logic": "BA-04/BA-03 -> evidence insufficiency risk -> retention requirements by risk tier -> immutable/tiered storage -> governance attestations for cost-risk balance."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-09",
+      "title": "DevSecOps acceleration with weak segregation",
+      "prompt": "A product unit wants developers to approve their own production deployments to speed releases. Audit has previously cited change-control failures.",
+      "perspectives": {
+        "contextual": "BA-03 integrity and BA-04 demonstrability are threatened by collapsed segregation.",
+        "conceptual": "Release assurance service and policy enforcement service are required.",
+        "logical": "Dual-control logic with risk-based approvals and traceable exception pathways.",
+        "physical": "Pipeline guardrails, signed artifacts, policy-as-code gates.",
+        "operational": "Change governance metrics include exception rate and post-release incident correlation."
+      },
+      "answer_options": [
+        "A. Permit self-approval for all low-risk changes by default.",
+        "B. Require CAB approval for every deployment.",
+        "C. Implement risk-tiered separation with automated policy controls and business-approved exception governance.",
+        "D. Move approval responsibility fully to SOC."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C balances velocity and control by applying SABSA-derived requirements and measurable governance over exceptions.",
+      "attribute_traceability_logic": "BA-03/BA-04 -> unauthorized change risk -> segregation and evidence requirements -> signed pipelines and gates -> metrics-driven governance and periodic recalibration."
+    },
+    {
+      "scenario_id": "SABSA-CISSP-10",
+      "title": "Nation-state threat against critical infrastructure",
+      "prompt": "A utility receives threat intelligence indicating targeted intrusion campaigns. Engineering requests emergency controls; executives fear customer impact from aggressive lockdowns.",
+      "perspectives": {
+        "contextual": "BA-02 availability is mission-critical, with BA-01 confidentiality and BA-03 integrity as co-drivers.",
+        "conceptual": "Threat-informed resilience and crisis governance services required.",
+        "logical": "Adaptive control states for normal, elevated, and crisis operations.",
+        "physical": "Network segmentation hardening, privileged session controls, and rapid isolation capability.",
+        "operational": "Executive crisis playbooks with pre-approved risk thresholds and emergency decision rights."
+      },
+      "answer_options": [
+        "A. Keep current controls to avoid service disruption.",
+        "B. Apply maximum lockdown immediately with no governance review.",
+        "C. Activate pre-defined adaptive control state model tied to business attributes and executive risk thresholds.",
+        "D. Outsource all decisions to external incident responders."
+      ],
+      "most_strategic_answer": "C",
+      "governance_reasoning": "C ensures rapid, accountable response with business-aligned thresholds and avoids both paralysis and uncontrolled technical overreaction.",
+      "attribute_traceability_logic": "BA-02/BA-01/BA-03 -> targeted disruption and compromise risks -> crisis-state requirements -> adaptive controls and isolation mechanisms -> executive oversight with post-incident assurance."
+    }
+  ]
+}

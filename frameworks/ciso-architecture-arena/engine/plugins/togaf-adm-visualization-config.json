@@ -1,0 +1,44 @@
+{
+  "component": "TogafAdmWheel",
+  "version": "1.0",
+  "layout": {
+    "type": "circular",
+    "rotationStartDegrees": -90,
+    "clockwise": true,
+    "segmentOrder": [
+      "Preliminary",
+      "Architecture Vision",
+      "Business Architecture",
+      "Information Systems Architecture",
+      "Technology Architecture",
+      "Opportunities & Solutions",
+      "Migration Planning",
+      "Implementation Governance",
+      "Architecture Change Management"
+    ],
+    "centerNode": {
+      "label": "Requirements Management",
+      "alwaysVisible": true
+    }
+  },
+  "style": {
+    "segmentLabelMode": "full",
+    "showFocusText": true,
+    "interactive": true
+  },
+  "events": {
+    "segmentClick": {
+      "name": "togafAdmPhaseSelected",
+      "payload": ["label", "focus"]
+    },
+    "centerClick": {
+      "name": "togafRequirementsLoopSelected",
+      "payload": ["label"]
+    }
+  },
+  "accessibility": {
+    "role": "list",
+    "keyboardNavigation": true,
+    "ariaPattern": "TOGAF ADM phase {label}: {focus}"
+  }
+}

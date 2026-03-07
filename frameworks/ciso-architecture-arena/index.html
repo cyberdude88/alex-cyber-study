@@ -3,11 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Place security decisions in the correct framework layer and role. Practice SABSA, TOGAF, Zachman, and ITIL frameworks for the CISSP exam.">
+  <meta name="keywords" content="SABSA framework, TOGAF security, Zachman framework, ITIL CISSP, security architecture CISSP, enterprise architecture">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/frameworks/ciso-architecture-arena">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="CISO Architecture Arena — SABSA, TOGAF, Zachman, ITIL | Alex Cyber Study">
+  <meta property="og:description" content="Place security decisions in the correct framework layer and role. Practice SABSA, TOGAF, Zachman, and ITIL frameworks for the CISSP exam.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/frameworks/ciso-architecture-arena">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CISO Architecture Arena — SABSA, TOGAF, Zachman, ITIL | Alex Cyber Study">
+  <meta name="twitter:description" content="Place security decisions in the correct framework layer and role. Practice SABSA, TOGAF, Zachman, and ITIL frameworks for the CISSP exam.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
   <title>CISO Architecture Arena - Alex Cyber Study</title>
   <link rel="stylesheet" href="../../style.css">
   <style>
     .arena-shell {
-      max-width: 900px;
+      max-width: 980px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -52,32 +69,6 @@
       filter: brightness(1.05);
     }
 
-    .arena-form {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.9rem;
-      margin-top: 1rem;
-    }
-
-    .arena-form label {
-      display: block;
-      margin-bottom: 0.35rem;
-      color: rgba(255,255,255,0.75);
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-
-    .arena-form select {
-      width: 100%;
-      padding: 0.7rem 0.8rem;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(15,23,42,0.8);
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-    }
-
     .session-mode-controls {
       max-width: 320px;
       margin: 0 auto;
@@ -101,6 +92,148 @@
       color: #fff;
       font-size: 0.95rem;
       outline: none;
+    }
+
+    .framework-description {
+      margin: 0;
+      color: rgba(255,255,255,0.82);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .framework-visual {
+      margin-top: 1rem;
+    }
+
+    .framework-wheel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .framework-wheel-circle {
+      position: relative;
+      width: min(560px, 100%);
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.2);
+      background:
+        radial-gradient(circle at center, rgba(102,126,234,0.16) 0 26%, transparent 26% 100%),
+        radial-gradient(circle at center, transparent 0 49%, rgba(255,255,255,0.08) 49% 50%, transparent 50% 100%);
+    }
+
+    .framework-wheel-node {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(132px, 23vw);
+      min-height: 76px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+      background: rgba(15,23,42,0.78);
+      color: #fff;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      transform:
+        rotate(var(--node-angle))
+        translateY(-220%)
+        rotate(calc(-1 * var(--node-angle)))
+        translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .framework-wheel-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(190px, 38vw);
+      min-height: 92px;
+      border: 1px solid rgba(255,255,255,0.26);
+      border-radius: 12px;
+      background: rgba(10,14,28,0.9);
+      color: #fff;
+      padding: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.34);
+    }
+
+    .framework-wheel-slice,
+    .framework-stack-item,
+    .framework-lifecycle-item {
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 12px;
+      background: rgba(15,23,42,0.58);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-height: 78px;
+    }
+
+    .framework-wheel-title,
+    .framework-stack-item strong,
+    .framework-lifecycle-item strong {
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .framework-wheel-focus,
+    .framework-stack-item span,
+    .framework-lifecycle-item span {
+      color: rgba(255,255,255,0.74);
+      font-size: 0.82rem;
+    }
+
+    .framework-stack {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .framework-matrix-wrap {
+      overflow-x: auto;
+    }
+
+    .framework-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+    }
+
+    .framework-matrix th,
+    .framework-matrix td {
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.82rem;
+    }
+
+    .framework-matrix th {
+      background: rgba(15,23,42,0.78);
+    }
+
+    .framework-lifecycle {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+
+    .framework-lifecycle-item {
+      min-width: 170px;
+    }
+
+    .framework-lifecycle-arrow {
+      color: rgba(255,255,255,0.72);
+      font-weight: 800;
+      font-size: 1rem;
     }
 
     .arena-submit {
@@ -143,6 +276,46 @@
       transform: translateY(-1px);
     }
 
+    .perspective-prompt {
+      margin: 0.75rem 0;
+      font-weight: 800;
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+    }
+
+    .perspective-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .perspective-btn {
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 0.7rem;
+      background: rgba(15,23,42,0.72);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .perspective-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96,165,250,0.8);
+    }
+
+    .perspective-btn.active {
+      border-color: rgba(52,211,153,0.9);
+      box-shadow: 0 0 0 1px rgba(52,211,153,0.35) inset;
+      background: rgba(16,185,129,0.2);
+    }
+
+    .perspective-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
     .feedback-panel {
       display: none;
       margin-top: 1rem;
@@ -152,6 +325,7 @@
       background: rgba(15,23,42,0.55);
       font-weight: 700;
       line-height: 1.5;
+      white-space: pre-line;
     }
 
     .feedback-panel.correct {
@@ -191,10 +365,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 0.9rem;
       margin-bottom: 0.7rem;
-    }
-
-    .answer-review-row:last-child {
-      margin-bottom: 0;
     }
 
     .answer-chip {
@@ -286,10 +456,32 @@
     }
 
     @media (max-width: 768px) {
-      .arena-form,
       .meters-grid,
       .answer-review-row {
         grid-template-columns: 1fr;
+      }
+
+      .framework-lifecycle {
+        flex-wrap: nowrap;
+      }
+
+      .framework-wheel-circle {
+        width: 100%;
+        aspect-ratio: auto;
+        border-radius: 12px;
+        border-style: solid;
+        padding: 0.6rem;
+        display: grid;
+        gap: 0.5rem;
+        background: transparent;
+      }
+
+      .framework-wheel-node,
+      .framework-wheel-center {
+        position: static;
+        width: 100%;
+        min-height: 0;
+        transform: none;
       }
     }
   </style>
@@ -313,7 +505,7 @@
   <div class="game-container">
     <div class="game-header">
       <h1>🏛️ CISO Architecture Arena</h1>
-      <p class="game-subtitle">Who Decides What?</p>
+      <p class="game-subtitle">CISSP Framework Simulator</p>
     </div>
 
     <div class="game-controls">
@@ -337,11 +529,21 @@
             <option value="20">20 Questions</option>
           </select>
         </div>
+        <div class="session-mode-controls" style="margin-top: 0.75rem;">
+          <label for="difficultyMode">Difficulty</label>
+          <select id="difficultyMode">
+            <option value="adaptive">Adaptive</option>
+            <option value="easy">Easy (Definition-Level)</option>
+            <option value="medium">Medium (Process Alignment)</option>
+            <option value="hard">Hard (Governance Tradeoff)</option>
+            <option value="expert">Expert (Risk-Strategy Conflict)</option>
+          </select>
+        </div>
       </div>
 
       <div id="frameworkSelector" class="arena-card">
         <h2>Select Your Framework</h2>
-        <div class="framework-buttons">
+        <div id="frameworkButtons" class="framework-buttons">
           <button type="button" class="framework-btn" data-framework="SABSA">SABSA</button>
           <button type="button" class="framework-btn" data-framework="TOGAF">TOGAF</button>
           <button type="button" class="framework-btn" data-framework="Zachman">Zachman</button>
@@ -374,26 +576,17 @@
 
       <div id="playArea" class="arena-card" style="display:none;">
         <h2>Scenario</h2>
-        <div id="scenarioCard" class="scenario-box">
+        <p id="frameworkDescription" class="framework-description"></p>
+        <div id="frameworkVisual" class="framework-visual"></div>
+
+        <div id="scenarioCard" class="scenario-box" style="margin-top: 0.95rem;">
           <div id="scenarioText" class="scenario-text"></div>
         </div>
 
-        <div class="arena-form">
-          <div>
-            <label for="layerSelect">Layer / Phase</label>
-            <select id="layerSelect">
-              <option value="">Select a layer/phase...</option>
-            </select>
-          </div>
-          <div>
-            <label for="roleSelect">Role</label>
-            <select id="roleSelect">
-              <option value="">Select a role...</option>
-            </select>
-          </div>
-        </div>
+        <p class="perspective-prompt">Which perspective is MOST correct?</p>
+        <div id="perspectiveOptions" class="perspective-grid"></div>
 
-        <button type="button" id="submitBtn" class="arena-submit">Submit Answer</button>
+        <button type="button" id="submitBtn" class="arena-submit">Submit Perspective</button>
 
         <div id="feedbackPanel" class="feedback-panel"></div>
         <div id="answerReview" class="answer-review-panel"></div>
@@ -409,6 +602,6 @@
     <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
   </footer>
 
-  <script src="./script.js"></script>
+  <script type="module" src="./script.js"></script>
 </body>
 </html>

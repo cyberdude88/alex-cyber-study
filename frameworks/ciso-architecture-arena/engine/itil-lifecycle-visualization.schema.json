@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alex-cyber-study.local/frameworks/ciso-architecture-arena/itil-lifecycle-visualization.schema.json",
+  "title": "ITIL Lifecycle Visualization Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "clockwise", "startNode", "nodes", "edges"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "lifecycle"
+    },
+    "clockwise": {
+      "type": "boolean"
+    },
+    "startNode": {
+      "type": "string",
+      "minLength": 3
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "order"],
+        "properties": {
+          "id": { "type": "string", "minLength": 3 },
+          "label": { "type": "string", "minLength": 3 },
+          "order": { "type": "integer", "minimum": 1, "maximum": 5 }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "kind"],
+        "properties": {
+          "from": { "type": "string", "minLength": 3 },
+          "to": { "type": "string", "minLength": 3 },
+          "kind": {
+            "type": "string",
+            "enum": ["forward", "feedback"]
+          }
+        }
+      }
+    }
+  }
+}

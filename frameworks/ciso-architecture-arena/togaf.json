@@ -1,0 +1,375 @@
+{
+  "id": "TOGAF",
+  "name": "TOGAF",
+  "type": "wheel",
+  "description": "TOGAF ADM governance and transformation reasoning for CISSP-level architecture decisions.",
+  "renderData": {
+    "center": {
+      "label": "Requirements Management",
+      "focus": "Central continuous loop"
+    },
+    "segments": [
+      { "label": "Preliminary", "focus": "Architecture capability, governance model, principles" },
+      { "label": "Architecture Vision", "focus": "Business drivers, scope, stakeholder value" },
+      { "label": "Business Architecture", "focus": "Capabilities, value streams, target operating model" },
+      { "label": "Information Systems Architecture", "focus": "Data and application architecture alignment" },
+      { "label": "Technology Architecture", "focus": "Platform and infrastructure target state" },
+      { "label": "Opportunities & Solutions", "focus": "Work package options and transition concepts" },
+      { "label": "Migration Planning", "focus": "Roadmap sequencing and transition risk" },
+      { "label": "Implementation Governance", "focus": "Compliance assessments and architecture contract control" },
+      { "label": "Architecture Change Management", "focus": "Change triggers, impact reassessment, governance updates" }
+    ],
+    "clockwise": true,
+    "rotationStartDegrees": -90
+  },
+  "admWheelVisualizationConfig": {
+    "schemaRef": "./togaf-adm-visualization-config.json",
+    "interaction": {
+      "segmentClickAction": "focus-scenarios-by-adm-phase",
+      "centerClickAction": "show-requirements-traceability"
+    }
+  },
+  "perspectiveScoringModel": {
+    "name": "togaf-cissp-strategic-balance-v1",
+    "base": {
+      "correctBonus": 120,
+      "technicalCredit": 35,
+      "strategicPenalty": -25,
+      "noGapBonus": 20
+    },
+    "focusBoost": {
+      "governance_vs_execution": {
+        "Enterprise Architect": 15,
+        "CISO": 10
+      },
+      "risk_alignment": {
+        "Risk Manager": 20,
+        "CISO": 10
+      },
+      "business_driver_translation": {
+        "Enterprise Architect": 15,
+        "Security Architect": 10
+      },
+      "change_control": {
+        "Audit/Compliance": 15,
+        "Enterprise Architect": 10
+      },
+      "architecture_compliance": {
+        "Audit/Compliance": 20,
+        "Enterprise Architect": 10
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "id": "TOGAF-CISSP-01",
+      "difficulty": "hard",
+      "admPhase": "Preliminary",
+      "focus": ["governance_vs_execution", "risk_alignment"],
+      "prompt": "Before launching a zero-trust transformation, engineering asks to begin tool deployment while governance charters are still draft. Leadership needs the MOST strategic next action in TOGAF terms.",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Preliminary phase success depends on establishing architecture governance, principles, and decision rights before execution accelerates.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can define enterprise security intent and risk boundaries.",
+          "strategicGap": "Intent alone does not establish architecture board mechanics and decision rights needed to control execution."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Establishes architecture capability, governance process, and principles to govern downstream ADM phases.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can draft technical control patterns to speed implementation.",
+          "strategicGap": "Pattern work is premature if enterprise governance control points are not operationalized."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can produce risk criteria and treatment thresholds.",
+          "strategicGap": "Risk criteria inform governance but do not substitute for architecture capability setup."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can define evidence expectations for governance artifacts.",
+          "strategicGap": "Assurance expectations validate governance but do not architect it."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-02",
+      "difficulty": "hard",
+      "admPhase": "Architecture Vision",
+      "focus": ["business_driver_translation", "governance_vs_execution"],
+      "prompt": "Executives state a business objective to reduce partner onboarding from 45 days to 10, but security teams propose controls without mapping to business value outcomes. Which perspective is MOST strategic for translating driver to architecture vision?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Architecture Vision translates business drivers into stakeholder-aligned architecture outcomes and scope boundaries.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can articulate target risk posture and non-negotiable controls.",
+          "strategicGap": "Risk posture must be tied to enterprise value hypotheses and scope in the vision artifacts."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Aligns business drivers, value statements, stakeholders, and target architecture scope into a coherent vision.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can map candidate control patterns to onboarding workflows.",
+          "strategicGap": "Detailed control patterning should follow after vision-level value and scope alignment."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can quantify downside if onboarding speed increases control bypass risk.",
+          "strategicGap": "Quantification is input, but architecture vision synthesis is broader than risk estimation."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can identify legal constraints on third-party onboarding decisions.",
+          "strategicGap": "Constraints inform the vision but do not replace architecture value translation."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-03",
+      "difficulty": "medium",
+      "admPhase": "Business Architecture",
+      "focus": ["business_driver_translation", "risk_alignment"],
+      "prompt": "Business units disagree whether privileged access management should be centralized globally or delegated by region, and ownership boundaries are unclear. Which perspective is MOST strategic in Phase B?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Phase B requires enterprise capability, actor, and process boundary definition before technical decomposition.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can set enterprise policy expectations for privileged access governance.",
+          "strategicGap": "Policy direction is required, but capability and accountability boundary design is a business architecture task."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Defines target business capabilities, ownership boundaries, and process accountability aligned to strategy.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can propose centralized and federated PAM control architectures.",
+          "strategicGap": "Control topology should not be finalized before business ownership architecture is clear."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can compare risk concentration versus local autonomy exposure.",
+          "strategicGap": "Risk comparison guides choice but does not define capability architecture boundaries."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can identify accountability obligations by jurisdiction.",
+          "strategicGap": "Compliance mapping constrains options but does not architect business operating model boundaries."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-04",
+      "difficulty": "hard",
+      "admPhase": "Information Systems Architecture",
+      "focus": ["business_driver_translation", "architecture_compliance"],
+      "prompt": "Data and application teams propose separate IAM data models that cannot support unified certification reporting. Which perspective is MOST strategic for maintaining architecture coherence in Phase C?",
+      "mostCorrectPerspective": "Security Architect",
+      "mostStrategicReason": "Phase C demands coherent data/application control architecture; security architecture resolves cross-domain control model consistency.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can require unified reporting outcomes and risk accountability.",
+          "strategicGap": "Outcome mandates do not resolve model-level integration design conflicts."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can enforce consistency with enterprise target architecture standards.",
+          "strategicGap": "Standards governance is essential, but immediate resolution is a control-model architecture design problem."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Designs unified identity data semantics, control inheritance, and application trust boundaries.",
+          "strategicGap": ""
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can estimate residual risk from fragmented IAM data models.",
+          "strategicGap": "Risk estimation prioritizes urgency but does not deliver architecture integration design."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can define evidence needs for certification and attestation.",
+          "strategicGap": "Evidence requirements are downstream from architecture model harmonization."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-05",
+      "difficulty": "medium",
+      "admPhase": "Technology Architecture",
+      "focus": ["governance_vs_execution", "risk_alignment"],
+      "prompt": "A cloud-first initiative has competing designs for policy enforcement points across hybrid environments, with performance and resilience tradeoffs. Which perspective is MOST strategic for control-pattern decisioning in Phase D?",
+      "mostCorrectPerspective": "Security Architect",
+      "mostStrategicReason": "Phase D decisions require security architecture tradeoff design across technology patterns while preserving policy intent.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can enforce alignment to risk appetite and strategic constraints.",
+          "strategicGap": "Strategic constraints guide selection, but detailed pattern tradeoff engineering is architecture design work."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can ensure target-state consistency and standards conformance.",
+          "strategicGap": "Consistency governance is secondary to selecting the correct technical security pattern topology."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Defines control placement, trust boundaries, and resilience-performance tradeoff architecture.",
+          "strategicGap": ""
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can compare residual risk profiles across deployment options.",
+          "strategicGap": "Risk comparison is input, but selecting implementable control architecture remains a design responsibility."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can identify mandatory control evidence implications.",
+          "strategicGap": "Evidence requirements constrain design but do not choose architecture patterns."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-06",
+      "difficulty": "hard",
+      "admPhase": "Opportunities & Solutions",
+      "focus": ["risk_alignment", "governance_vs_execution"],
+      "prompt": "Portfolio leaders have six security work package options but only funding for three. They need to choose combinations that maximize business value while containing exposure. Which perspective is MOST strategic?",
+      "mostCorrectPerspective": "Risk Manager",
+      "mostStrategicReason": "Phase E tradeoff selection under constraints is a risk-treatment optimization exercise tied to enterprise tolerance and value impact.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can set executive priorities and approve strategic direction.",
+          "strategicGap": "Executive direction should be informed by structured risk optimization of solution options."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can map architecture dependencies and integration constraints among work packages.",
+          "strategicGap": "Dependency mapping is required but does not by itself optimize treatment against risk tolerance."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can estimate control effectiveness of each package.",
+          "strategicGap": "Technical effectiveness is only one axis; enterprise risk-value balancing is the strategic objective."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Quantifies risk reduction, residual exposure, and business impact tradeoffs to prioritize solution bundles.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can prioritize non-negotiable regulatory commitments.",
+          "strategicGap": "Compliance deadlines are constraints but not the full optimization function."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-07",
+      "difficulty": "hard",
+      "admPhase": "Migration Planning",
+      "focus": ["risk_alignment", "change_control"],
+      "prompt": "The roadmap includes identity modernization, privileged session monitoring, and third-party access redesign. Sequence choices materially change residual risk for two years. Which perspective is MOST strategic?",
+      "mostCorrectPerspective": "Risk Manager",
+      "mostStrategicReason": "Phase F sequencing should be risk-informed so transition states remain inside approved tolerance while capability matures.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can approve final roadmap priorities and communicate board-level accountability.",
+          "strategicGap": "Approval is necessary but should follow risk-modeled transition sequencing."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can structure transition architectures and dependency-aware sequencing.",
+          "strategicGap": "Dependency logic needs risk impact weighting to determine safest migration order."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can estimate technical debt and control coverage progression by sequence.",
+          "strategicGap": "Coverage projections are input; strategic sequence choice hinges on risk tolerance management."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Defines sequence priorities by residual risk curves, impact windows, and tolerance thresholds.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can flag mandatory milestones for policy and regulatory deadlines.",
+          "strategicGap": "Mandatory milestones constrain sequencing but do not optimize enterprise transition risk."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-08",
+      "difficulty": "expert",
+      "admPhase": "Implementation Governance",
+      "focus": ["architecture_compliance", "change_control"],
+      "prompt": "A release is ready, but architecture compliance review finds deviations from approved reference patterns. Delivery asks to go live and remediate later. Which perspective is MOST strategic for go/no-go determination?",
+      "mostCorrectPerspective": "Audit/Compliance",
+      "mostStrategicReason": "Phase G governance requires defensible compliance and exception criteria before deployment, not retrospective promises.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can make high-impact risk decisions and accept bounded exceptions.",
+          "strategicGap": "Exception decisions need assurance-grade evidence and policy defensibility first."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Can assess architectural drift and required remediation paths.",
+          "strategicGap": "Drift assessment is vital, but release admissibility hinges on compliance evidence and exception governance."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can engineer compensating controls and remediation designs.",
+          "strategicGap": "Compensating design does not by itself authorize policy-compliant release."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can estimate residual risk if release proceeds with deviations.",
+          "strategicGap": "Risk estimates inform decisions, but compliance admissibility standards govern go/no-go."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Validates conformance evidence, exception criteria, and architecture contract obligations before release authorization.",
+          "strategicGap": ""
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-09",
+      "difficulty": "expert",
+      "admPhase": "Architecture Change Management",
+      "focus": ["change_control", "governance_vs_execution"],
+      "prompt": "A new regulation and major acquisition arrive mid-program, invalidating assumptions in approved architectures. Teams want local fixes without revisiting governance triggers. Which perspective is MOST strategic?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Phase H requires structured change impact governance to determine whether architecture baselines, roadmaps, and controls must be formally reworked.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can reset strategic direction and risk boundaries after external change.",
+          "strategicGap": "Direction-setting must be translated through formal architecture change governance mechanisms."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Runs architecture change governance, assesses baseline impact, and orchestrates formal updates across ADM artifacts.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can rapidly adjust security patterns for acquisition and regulatory impacts.",
+          "strategicGap": "Local technical fixes cannot replace enterprise change-governance evaluation and baseline control."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can reassess risk exposure introduced by new obligations and integration conditions.",
+          "strategicGap": "Risk reassessment is input; governance trigger and architecture baseline control are architecture change functions."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can interpret control and evidence obligations from new regulation.",
+          "strategicGap": "Obligation interpretation alone does not manage enterprise architecture change lifecycle decisions."
+        }
+      }
+    },
+    {
+      "id": "TOGAF-CISSP-10",
+      "difficulty": "hard",
+      "admPhase": "Requirements Management",
+      "focus": ["business_driver_translation", "architecture_compliance", "risk_alignment"],
+      "prompt": "Across multiple ADM phases, teams maintain separate requirement logs with conflicting priorities, and security requirements are disconnected from architecture decisions. Which perspective is MOST strategic to restore traceability discipline?",
+      "mostCorrectPerspective": "Enterprise Architect",
+      "mostStrategicReason": "Requirements Management is the central loop in ADM; architecture leadership must enforce single-source traceability across phases and decisions.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "Can require that critical security requirements remain visible to executives.",
+          "strategicGap": "Executive visibility is necessary but does not implement end-to-end ADM requirements traceability control."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Defines and governs integrated requirements traceability across all ADM phases and decision records.",
+          "strategicGap": ""
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Can normalize security requirement semantics for technical teams.",
+          "strategicGap": "Security normalization alone cannot reconcile enterprise-wide requirement governance across all domains."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Can prioritize requirements by risk reduction impact.",
+          "strategicGap": "Prioritization does not replace governance over requirement lifecycle and architecture linkage."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Can define evidence requirements for requirement-to-control traceability.",
+          "strategicGap": "Evidence criteria validate quality but do not govern the requirements management operating model."
+        }
+      }
+    }
+  ]
+}

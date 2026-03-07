@@ -1,0 +1,172 @@
+{
+  "id": "ITIL",
+  "name": "ITIL",
+  "type": "lifecycle",
+  "description": "Service lifecycle governance for secure, reliable, and continuously improving delivery.",
+  "renderData": {
+    "phases": [
+      {
+        "label": "Strategy",
+        "focus": "Value and policy direction"
+      },
+      {
+        "label": "Design",
+        "focus": "Service design package"
+      },
+      {
+        "label": "Transition",
+        "focus": "Change and release"
+      },
+      {
+        "label": "Operation",
+        "focus": "Run and support"
+      },
+      {
+        "label": "Improve",
+        "focus": "CSI feedback loop"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "ITIL-1",
+      "prompt": "A service owner wants to bypass change governance to accelerate a security tooling rollout after a recent incident. The organization needs a perspective that preserves service reliability while enabling security urgency. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Risk Manager",
+      "mostStrategicReason": "Balancing incident-driven urgency with controlled change in ITIL is a risk tradeoff decision across availability, integrity, and business impact.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can mandate urgent security actions to reduce active exposure.",
+          "strategicGap": "Urgency is valid, but ITIL governance balance requires explicit risk tradeoff analysis."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can ensure tooling fits target service architecture.",
+          "strategicGap": "Architectural fit is secondary to immediate risk-balanced change governance choice."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can propose safer implementation patterns and controls.",
+          "strategicGap": "Technical safeguards are inputs; decision to bypass governance is risk-governance centric."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management evaluates urgency versus service disruption and defines acceptable expedited control paths.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can clarify mandatory change-control requirements.",
+          "strategicGap": "Requirement interpretation is needed, but balancing speed and reliability under threat is risk-led."
+        }
+      }
+    },
+    {
+      "id": "ITIL-2",
+      "prompt": "A new customer-facing platform requires security requirements embedded into the service design package before procurement and implementation. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Security Architect",
+      "mostStrategicReason": "In ITIL Design, security architecture is central to embedding control requirements into service design artifacts.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO sets mandatory security outcomes and governance expectations.",
+          "strategicGap": "Outcomes are strategic; service design package control integration is architecture detail."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can align design package decisions to enterprise standards.",
+          "strategicGap": "Alignment is important, but control integration inside the package is security architecture-led."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture defines concrete control requirements, trust boundaries, and assurance hooks for the design package.",
+          "strategicGap": ""
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management can prioritize high-impact controls for inclusion.",
+          "strategicGap": "Prioritization helps, but authoring control architecture content is not a risk function."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can map required controls to legal and policy obligations.",
+          "strategicGap": "Obligation mapping constrains design, but architecture integration decisions remain security architecture work."
+        }
+      }
+    },
+    {
+      "id": "ITIL-3",
+      "prompt": "Post-implementation reviews show recurring privileged access incidents despite completed change records. Leadership must decide who should reshape governance so service transition gates enforce meaningful security outcomes. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "CISO",
+      "mostStrategicReason": "Transition gate redesign with enterprise-wide accountability and security outcome ownership is an executive security governance decision.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can reset governance expectations, accountability, and enterprise control effectiveness criteria.",
+          "strategicGap": ""
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can adjust gate artifacts and architecture approval dependencies.",
+          "strategicGap": "Artifact updates help, but cross-service accountability reset is executive security governance-led."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can strengthen technical acceptance criteria in transition checklists.",
+          "strategicGap": "Technical criteria are necessary but insufficient without governance authority and accountability reset."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk teams can evidence that current gates leave material residual exposure.",
+          "strategicGap": "Risk evidence supports change, but governance restructuring authority is executive."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Audit/compliance can flag ineffective control operation and nonconformance patterns.",
+          "strategicGap": "Findings identify failure points; strategic governance redesign is led by CISO accountability."
+        }
+      }
+    },
+    {
+      "id": "ITIL-4",
+      "prompt": "An ITSM dashboard shows control-related incidents trending upward across multiple services. The organization must choose the perspective MOST suitable to prioritize CSI initiatives for measurable risk reduction. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Risk Manager",
+      "mostStrategicReason": "CSI initiative prioritization under constrained capacity should be risk-ranked to maximize reduction of enterprise exposure.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO can direct strategic focus areas for enterprise improvement.",
+          "strategicGap": "Strategic direction is key, but initiative ordering should be risk-optimized first."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can identify service dependencies that affect rollout ordering.",
+          "strategicGap": "Dependency-aware scheduling is useful, but prioritization objective here is risk reduction efficiency."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architects can estimate control uplift impact of candidate CSI actions.",
+          "strategicGap": "Impact estimates are technical inputs; portfolio priority remains a risk decision."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk management compares expected risk reduction per initiative and aligns CSI backlog to tolerance thresholds.",
+          "strategicGap": ""
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Compliance can spotlight improvements needed to close recurring audit observations.",
+          "strategicGap": "Observation closure is important, but broader risk reduction optimization is risk-led."
+        }
+      }
+    },
+    {
+      "id": "ITIL-5",
+      "prompt": "Regulators request evidence that incident, change, and access-management controls are operating effectively across the service lifecycle. The team must select the perspective MOST appropriate to define evidence defensibility standards. Which perspective is MOST correct?",
+      "mostCorrectPerspective": "Audit/Compliance",
+      "mostStrategicReason": "Defining defensible evidence standards and assurance criteria for regulators is a core audit/compliance responsibility.",
+      "perspectiveAnalysis": {
+        "CISO": {
+          "technicallyCorrect": "The CISO remains accountable for external assurance outcomes and leadership response.",
+          "strategicGap": "Accountability is executive, but evidence sufficiency standards are assurance-specialist domain."
+        },
+        "Enterprise Architect": {
+          "technicallyCorrect": "Enterprise architecture can map evidence-producing processes to service architecture components.",
+          "strategicGap": "Mapping supports defensibility, but criterion-setting is compliance-led."
+        },
+        "Security Architect": {
+          "technicallyCorrect": "Security architecture can ensure technical telemetry supports control attestations.",
+          "strategicGap": "Telemetry design is needed, yet regulatory defensibility thresholds are defined by assurance roles."
+        },
+        "Risk Manager": {
+          "technicallyCorrect": "Risk teams can contextualize control effectiveness outcomes in business risk terms.",
+          "strategicGap": "Risk context helps reporting, but evidentiary acceptance standards remain audit/compliance territory."
+        },
+        "Audit/Compliance": {
+          "technicallyCorrect": "Audit/compliance defines evidence quality, traceability, and testing expectations to satisfy regulators.",
+          "strategicGap": ""
+        }
+      }
+    }
+  ]
+}

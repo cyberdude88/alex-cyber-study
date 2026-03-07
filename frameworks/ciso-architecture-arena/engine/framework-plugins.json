@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    {
+      "id": "TOGAF",
+      "url": "./engine/plugins/togaf.json"
+    },
+    {
+      "id": "SABSA",
+      "url": "./engine/plugins/sabsa.json"
+    },
+    {
+      "id": "Zachman",
+      "url": "./engine/plugins/zachman.json"
+    },
+    {
+      "id": "ITIL",
+      "url": "./engine/plugins/itil.json"
+    }
+  ]
+}

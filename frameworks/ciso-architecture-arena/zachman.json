@@ -1,0 +1,264 @@
+{
+  "framework": {
+    "id": "Zachman",
+    "name": "Zachman Enterprise Taxonomy",
+    "type": "matrix",
+    "ontologyStatement": "Zachman is an enterprise ontology for classifying architectural artifacts by perspective and interrogative. It does not prescribe project sequence, lifecycle phases, or implementation process.",
+    "examFocus": [
+      "architectural completeness",
+      "missing stakeholder perspectives",
+      "misalignment between rows",
+      "documentation gaps",
+      "governance oversight"
+    ]
+  },
+  "matrix": {
+    "rows": [
+      "Contextual",
+      "Conceptual",
+      "Logical",
+      "Physical",
+      "Detailed",
+      "Operational"
+    ],
+    "columns": [
+      "What",
+      "How",
+      "Where",
+      "Who",
+      "When",
+      "Why"
+    ],
+    "cells": [
+      { "id": "R1C1", "row": "Contextual", "column": "What", "label": "Inventory of Things", "clickTarget": "cell:R1C1" },
+      { "id": "R1C2", "row": "Contextual", "column": "How", "label": "Business Process Scope", "clickTarget": "cell:R1C2" },
+      { "id": "R1C3", "row": "Contextual", "column": "Where", "label": "Enterprise Locations", "clickTarget": "cell:R1C3" },
+      { "id": "R1C4", "row": "Contextual", "column": "Who", "label": "Stakeholder Communities", "clickTarget": "cell:R1C4" },
+      { "id": "R1C5", "row": "Contextual", "column": "When", "label": "Business Cycles", "clickTarget": "cell:R1C5" },
+      { "id": "R1C6", "row": "Contextual", "column": "Why", "label": "Strategic Drivers", "clickTarget": "cell:R1C6" },
+
+      { "id": "R2C1", "row": "Conceptual", "column": "What", "label": "Business Objects", "clickTarget": "cell:R2C1" },
+      { "id": "R2C2", "row": "Conceptual", "column": "How", "label": "Business Workflows", "clickTarget": "cell:R2C2" },
+      { "id": "R2C3", "row": "Conceptual", "column": "Where", "label": "Business Geography", "clickTarget": "cell:R2C3" },
+      { "id": "R2C4", "row": "Conceptual", "column": "Who", "label": "Business Roles", "clickTarget": "cell:R2C4" },
+      { "id": "R2C5", "row": "Conceptual", "column": "When", "label": "Business Events", "clickTarget": "cell:R2C5" },
+      { "id": "R2C6", "row": "Conceptual", "column": "Why", "label": "Business Policies", "clickTarget": "cell:R2C6" },
+
+      { "id": "R3C1", "row": "Logical", "column": "What", "label": "Logical Data Model", "clickTarget": "cell:R3C1" },
+      { "id": "R3C2", "row": "Logical", "column": "How", "label": "Application Functions", "clickTarget": "cell:R3C2" },
+      { "id": "R3C3", "row": "Logical", "column": "Where", "label": "Logical Network", "clickTarget": "cell:R3C3" },
+      { "id": "R3C4", "row": "Logical", "column": "Who", "label": "Actor-Responsibility Matrix", "clickTarget": "cell:R3C4" },
+      { "id": "R3C5", "row": "Logical", "column": "When", "label": "Logical Event Timing", "clickTarget": "cell:R3C5" },
+      { "id": "R3C6", "row": "Logical", "column": "Why", "label": "Rule Logic", "clickTarget": "cell:R3C6" },
+
+      { "id": "R4C1", "row": "Physical", "column": "What", "label": "Physical Data Structures", "clickTarget": "cell:R4C1" },
+      { "id": "R4C2", "row": "Physical", "column": "How", "label": "System Design", "clickTarget": "cell:R4C2" },
+      { "id": "R4C3", "row": "Physical", "column": "Where", "label": "Infrastructure Topology", "clickTarget": "cell:R4C3" },
+      { "id": "R4C4", "row": "Physical", "column": "Who", "label": "Implementation Roles", "clickTarget": "cell:R4C4" },
+      { "id": "R4C5", "row": "Physical", "column": "When", "label": "Deployment Schedule", "clickTarget": "cell:R4C5" },
+      { "id": "R4C6", "row": "Physical", "column": "Why", "label": "Control Design Rationale", "clickTarget": "cell:R4C6" },
+
+      { "id": "R5C1", "row": "Detailed", "column": "What", "label": "Table/File Specs", "clickTarget": "cell:R5C1" },
+      { "id": "R5C2", "row": "Detailed", "column": "How", "label": "Code/Procedure Specs", "clickTarget": "cell:R5C2" },
+      { "id": "R5C3", "row": "Detailed", "column": "Where", "label": "Node Configuration", "clickTarget": "cell:R5C3" },
+      { "id": "R5C4", "row": "Detailed", "column": "Who", "label": "Job/Access Definitions", "clickTarget": "cell:R5C4" },
+      { "id": "R5C5", "row": "Detailed", "column": "When", "label": "Job Schedules", "clickTarget": "cell:R5C5" },
+      { "id": "R5C6", "row": "Detailed", "column": "Why", "label": "Rule Parameters", "clickTarget": "cell:R5C6" },
+
+      { "id": "R6C1", "row": "Operational", "column": "What", "label": "Live Data Instances", "clickTarget": "cell:R6C1" },
+      { "id": "R6C2", "row": "Operational", "column": "How", "label": "Running Processes", "clickTarget": "cell:R6C2" },
+      { "id": "R6C3", "row": "Operational", "column": "Where", "label": "Active Network", "clickTarget": "cell:R6C3" },
+      { "id": "R6C4", "row": "Operational", "column": "Who", "label": "People and Agents", "clickTarget": "cell:R6C4" },
+      { "id": "R6C5", "row": "Operational", "column": "When", "label": "Runtime Events", "clickTarget": "cell:R6C5" },
+      { "id": "R6C6", "row": "Operational", "column": "Why", "label": "Actual Outcomes", "clickTarget": "cell:R6C6" }
+    ]
+  },
+  "matrixRenderingSchema": {
+    "component": "ZachmanMatrixGrid",
+    "version": "1.0",
+    "clickBehavior": {
+      "type": "emit-event",
+      "eventName": "zachmanCellSelected",
+      "payload": ["cellId", "row", "column", "label"]
+    },
+    "layout": {
+      "header": { "sticky": true },
+      "rowLabels": { "sticky": true },
+      "cellSize": "compact",
+      "responsiveBreakpointPx": 960
+    },
+    "accessibility": {
+      "role": "grid",
+      "keyboardNavigation": true,
+      "ariaCellPattern": "{row} / {column}: {label}"
+    },
+    "binding": {
+      "rowsPath": "$.matrix.rows",
+      "columnsPath": "$.matrix.columns",
+      "cellsPath": "$.matrix.cells",
+      "cellKey": "id"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "ZACHMAN-CISSP-01",
+      "title": "Missing Why Column Coverage",
+      "focus": ["architectural completeness", "incomplete taxonomy"],
+      "prompt": "A merger integration program has artifacts for What, How, Where, Who, and When across multiple rows, but almost no Why artifacts. Security controls are being implemented without agreed business motivation and policy rationale. What is the MOST strategic interpretation?",
+      "correctPerspective": "Enterprise Architect",
+      "correctReason": "This is a taxonomy completeness failure: one interrogative column is missing across the ontology, creating misclassification and traceability loss.",
+      "recognitionTest": "incomplete taxonomy",
+      "answerPerspectives": {
+        "CISO": "Can pause execution and demand risk-accountable governance, but this alone does not repair structural matrix completeness.",
+        "Enterprise Architect": "Best answer. Restores column completeness and cross-row traceability without forcing a project method.",
+        "Security Architect": "Can map controls to technical intent, but cannot substitute for missing enterprise-level motivation artifacts.",
+        "Risk Manager": "Can quantify exposure from rationale gaps, but does not own taxonomy structuring decisions.",
+        "Audit/Compliance": "Can flag evidence insufficiency, but assurance findings are downstream of architecture classification quality."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-02",
+      "title": "Artifact Placed in Wrong Row",
+      "focus": ["misplaced architectural artifact", "misalignment between rows"],
+      "prompt": "A detailed firewall rule set is stored as the official Logical-How artifact and used in design review gates. Teams claim the row is complete because implementation detail exists. What is the MOST strategic interpretation?",
+      "correctPerspective": "Security Architect",
+      "correctReason": "The artifact is misplaced: detailed implementation material cannot stand in for logical abstraction. Cross-row substitution masks architecture debt.",
+      "recognitionTest": "misplaced architectural artifact",
+      "answerPerspectives": {
+        "CISO": "Can enforce escalation and accountability, but does not perform row-appropriate artifact correction.",
+        "Enterprise Architect": "Can govern row integrity globally, but the immediate correction is technical modeling at the security architecture layer.",
+        "Security Architect": "Best answer. Reclassifies artifacts so logical control patterns and physical implementations are separated correctly.",
+        "Risk Manager": "Can score risk from model confusion, but not redesign the control-model stack.",
+        "Audit/Compliance": "Can cite control-document mismatch, but remediation design still requires architecture correction."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-03",
+      "title": "Owner vs Builder Perspective Collision",
+      "focus": ["missing stakeholder perspectives", "perspective misalignment"],
+      "prompt": "Business owners and platform engineers are co-authoring the same Who artifacts, and approval meetings cannot distinguish accountability from implementation assignment. What is the MOST strategic interpretation?",
+      "correctPerspective": "Enterprise Architect",
+      "correctReason": "Zachman perspective boundaries are collapsing; owner and builder concerns must be separated to keep accountability and implementation distinct.",
+      "recognitionTest": "perspective misalignment",
+      "answerPerspectives": {
+        "CISO": "Can set governance tone, but perspective taxonomy cleanup is enterprise architecture work.",
+        "Enterprise Architect": "Best answer. Re-establishes perspective ownership and row-specific artifact responsibilities.",
+        "Security Architect": "Can help in security-related Who mappings, but issue is enterprise-wide perspective governance.",
+        "Risk Manager": "Can describe accountability risk, but not define ontology boundaries.",
+        "Audit/Compliance": "Can report RACI ambiguity, but does not own architecture perspective modeling."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-04",
+      "title": "Timing Evidence Without Conceptual Events",
+      "focus": ["documentation gaps", "misalignment between rows"],
+      "prompt": "An organization documents job schedules and SIEM timestamps in depth, but has no conceptual event catalog showing business-trigger semantics. Incident response tuning is inconsistent. What is the MOST strategic interpretation?",
+      "correctPerspective": "Security Architect",
+      "correctReason": "Operational and detailed timing data cannot replace conceptual event definitions; missing middle-row semantics break coherent detection design.",
+      "recognitionTest": "incomplete taxonomy",
+      "answerPerspectives": {
+        "CISO": "Can prioritize remediation funding, but cannot author the missing event semantics.",
+        "Enterprise Architect": "Can enforce row completion policy, but security event-model translation is the immediate need.",
+        "Security Architect": "Best answer. Defines conceptual-to-logical event architecture and aligns telemetry design.",
+        "Risk Manager": "Can estimate detection risk, but lacks direct model-construction ownership.",
+        "Audit/Compliance": "Can note logging evidence gaps, but not architect event semantics."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-05",
+      "title": "Governance Ignores Empty Cells",
+      "focus": ["governance oversight", "architectural completeness"],
+      "prompt": "Quarterly architecture governance reports show green status by program milestone, yet 11 Zachman cells are empty and no exception register exists. What is the MOST strategic interpretation?",
+      "correctPerspective": "CISO",
+      "correctReason": "This is a governance oversight failure: leadership accountability must enforce completeness visibility and exception handling for missing taxonomy areas.",
+      "recognitionTest": "incomplete taxonomy",
+      "answerPerspectives": {
+        "CISO": "Best answer. Establishes governance controls that expose empty cells and require risk-accepted exceptions.",
+        "Enterprise Architect": "Can inventory missing artifacts, but executive enforcement of governance behavior is needed first.",
+        "Security Architect": "Can fill some technical gaps, but cannot institute enterprise governance obligations alone.",
+        "Risk Manager": "Can rank cell risks, but governance ownership and policy enforcement sit with leadership.",
+        "Audit/Compliance": "Can issue findings, but management control design belongs to accountable leadership."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-06",
+      "title": "Compliance Evidence Not Mapped to Cells",
+      "focus": ["documentation gaps", "governance oversight"],
+      "prompt": "Auditors ask for evidence lineage from policy intent to runtime controls. Teams provide documents, but none are mapped to row/column coordinates, making coverage claims unverifiable. What is the MOST strategic interpretation?",
+      "correctPerspective": "Audit/Compliance",
+      "correctReason": "The priority is defining defensible evidence mapping and acceptance criteria; without this, completeness claims cannot be trusted.",
+      "recognitionTest": "perspective misalignment",
+      "answerPerspectives": {
+        "CISO": "Can mandate corrective action, but assurance criteria need to be defined concretely first.",
+        "Enterprise Architect": "Can build mapping structures, but assurance validity criteria are compliance-led.",
+        "Security Architect": "Can map control artifacts technically, but evidentiary sufficiency is not set by engineering.",
+        "Risk Manager": "Can quantify uncertainty, but cannot set evidence admissibility standards.",
+        "Audit/Compliance": "Best answer. Defines traceability and evidence sufficiency tied to obligations."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-07",
+      "title": "Risk Register Detached from Matrix",
+      "focus": ["governance oversight", "missing stakeholder perspectives"],
+      "prompt": "The enterprise risk register lists major cyber risks, but none reference the affected Zachman rows or columns. Remediation plans repeatedly miss the same architecture blind spots. What is the MOST strategic interpretation?",
+      "correctPerspective": "Risk Manager",
+      "correctReason": "Risk treatment must be tied to taxonomy coordinates so remediation addresses the specific missing or weak architecture viewpoints.",
+      "recognitionTest": "incomplete taxonomy",
+      "answerPerspectives": {
+        "CISO": "Can require integrated reporting, but risk taxonomy linkage is a risk management design task.",
+        "Enterprise Architect": "Can provide structure, but risk ownership should drive treatment prioritization linkages.",
+        "Security Architect": "Can improve technical controls, but recurring blind spots indicate risk-tracking misclassification.",
+        "Risk Manager": "Best answer. Connects risk statements to matrix cells for measurable treatment closure.",
+        "Audit/Compliance": "Can test traceability after implementation, but does not own risk-treatment structure."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-08",
+      "title": "Physical Model Used as Business Policy",
+      "focus": ["misplaced architectural artifact", "perspective misalignment"],
+      "prompt": "A network segmentation diagram is being treated as the authoritative policy rationale for third-party access decisions. Business leaders sign it as if it were a Why artifact. What is the MOST strategic interpretation?",
+      "correctPerspective": "Enterprise Architect",
+      "correctReason": "A physical Where artifact is being misused as conceptual Why policy, indicating cross-column and cross-row category confusion.",
+      "recognitionTest": "misplaced architectural artifact",
+      "answerPerspectives": {
+        "CISO": "Can halt approvals, but taxonomy correction requires architecture stewardship.",
+        "Enterprise Architect": "Best answer. Separates policy rationale from implementation topology and restores artifact discipline.",
+        "Security Architect": "Can refine segmentation design, but policy ownership classification remains unresolved.",
+        "Risk Manager": "Can explain decision risk, but not reclassify architecture artifacts enterprise-wide.",
+        "Audit/Compliance": "Can challenge evidence quality, but architecture taxonomy correction comes first."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-09",
+      "title": "Operational Drift from Logical Intent",
+      "focus": ["misalignment between rows", "architectural completeness"],
+      "prompt": "Operations has introduced emergency IAM scripts in production that no longer match the logical role model. The scripts work, but privilege review cannot map runtime behavior to approved design. What is the MOST strategic interpretation?",
+      "correctPerspective": "Security Architect",
+      "correctReason": "This is row drift: operational artifacts diverged from logical intent, breaking traceability and control assurance.",
+      "recognitionTest": "perspective misalignment",
+      "answerPerspectives": {
+        "CISO": "Can enforce accountability and temporary risk acceptance, but not perform design-runtime reconciliation.",
+        "Enterprise Architect": "Can coordinate enterprise remediation sequencing, but technical role-model alignment is immediate.",
+        "Security Architect": "Best answer. Re-aligns runtime IAM implementations to logical role architecture.",
+        "Risk Manager": "Can assess accumulated privilege risk, but cannot directly reconcile model and implementation.",
+        "Audit/Compliance": "Can log nonconformance, but technical corrective design is architectural."
+      }
+    },
+    {
+      "id": "ZACHMAN-CISSP-10",
+      "title": "Mistaken Demand for Zachman Sequence",
+      "focus": ["governance oversight", "perspective misalignment"],
+      "prompt": "A PMO requires all teams to execute Zachman rows in fixed chronological order as if it were a delivery methodology, and blocks work that does not follow that sequence. What is the MOST strategic interpretation?",
+      "correctPerspective": "Enterprise Architect",
+      "correctReason": "Zachman is an ontology, not a process. Enforcing a mandated execution sequence is category error and governance misuse.",
+      "recognitionTest": "incomplete taxonomy",
+      "answerPerspectives": {
+        "CISO": "Can override harmful governance behavior, but explanation of ontology-vs-method distinction is architecture-led.",
+        "Enterprise Architect": "Best answer. Clarifies that Zachman classifies artifacts and does not prescribe implementation process.",
+        "Security Architect": "Can adapt security workplans, but cannot authoritatively redefine enterprise architecture doctrine.",
+        "Risk Manager": "Can describe schedule risk, but not correct the conceptual misuse of the framework.",
+        "Audit/Compliance": "Can confirm policy mismatch, but architectural interpretation authority is needed first."
+      }
+    }
+  ]
+}
