@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Discovery — EDRM Sequencing Drill</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #0d0f14;
+  --surface: #161b25;
+  --border:  #1e2a3a;
+  --text:    #c9d5e0;
+  --dim:     #5a6a7a;
+  --accent:  #00aaff;
+  --gold:    #f5c842;
+  --green:   #2ecc71;
+  --red:     #e74c3c;
+  --r:       10px;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 16px; line-height: 1.5; min-height: 100vh; }
+#app { max-width: 780px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* HUD */
+#hud { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 18px; margin-bottom: 24px; position: sticky; top: 10px; z-index: 100; gap: 12px; }
+#back-btn { background: none; border: 1px solid var(--border); color: var(--dim); border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color .2s, color .2s; }
+#back-btn:hover { border-color: var(--accent); color: var(--accent); }
+.hud-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+.hud-stats { display: flex; gap: 20px; }
+.hud-stat { text-align: center; }
+.hud-stat .val { font-size: 18px; font-weight: 700; color: var(--gold); }
+.hud-stat .lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.tab { padding: 8px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--dim); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; }
+.tab.active { border-color: var(--accent); color: var(--accent); background: rgba(0,170,255,.08); }
+
+/* Reference strip */
+.ref-strip { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 18px; margin-bottom: 20px; }
+.ref-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.ref-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.ref-pill { background: rgba(0,170,255,.1); border: 1px solid rgba(0,170,255,.3); border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 600; color: var(--accent); }
+.ref-arrow { color: var(--dim); font-size: 12px; }
+.ref-toggle { font-size: 12px; color: var(--accent); cursor: pointer; margin-top: 6px; }
+
+/* Sequence list */
+.seq-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.seq-item { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 18px; cursor: grab; user-select: none; transition: border-color .2s; }
+.seq-item:active { cursor: grabbing; }
+.seq-item.dragover-top { border-top: 2px solid var(--accent); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--dim); font-size: 13px; flex-shrink: 0; }
+.seq-item.correct-order .step-num { border-color: var(--green); color: var(--green); background: rgba(46,204,113,.1); }
+.seq-item.wrong-order   .step-num { border-color: var(--red);   color: var(--red);   background: rgba(231,76,60,.08); }
+.step-content { flex: 1; }
+.step-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+.step-desc { font-size: 12px; color: var(--dim); }
+.drag-handle { color: var(--dim); font-size: 18px; }
+
+/* Scenario */
+.scenario-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 22px; margin-bottom: 16px; }
+.sc-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+.sc-stem { font-size: 17px; line-height: 1.85; margin-bottom: 20px; }
+.sc-stem .ql { color: var(--gold); font-weight: 700; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt { display: flex; align-items: flex-start; gap: 14px; padding: 13px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all .2s; color: var(--text); font-size: 15px; text-align: left; width: 100%; }
+.opt:hover { border-color: var(--accent); background: rgba(0,170,255,.04); }
+.opt-key { width: 27px; height: 27px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; color: var(--accent); background: rgba(0,170,255,.08); }
+.opt.correct-ans { border-color: var(--green); background: rgba(46,204,113,.1); }
+.opt.correct-ans .opt-key { border-color: var(--green); color: var(--green); }
+.opt.wrong-ans { border-color: var(--red); background: rgba(231,76,60,.08); }
+.opt.wrong-ans .opt-key { border-color: var(--red); color: var(--red); }
+.explanation { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-size: 14px; line-height: 1.7; margin-top: 14px; display: none; }
+.explanation.show { display: block; }
+.seq-note { color: var(--gold); font-weight: 700; margin-bottom: 6px; font-size: 13px; }
+.btn-next { background: var(--green); color: #000; font-weight: 700; font-size: 14px; padding: 11px 24px; border: none; border-radius: 8px; cursor: pointer; margin-top: 14px; width: 100%; }
+
+/* Buttons */
+.btn { background: var(--accent); color: #000; font-weight: 700; font-size: 15px; padding: 11px 26px; border: none; border-radius: 8px; cursor: pointer; transition: opacity .2s; }
+.btn:hover { opacity: .85; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); font-weight: 600; font-size: 14px; padding: 9px 20px; border-radius: 8px; cursor: pointer; transition: all .2s; margin-left: 10px; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.result-box { border-radius: 8px; padding: 14px 18px; margin-top: 16px; font-weight: 600; font-size: 15px; display: none; }
+.result-box.show { display: block; }
+.result-box.perfect { background: rgba(46,204,113,.1); border: 1px solid var(--green); color: var(--green); }
+.result-box.partial  { background: rgba(245,200,66,.08); border: 1px solid var(--gold); color: var(--gold); }
+
+.disclaimer-note { font-size: 12px; color: var(--dim); text-align: center; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="hud">
+    <a id="back-btn" href="../../">← Home</a>
+    <div class="hud-title">E-Discovery</div>
+    <div class="hud-stats">
+      <div class="hud-stat"><div class="val" id="score-val">0</div><div class="lbl">Score</div></div>
+      <div class="hud-stat"><div class="val" id="correct-val">0</div><div class="lbl">Correct</div></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="setMode('sequence',this)">Sequence Steps</div>
+    <div class="tab" onclick="setMode('scenario',this)">Scenario Questions</div>
+  </div>
+
+  <!-- SEQUENCE MODE -->
+  <div id="sequence-mode">
+    <div class="ref-strip">
+      <div class="ref-label">EDRM Reference</div>
+      <div class="ref-toggle" onclick="toggleRef()" id="ref-toggle">Show correct order ▼</div>
+      <div class="ref-pills" id="ref-pills" style="display:none; margin-top:8px;">
+        <span class="ref-pill">Info Governance</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Identification</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Preservation</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Collection</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Processing</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Review</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Analysis</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Production</span><span class="ref-arrow">→</span>
+        <span class="ref-pill">Presentation</span>
+      </div>
+    </div>
+    <p style="color:var(--dim);font-size:14px;margin-bottom:14px;">Drag the steps into the correct EDRM order.</p>
+    <div class="seq-list" id="seq-list"></div>
+    <button class="btn" onclick="checkSequence()">Check Order</button>
+    <button class="btn-ghost" onclick="resetSequence()">Shuffle Again</button>
+    <div class="result-box" id="seq-result"></div>
+  </div>
+
+  <!-- SCENARIO MODE -->
+  <div id="scenario-mode" style="display:none;">
+    <div id="scenario-container"></div>
+  </div>
+
+  <p class="disclaimer-note">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+</div>
+
+<script>
+const EDRM = [
+  { name: "Information Governance", desc: "Policies, retention schedules, and controls established before litigation begins." },
+  { name: "Identification",         desc: "Locate and identify potentially relevant ESI." },
+  { name: "Preservation",           desc: "Issue legal hold — prevent destruction or alteration of identified ESI." },
+  { name: "Collection",             desc: "Gather preserved ESI in a forensically sound manner." },
+  { name: "Processing",             desc: "Reduce volume, extract metadata, convert to reviewable format." },
+  { name: "Review",                 desc: "Assess relevance, privilege, and responsiveness." },
+  { name: "Analysis",               desc: "Evaluate content for patterns, key topics, and custodians." },
+  { name: "Production",             desc: "Deliver responsive, non-privileged ESI to requesting party." },
+  { name: "Presentation",           desc: "Use ESI at depositions, hearings, or trial." },
+];
+
+const SCENARIOS = [
+  {
+    stem: "A company receives a litigation hold notice. Relevant emails exist on employee laptops. What is the <span class='ql'>FIRST</span> action the security team should take?",
+    options: [
+      { k:"a", t:"Collect forensic images of all employee laptops immediately." },
+      { k:"b", t:"Preserve the emails in place and suspend auto-deletion policies." },
+      { k:"c", t:"Review the emails for privilege before preserving them." },
+      { k:"d", t:"Produce the emails to opposing counsel within 30 days." },
+    ],
+    correct: "b",
+    explanation: "Preservation comes BEFORE Collection. Issue the legal hold and stop auto-deletion first — otherwise you risk spoliation. Collection happens after preservation is confirmed. Review and Production are much later steps.",
+  },
+  {
+    stem: "Counsel has completed Identification of all potentially relevant ESI. The <span class='ql'>NEXT</span> EDRM phase is:",
+    options: [
+      { k:"a", t:"Processing — extract metadata and reduce volume." },
+      { k:"b", t:"Collection — gather the ESI from custodian systems." },
+      { k:"c", t:"Preservation — issue a legal hold." },
+      { k:"d", t:"Review — assess for relevance and privilege." },
+    ],
+    correct: "c",
+    explanation: "After Identification: Preservation. You must issue the legal hold and prevent deletion BEFORE you collect anything. The sequence is Identification → Preservation → Collection → Processing → Review. Jumping to Collection before Preservation risks losing evidence.",
+  },
+  {
+    stem: "ESI has been preserved and collected forensically. What is the <span class='ql'>NEXT</span> step?",
+    options: [
+      { k:"a", t:"Review for attorney-client privilege." },
+      { k:"b", t:"Produce the ESI to opposing counsel." },
+      { k:"c", t:"Process the ESI — reduce volume and extract metadata." },
+      { k:"d", t:"Present the ESI at deposition." },
+    ],
+    correct: "c",
+    explanation: "After Collection comes Processing — deduplication, format conversion, metadata extraction. Only then can Review happen efficiently. A common trap is skipping Processing and going straight to Review.",
+  },
+  {
+    stem: "Which EDRM phase occurs <span class='ql'>BEFORE</span> collection of ESI?",
+    options: [
+      { k:"a", t:"Processing" },
+      { k:"b", t:"Review" },
+      { k:"c", t:"Preservation" },
+      { k:"d", t:"Production" },
+    ],
+    correct: "c",
+    explanation: "Preservation always comes before Collection. Identification → Preservation → Collection. This sequencing error — jumping to Collection before Preservation — was a direct failure pattern on your Feb 18 exam.",
+  },
+  {
+    stem: "Attorneys are reviewing documents to determine which are privileged and responsive to the opposing party's requests. Which EDRM phase is this?",
+    options: [
+      { k:"a", t:"Analysis" },
+      { k:"b", t:"Identification" },
+      { k:"c", t:"Review" },
+      { k:"d", t:"Production" },
+    ],
+    correct: "c",
+    explanation: "Review is where attorneys assess documents for relevance, privilege (attorney-client, work product), and responsiveness. Analysis comes after Review and identifies patterns. Production delivers the non-privileged responsive documents.",
+  },
+];
+
+let score = 0, correctCount = 0;
+let seqItems = [];
+let dragSrc = null;
+let scenarioPool = [];
+let scenarioIndex = 0;
+let refVisible = false;
+
+function setMode(mode, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('sequence-mode').style.display = mode === 'sequence' ? '' : 'none';
+  document.getElementById('scenario-mode').style.display = mode === 'scenario' ? '' : 'none';
+  if (mode === 'sequence') resetSequence();
+  if (mode === 'scenario') startScenarios();
+}
+
+function updateHUD() {
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('correct-val').textContent = correctCount;
+}
+
+function toggleRef() {
+  refVisible = !refVisible;
+  document.getElementById('ref-pills').style.display = refVisible ? 'flex' : 'none';
+  document.getElementById('ref-toggle').textContent = refVisible ? 'Hide order ▲' : 'Show correct order ▼';
+}
+
+// ── SEQUENCE ────────────────────────────────────────────────────────────────
+function resetSequence() {
+  document.getElementById('seq-result').className = 'result-box';
+  seqItems = [...EDRM].sort(() => Math.random() - 0.5);
+  buildSeqList();
+}
+
+function buildSeqList() {
+  const list = document.getElementById('seq-list');
+  list.innerHTML = '';
+  seqItems.forEach((step, i) => {
+    const el = document.createElement('div');
+    el.className = 'seq-item';
+    el.draggable = true;
+    el.innerHTML = `<div class="step-num">${i + 1}</div><div class="step-content"><div class="step-name">${step.name}</div><div class="step-desc">${step.desc}</div></div><div class="drag-handle">⠿</div>`;
+
+    el.addEventListener('dragstart', e => {
+      dragSrc = i;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => el.style.opacity = '.4', 0);
+    });
+    el.addEventListener('dragend', () => { el.style.opacity = ''; });
+    el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragover-top'); });
+    el.addEventListener('dragleave', () => el.classList.remove('dragover-top'));
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      el.classList.remove('dragover-top');
+      if (dragSrc === null || dragSrc === i) return;
+      const moved = seqItems.splice(dragSrc, 1)[0];
+      seqItems.splice(i, 0, moved);
+      dragSrc = null;
+      buildSeqList();
+    });
+    list.appendChild(el);
+  });
+}
+
+function checkSequence() {
+  let correct = 0;
+  document.querySelectorAll('.seq-item').forEach((el, i) => {
+    const name = el.querySelector('.step-name').textContent;
+    if (name === EDRM[i].name) {
+      el.classList.add('correct-order'); el.classList.remove('wrong-order'); correct++;
+    } else {
+      el.classList.add('wrong-order'); el.classList.remove('correct-order');
+    }
+  });
+  score += correct * 10;
+  if (correct === 9) correctCount++;
+  updateHUD();
+
+  const result = document.getElementById('seq-result');
+  result.classList.add('show');
+  if (correct === 9) {
+    result.className = 'result-box show perfect';
+    result.innerHTML = 'Perfect — all 9 EDRM phases in the correct order.';
+  } else {
+    result.className = 'result-box show partial';
+    result.innerHTML = `${correct}/9 correct. Key rule: Identification → <strong>Preservation</strong> → Collection. Legal hold BEFORE you touch anything.`;
+  }
+}
+
+// ── SCENARIOS ───────────────────────────────────────────────────────────────
+function startScenarios() {
+  scenarioPool = [...SCENARIOS].sort(() => Math.random() - 0.5);
+  scenarioIndex = 0;
+  loadScenario();
+}
+
+function loadScenario() {
+  const container = document.getElementById('scenario-container');
+  if (scenarioIndex >= scenarioPool.length) {
+    container.innerHTML = `<div style="text-align:center;padding:40px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);">
+      <div style="font-size:1.3rem;font-weight:700;color:var(--green);margin-bottom:8px;">All scenarios complete</div>
+      <div style="color:var(--dim);margin-bottom:20px;">Score: ${score} &nbsp;|&nbsp; Correct: ${correctCount}/${scenarioPool.length}</div>
+      <button class="btn" onclick="startScenarios()">Restart</button></div>`;
+    return;
+  }
+
+  const q = scenarioPool[scenarioIndex];
+  container.innerHTML = `
+    <div class="scenario-card">
+      <div class="sc-label">Scenario ${scenarioIndex + 1} of ${scenarioPool.length}</div>
+      <div class="sc-stem">${q.stem}</div>
+      <div class="options" id="opts"></div>
+      <div class="explanation" id="exp">
+        <div class="seq-note">SEQUENCE ANALYSIS</div>
+        <div id="exp-text"></div>
+      </div>
+    </div>`;
+
+  const opts = document.getElementById('opts');
+  q.options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-key">${o.k.toUpperCase()}</span><span>${o.t}</span>`;
+    btn.onclick = () => answer(o.k, q);
+    opts.appendChild(btn);
+  });
+}
+
+function answer(key, q) {
+  document.querySelectorAll('.opt').forEach(b => b.onclick = null);
+  const isOk = key === q.correct;
+  document.querySelectorAll('.opt').forEach((btn, i) => {
+    const k = q.options[i].k;
+    if (k === q.correct) btn.classList.add('correct-ans');
+    if (k === key && !isOk) btn.classList.add('wrong-ans');
+  });
+
+  if (isOk) { score += 50; correctCount++; }
+  updateHUD();
+
+  const exp = document.getElementById('exp');
+  document.getElementById('exp-text').textContent = q.explanation;
+  exp.classList.add('show');
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'btn-next';
+  nextBtn.textContent = scenarioIndex + 1 < scenarioPool.length ? 'Next Scenario →' : 'See Results →';
+  nextBtn.onclick = () => { scenarioIndex++; loadScenario(); };
+  setTimeout(() => exp.appendChild(nextBtn), 300);
+}
+
+// ── INIT ────────────────────────────────────────────────────────────────────
+resetSequence();
+</script>
+</body>
+</html>

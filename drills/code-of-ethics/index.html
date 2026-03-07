@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISC2 Code of Ethics — CISSP Drill</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #0d0f14;
+  --surface: #161b25;
+  --border:  #1e2a3a;
+  --text:    #c9d5e0;
+  --dim:     #5a6a7a;
+  --accent:  #00aaff;
+  --gold:    #f5c842;
+  --green:   #2ecc71;
+  --red:     #e74c3c;
+  --r:       10px;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 16px; line-height: 1.5; min-height: 100vh; }
+#app { max-width: 780px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* HUD */
+#hud { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 18px; margin-bottom: 24px; position: sticky; top: 10px; z-index: 100; gap: 12px; }
+#back-btn { background: none; border: 1px solid var(--border); color: var(--dim); border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color .2s, color .2s; }
+#back-btn:hover { border-color: var(--accent); color: var(--accent); }
+.hud-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+.hud-stats { display: flex; gap: 20px; }
+.hud-stat { text-align: center; }
+.hud-stat .val { font-size: 18px; font-weight: 700; color: var(--gold); }
+.hud-stat .lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.tab { padding: 8px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--dim); cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; }
+.tab.active { border-color: var(--accent); color: var(--accent); background: rgba(0,170,255,.08); }
+
+/* Word bank */
+.word-bank { display: flex; flex-wrap: wrap; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 20px; min-height: 56px; }
+.bank-label { font-size: 11px; color: var(--dim); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; width: 100%; margin-bottom: 6px; }
+.chip { background: rgba(0,170,255,.12); border: 1px solid var(--accent); border-radius: 6px; padding: 6px 14px; font-size: 14px; font-weight: 600; color: var(--accent); cursor: grab; user-select: none; transition: all .15s; }
+.chip:active { cursor: grabbing; opacity: .7; }
+.chip.used { opacity: .22; pointer-events: none; border-style: dashed; }
+
+/* Canon cards */
+.canon-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+.canon-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; }
+.canon-num { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+.canon-text { font-size: 17px; line-height: 2; }
+
+/* Blanks */
+.blank { display: inline-block; min-width: 110px; border-bottom: 2px solid var(--accent); margin: 0 4px; text-align: center; vertical-align: bottom; padding: 2px 8px; border-radius: 4px 4px 0 0; background: rgba(0,170,255,.06); color: var(--accent); font-weight: 700; font-size: 15px; cursor: pointer; transition: all .2s; }
+.blank.dragover { background: rgba(0,170,255,.2); border-color: var(--gold); }
+.blank.filled { background: rgba(0,170,255,.1); color: var(--text); border-color: var(--border); }
+.blank.correct { background: rgba(46,204,113,.15); border-color: var(--green); color: var(--green); }
+.blank.wrong   { background: rgba(231,76,60,.12); border-color: var(--red); color: var(--red); }
+.blank-ph { color: var(--dim); font-size: 12px; font-style: italic; font-weight: 400; }
+
+/* Order mode */
+.order-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.order-item { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 18px; cursor: grab; user-select: none; transition: border-color .2s; }
+.order-item:active { cursor: grabbing; }
+.order-item.dragover-top { border-top: 2px solid var(--accent); }
+.order-num { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--dim); font-size: 13px; flex-shrink: 0; }
+.order-item.correct-order .order-num { border-color: var(--green); color: var(--green); background: rgba(46,204,113,.1); }
+.order-item.wrong-order   .order-num { border-color: var(--red);   color: var(--red);   background: rgba(231,76,60,.08); }
+.order-text { font-size: 15px; line-height: 1.6; flex: 1; }
+.drag-handle { color: var(--dim); font-size: 18px; flex-shrink: 0; }
+
+/* Buttons */
+.btn { background: var(--accent); color: #000; font-weight: 700; font-size: 15px; padding: 11px 26px; border: none; border-radius: 8px; cursor: pointer; transition: opacity .2s; }
+.btn:hover { opacity: .85; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); font-weight: 600; font-size: 14px; padding: 9px 20px; border-radius: 8px; cursor: pointer; transition: all .2s; margin-left: 10px; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Result */
+.result-box { border-radius: 8px; padding: 14px 18px; margin-top: 16px; font-weight: 600; font-size: 15px; display: none; }
+.result-box.show { display: block; }
+.result-box.perfect { background: rgba(46,204,113,.1); border: 1px solid var(--green); color: var(--green); }
+.result-box.partial  { background: rgba(245,200,66,.08); border: 1px solid var(--gold); color: var(--gold); }
+.trap-callout { background: rgba(231,76,60,.08); border: 1px solid rgba(231,76,60,.3); border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; color: var(--red); font-weight: 400; }
+
+.disclaimer-note { font-size: 12px; color: var(--dim); text-align: center; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="hud">
+    <a id="back-btn" href="../../">← Home</a>
+    <div class="hud-title">ISC2 Code of Ethics</div>
+    <div class="hud-stats">
+      <div class="hud-stat"><div class="val" id="score-val">0</div><div class="lbl">Score</div></div>
+      <div class="hud-stat"><div class="val" id="round-val">1</div><div class="lbl">Round</div></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="setMode('fillin',this)">Fill in the Blanks</div>
+    <div class="tab" onclick="setMode('order',this)">Priority Order</div>
+  </div>
+
+  <!-- FILL IN THE BLANKS -->
+  <div id="fillin-mode">
+    <div class="word-bank">
+      <div class="bank-label">Word Bank — drag a word to a blank, click a filled blank to return it</div>
+      <div id="chips"></div>
+    </div>
+    <div class="canon-list" id="canon-list"></div>
+    <button class="btn" onclick="checkFillIn()">Check Answers</button>
+    <button class="btn-ghost" onclick="resetFillIn()">Reset</button>
+    <div class="result-box" id="fillin-result"></div>
+  </div>
+
+  <!-- PRIORITY ORDER -->
+  <div id="order-mode" style="display:none;">
+    <p style="color:var(--dim);font-size:14px;margin-bottom:16px;">Drag the canons into the correct priority order (1 = highest).</p>
+    <div class="order-list" id="order-list"></div>
+    <button class="btn" onclick="checkOrder()">Check Order</button>
+    <button class="btn-ghost" onclick="resetOrder()">Shuffle Again</button>
+    <div class="result-box" id="order-result"></div>
+  </div>
+
+  <p class="disclaimer-note">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+</div>
+
+<script>
+const CANONS = [
+  {
+    num: "Canon 1 — Highest Priority",
+    template: "Protect [society], the [common good], necessary public trust and confidence, and the [infrastructure].",
+    full: "Protect society, the common good, necessary public trust and confidence, and the infrastructure.",
+    blanks: ["society", "common good", "infrastructure"],
+  },
+  {
+    num: "Canon 2",
+    template: "Act [honorably], honestly, [justly], responsibly, and [LEGALLY].",
+    full: "Act honorably, honestly, justly, responsibly, and LEGALLY.",
+    blanks: ["honorably", "justly", "LEGALLY"],
+    trapNote: true,
+  },
+  {
+    num: "Canon 3",
+    template: "Provide [diligent] and [competent] service to [principals].",
+    full: "Provide diligent and competent service to principals.",
+    blanks: ["diligent", "competent", "principals"],
+  },
+  {
+    num: "Canon 4 — Lowest Priority",
+    template: "Advance and protect the [profession].",
+    full: "Advance and protect the profession.",
+    blanks: ["profession"],
+  },
+];
+
+const ALL_BLANKS = [...new Set(CANONS.flatMap(c => c.blanks))];
+let score = 0, round = 1, dragWord = null;
+
+function setMode(mode, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('fillin-mode').style.display = mode === 'fillin' ? '' : 'none';
+  document.getElementById('order-mode').style.display  = mode === 'order'  ? '' : 'none';
+  if (mode === 'fillin') resetFillIn();
+  if (mode === 'order')  resetOrder();
+}
+
+function updateHUD() {
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('round-val').textContent = round;
+}
+
+// ── FILL IN THE BLANKS ──────────────────────────────────────────────────────
+function buildWordBank() {
+  const shuffled = [...ALL_BLANKS].sort(() => Math.random() - 0.5);
+  const container = document.getElementById('chips');
+  container.innerHTML = '';
+  shuffled.forEach(word => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = word;
+    chip.draggable = true;
+    chip.dataset.word = word;
+    chip.addEventListener('dragstart', e => {
+      dragWord = word;
+      chip.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+    container.appendChild(chip);
+  });
+}
+
+function buildCanons() {
+  const list = document.getElementById('canon-list');
+  list.innerHTML = '';
+  CANONS.forEach((canon, ci) => {
+    const card = document.createElement('div');
+    card.className = 'canon-card';
+    const textDiv = document.createElement('div');
+    textDiv.className = 'canon-text';
+
+    // Build text with blanks by splitting on [word]
+    let remaining = canon.template;
+    let bi = 0;
+    canon.blanks.forEach(word => {
+      const parts = remaining.split(`[${word}]`);
+      textDiv.appendChild(document.createTextNode(parts[0]));
+      const blank = document.createElement('span');
+      blank.className = 'blank';
+      blank.id = `blank-${ci}-${bi}`;
+      blank.dataset.answer = word;
+      blank.innerHTML = '<span class="blank-ph">drop here</span>';
+
+      blank.addEventListener('dragover', e => { e.preventDefault(); blank.classList.add('dragover'); });
+      blank.addEventListener('dragleave', () => blank.classList.remove('dragover'));
+      blank.addEventListener('drop', e => {
+        e.preventDefault();
+        blank.classList.remove('dragover');
+        if (!dragWord) return;
+        const prev = blank.dataset.filled;
+        if (prev) markChip(prev, false);
+        blank.textContent = dragWord;
+        blank.classList.add('filled');
+        blank.classList.remove('correct','wrong');
+        blank.dataset.filled = dragWord;
+        markChip(dragWord, true);
+        dragWord = null;
+      });
+      blank.addEventListener('click', () => {
+        const w = blank.dataset.filled;
+        if (!w) return;
+        markChip(w, false);
+        blank.innerHTML = '<span class="blank-ph">drop here</span>';
+        blank.classList.remove('filled','correct','wrong');
+        delete blank.dataset.filled;
+      });
+
+      textDiv.appendChild(blank);
+      remaining = parts[1] || '';
+      bi++;
+    });
+    textDiv.appendChild(document.createTextNode(remaining));
+
+    card.innerHTML = `<div class="canon-num">${canon.num}</div>`;
+    card.appendChild(textDiv);
+    list.appendChild(card);
+  });
+}
+
+function markChip(word, used) {
+  document.querySelectorAll('.chip').forEach(c => {
+    if (c.dataset.word === word) c.classList.toggle('used', used);
+  });
+}
+
+function checkFillIn() {
+  let correct = 0, total = 0, legallyWrong = false;
+  document.querySelectorAll('.blank').forEach(blank => {
+    const answer = blank.dataset.answer;
+    const filled = blank.dataset.filled;
+    total++;
+    if (!filled) return;
+    if (filled.toLowerCase() === answer.toLowerCase()) {
+      blank.classList.add('correct'); blank.classList.remove('wrong'); correct++;
+    } else {
+      blank.classList.add('wrong'); blank.classList.remove('correct');
+      if (answer.toUpperCase() === 'LEGALLY') legallyWrong = true;
+    }
+  });
+
+  score += correct * 10; round++;
+  updateHUD();
+
+  const result = document.getElementById('fillin-result');
+  result.classList.add('show');
+  if (correct === total) {
+    result.className = 'result-box show perfect';
+    result.innerHTML = `Perfect — ${correct}/${total}. You know the exact wording cold.`;
+  } else {
+    result.className = 'result-box show partial';
+    let html = `${correct}/${total} correct. Review the highlighted blanks.`;
+    if (legallyWrong) {
+      html += `<div class="trap-callout"><strong>WORDING TRAP — Canon 2:</strong> The word is LEGALLY, not "ethically." This exact substitution is used on the CISSP exam. The ISC2 Code imposes a legal obligation, not merely an ethical one. You got this wrong on your Feb 18 exam.</div>`;
+    }
+    result.innerHTML = html;
+  }
+}
+
+function resetFillIn() {
+  document.getElementById('fillin-result').className = 'result-box';
+  buildWordBank();
+  buildCanons();
+}
+
+// ── PRIORITY ORDER ──────────────────────────────────────────────────────────
+const CANON_TEXTS = CANONS.map(c => ({ num: c.num, text: c.full }));
+let orderItems = [];
+let dragSrc = null;
+
+function resetOrder() {
+  document.getElementById('order-result').className = 'result-box';
+  orderItems = [...CANON_TEXTS].sort(() => Math.random() - 0.5);
+  buildOrderList();
+}
+
+function buildOrderList() {
+  const list = document.getElementById('order-list');
+  list.innerHTML = '';
+  orderItems.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'order-item';
+    el.draggable = true;
+    el.dataset.index = i;
+    el.innerHTML = `<div class="order-num">${i + 1}</div><div class="order-text">${item.text}</div><div class="drag-handle">⠿</div>`;
+
+    el.addEventListener('dragstart', e => {
+      dragSrc = i;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => el.style.opacity = '.4', 0);
+    });
+    el.addEventListener('dragend', () => { el.style.opacity = ''; });
+    el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragover-top'); });
+    el.addEventListener('dragleave', () => el.classList.remove('dragover-top'));
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      el.classList.remove('dragover-top');
+      if (dragSrc === null || dragSrc === i) return;
+      const moved = orderItems.splice(dragSrc, 1)[0];
+      orderItems.splice(i, 0, moved);
+      dragSrc = null;
+      buildOrderList();
+    });
+    list.appendChild(el);
+  });
+}
+
+function checkOrder() {
+  let correct = 0;
+  document.querySelectorAll('.order-item').forEach((el, i) => {
+    const text = el.querySelector('.order-text').textContent.trim();
+    if (text === CANON_TEXTS[i].text) {
+      el.classList.add('correct-order'); el.classList.remove('wrong-order'); correct++;
+    } else {
+      el.classList.add('wrong-order'); el.classList.remove('correct-order');
+    }
+  });
+
+  score += correct * 25; round++;
+  updateHUD();
+
+  const result = document.getElementById('order-result');
+  result.classList.add('show');
+  if (correct === 4) {
+    result.className = 'result-box show perfect';
+    result.innerHTML = 'Perfect. Society first. Profession last. Every time.';
+  } else {
+    result.className = 'result-box show partial';
+    result.innerHTML = `${correct}/4 correct. Remember: Society (1) → Act Honorably/LEGALLY (2) → Serve Principals (3) → Advance the Profession (4). Canon 1 always beats Canon 4 in a conflict.`;
+  }
+}
+
+// ── INIT ────────────────────────────────────────────────────────────────────
+resetFillIn();
+resetOrder();
+</script>
+</body>
+</html>
