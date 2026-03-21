@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CISO Decision Engine | Alex Cyber Study</title>
+<style>
+/* ── Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0d0f14;
+  --surface:  #161b25;
+  --border:   #1e2a3a;
+  --text:     #c9d5e0;
+  --dim:      #5a6a7a;
+  --accent:   #00aaff;
+  --gold:     #f5c842;
+  --green:    #2ecc71;
+  --amber:    #f39c12;
+  --red:      #e74c3c;
+  --cyan:     #00e5ff;
+  --purple:   #a855f7;
+  --card-r:   12px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#app { max-width: 880px; margin: 0 auto; padding: 24px 16px 80px; }
+
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Typography helpers ────────────────────────────────────────────────── */
+.label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--dim);
+  margin-bottom: 14px;
+}
+
+/* ── Card ──────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-r);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+/* ── Back link ─────────────────────────────────────────────────────────── */
+#back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--dim); font-size: 13px; text-decoration: none;
+  margin-bottom: 20px; transition: color .2s;
+}
+#back-link:hover { color: var(--accent); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   START SCREEN
+══════════════════════════════════════════════════════════════════════════ */
+#screen-start { text-align: center; padding: 40px 16px; }
+#screen-start h1 {
+  font-size: 2rem; color: var(--accent); letter-spacing: 3px;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+#screen-start .tagline { color: var(--dim); font-size: 15px; margin-bottom: 8px; }
+#screen-start .domain-badge {
+  display: inline-block; background: rgba(0,170,255,.12);
+  border: 1px solid rgba(0,170,255,.3); border-radius: 20px;
+  padding: 4px 14px; font-size: 12px; color: var(--accent);
+  margin-bottom: 32px;
+}
+
+.org-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--card-r); padding: 24px 28px;
+  max-width: 560px; margin: 0 auto 28px; text-align: left;
+}
+.org-card .org-name { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.org-card .org-role { font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+.org-card .org-brief { font-size: 14px; color: var(--text); line-height: 1.6; }
+
+.mechanics-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; max-width: 620px; margin: 0 auto 32px;
+}
+.mechanic-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 12px; text-align: center;
+}
+.mechanic-item .m-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.mechanic-item .m-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.mechanic-item .m-desc { font-size: 11px; color: var(--dim); }
+
+.start-btn {
+  background: var(--accent); color: #000; font-weight: 700;
+  font-size: 17px; padding: 16px 44px; border: none;
+  border-radius: 10px; cursor: pointer; transition: opacity .2s, transform .1s;
+  letter-spacing: 0.5px;
+}
+.start-btn:hover { opacity: .88; }
+.start-btn:active { transform: scale(0.98); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GAME SCREEN — HUD
+══════════════════════════════════════════════════════════════════════════ */
+#screen-game { display: block; }
+
+#hud {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--card-r); padding: 14px 20px;
+  margin-bottom: 20px;
+  position: sticky; top: 12px; z-index: 100;
+}
+.hud-left { display: flex; flex-direction: column; gap: 2px; }
+.hud-org   { font-size: 14px; font-weight: 700; color: var(--accent); }
+.hud-domain{ font-size: 11px; color: var(--dim); }
+.hud-right { display: flex; gap: 20px; align-items: center; }
+.hud-stat  { display: flex; flex-direction: column; align-items: center; }
+.hud-stat .val { font-size: 20px; font-weight: 700; }
+.hud-stat .lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; }
+#hud-scenario-val { color: var(--gold); }
+#hud-decisions-val { color: var(--cyan); }
+
+/* ── Risk Meter ────────────────────────────────────────────────────────── */
+#risk-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--card-r); padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.risk-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.risk-title { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 1px; text-transform: uppercase; }
+#risk-score-display {
+  font-size: 28px; font-weight: 700;
+  transition: color 0.4s ease;
+}
+.risk-score-label { font-size: 11px; color: var(--dim); margin-top: -4px; }
+
+/* The meter track */
+.risk-track-wrap { position: relative; margin-bottom: 8px; }
+.risk-track {
+  height: 18px; border-radius: 9px;
+  background: linear-gradient(to right,
+    #27ae60 0%, #2ecc71 20%,
+    #f1c40f 35%, #e67e22 55%,
+    #e74c3c 70%, #c0392b 100%
+  );
+  position: relative; overflow: visible;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+/* Dark overlay from right — reveals color as risk increases */
+.risk-track-fill {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  background: rgba(13,15,20,0.72);
+  border-radius: 0 9px 9px 0;
+  transition: width 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+/* Marker needle */
+.risk-needle {
+  position: absolute; top: -6px;
+  width: 4px; height: 30px;
+  background: #fff;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px rgba(255,255,255,0.6);
+  transition: left 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+/* Threshold markers */
+.risk-thresholds {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: var(--dim); margin-top: 6px;
+  padding: 0 2px;
+}
+.risk-thresholds .th-success { color: var(--green); font-weight: 700; }
+.risk-thresholds .th-fail    { color: var(--red);   font-weight: 700; }
+/* Zone labels */
+.risk-zones {
+  display: flex; font-size: 10px; margin-top: 4px;
+  text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700;
+}
+.zone-safe   { flex: 20; color: var(--green);  }
+.zone-caution{ flex: 60; text-align: center; color: var(--gold); }
+.zone-danger { flex: 20; text-align: right; color: var(--red); }
+
+/* Risk change badge */
+#risk-delta {
+  display: inline-block; font-size: 14px; font-weight: 700;
+  padding: 3px 10px; border-radius: 12px; margin-left: 10px;
+  opacity: 0; transition: opacity .3s;
+}
+#risk-delta.show { opacity: 1; }
+#risk-delta.down { background: rgba(46,204,113,.18); color: var(--green); }
+#risk-delta.up   { background: rgba(231,76,60,.18);  color: var(--red);   }
+
+/* ── Consequence banner ────────────────────────────────────────────────── */
+#consequence-banner {
+  border-left: 3px solid var(--accent);
+  background: rgba(0,170,255,.07);
+  padding: 10px 16px; border-radius: 0 8px 8px 0;
+  font-size: 13px; color: var(--text);
+  margin-bottom: 20px;
+}
+#consequence-banner .cons-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 3px;
+}
+
+/* ── Scenario Card ─────────────────────────────────────────────────────── */
+#scenario-card { }
+.scenario-meta {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.badge {
+  display: inline-block; border-radius: 12px;
+  padding: 3px 10px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.badge-domain  { background: rgba(0,170,255,.12); color: var(--accent); border: 1px solid rgba(0,170,255,.3); }
+.badge-phase   { background: rgba(245,200,66,.1);  color: var(--gold);   border: 1px solid rgba(245,200,66,.3); }
+
+.scenario-context {
+  font-size: 14px; color: var(--dim); line-height: 1.7;
+  margin-bottom: 16px; padding: 12px 16px;
+  background: rgba(0,0,0,.2); border-radius: 8px;
+  border-left: 3px solid var(--border);
+}
+.scenario-context strong { color: var(--text); }
+
+.scenario-stem {
+  font-size: 18px; line-height: 1.7; font-weight: 500;
+}
+/* Qualifier words highlighted in stem */
+.q-word { color: var(--gold); font-weight: 700; }
+
+/* ── Answer Choices ────────────────────────────────────────────────────── */
+#choices-wrap { margin-bottom: 20px; }
+.choices-grid { display: flex; flex-direction: column; gap: 10px; }
+
+.choice-btn {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px 18px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 10px;
+  cursor: pointer; transition: border-color .2s, background .2s;
+  text-align: left; color: var(--text); font-size: 15px; line-height: 1.5;
+  position: relative; overflow: hidden;
+}
+.choice-btn:hover:not(.locked) {
+  border-color: var(--accent);
+  background: rgba(0,170,255,.04);
+}
+.choice-btn .choice-letter {
+  flex-shrink: 0; width: 30px; height: 30px;
+  border-radius: 50%; border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; background: var(--surface);
+  transition: all .2s;
+}
+.choice-btn .choice-text { flex: 1; }
+
+/* State: locked after answer */
+.choice-btn.locked { cursor: default; }
+
+/* Result states */
+.choice-btn.result-best {
+  border-color: var(--green);
+  background: rgba(46,204,113,.06);
+}
+.choice-btn.result-best .choice-letter {
+  background: var(--green); border-color: var(--green); color: #000;
+}
+.choice-btn.result-good {
+  border-color: var(--amber);
+  background: rgba(243,156,18,.06);
+}
+.choice-btn.result-good .choice-letter {
+  background: var(--amber); border-color: var(--amber); color: #000;
+}
+.choice-btn.result-wrong {
+  border-color: var(--red);
+  background: rgba(231,76,60,.06);
+}
+.choice-btn.result-wrong .choice-letter {
+  background: var(--red); border-color: var(--red); color: #fff;
+}
+/* Non-selected choices get dimmed */
+.choice-btn.result-dim {
+  opacity: 0.45;
+}
+/* Quality pill that appears after answer */
+.quality-pill {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 8px;
+}
+.pill-best  { background: rgba(46,204,113,.2);  color: var(--green); }
+.pill-good  { background: rgba(243,156,18,.2);  color: var(--amber); }
+.pill-wrong { background: rgba(231,76,60,.2);   color: var(--red); }
+
+/* ── Explanation Panel ─────────────────────────────────────────────────── */
+#explanation-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--card-r); padding: 24px;
+  margin-bottom: 20px;
+}
+.expl-quality-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-radius: 8px; margin-bottom: 20px;
+  font-weight: 700; font-size: 15px;
+}
+.expl-quality-banner.best  { background: rgba(46,204,113,.12);  color: var(--green); border: 1px solid rgba(46,204,113,.25); }
+.expl-quality-banner.good  { background: rgba(243,156,18,.12);  color: var(--amber); border: 1px solid rgba(243,156,18,.25); }
+.expl-quality-banner.wrong { background: rgba(231,76,60,.12);   color: var(--red);   border: 1px solid rgba(231,76,60,.25); }
+
+.expl-section { margin-bottom: 18px; }
+.expl-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 8px;
+}
+.expl-best-text {
+  font-size: 14px; line-height: 1.7; color: var(--text);
+  padding: 12px 16px; background: rgba(0,0,0,.2); border-radius: 8px;
+  border-left: 3px solid var(--green);
+}
+.others-list { display: flex; flex-direction: column; gap: 8px; }
+.other-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13px; color: var(--dim); line-height: 1.5;
+  padding: 8px 12px; background: rgba(0,0,0,.15); border-radius: 6px;
+}
+.other-letter {
+  flex-shrink: 0; font-weight: 700; font-size: 12px;
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1px solid var(--border); display: flex;
+  align-items: center; justify-content: center;
+  background: var(--bg);
+}
+.frameworks-list {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.framework-tag {
+  font-size: 11px; padding: 3px 10px; border-radius: 10px;
+  background: rgba(168,85,247,.12); border: 1px solid rgba(168,85,247,.25);
+  color: var(--purple);
+}
+
+/* ── Next button ───────────────────────────────────────────────────────── */
+#next-btn {
+  display: block; width: 100%; padding: 16px;
+  background: var(--accent); color: #000; font-weight: 700;
+  font-size: 16px; border: none; border-radius: 10px;
+  cursor: pointer; transition: opacity .2s;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+#next-btn:hover { opacity: .85; }
+
+/* ── Early termination overlay ─────────────────────────────────────────── */
+#early-end-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(13,15,20,.92);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.early-end-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 40px; max-width: 460px;
+  text-align: center;
+}
+.early-end-box .end-icon { font-size: 3rem; margin-bottom: 12px; }
+.early-end-box h2 { font-size: 1.6rem; margin-bottom: 8px; }
+.early-end-box p  { color: var(--dim); font-size: 14px; margin-bottom: 24px; }
+.early-end-box .end-btn {
+  padding: 12px 32px; border-radius: 8px; border: none;
+  font-weight: 700; font-size: 15px; cursor: pointer;
+  transition: opacity .2s;
+}
+.end-btn-primary { background: var(--accent); color: #000; margin-right: 10px; }
+.end-btn-secondary { background: var(--surface); border: 1px solid var(--border) !important; color: var(--text); }
+.end-btn-primary:hover, .end-btn-secondary:hover { opacity: .8; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   END SCREEN
+══════════════════════════════════════════════════════════════════════════ */
+#screen-end { }
+.end-hero {
+  text-align: center; padding: 40px 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--card-r); margin-bottom: 24px;
+}
+.end-hero .end-icon-lg { font-size: 4rem; margin-bottom: 12px; }
+.end-hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+.end-hero .end-subtitle { color: var(--dim); font-size: 15px; margin-bottom: 20px; }
+.end-risk-display {
+  font-size: 3rem; font-weight: 700; margin: 12px 0 4px;
+}
+.end-risk-label { font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+
+.decisions-review { }
+.decision-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 20px; margin-bottom: 12px;
+}
+.decision-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px;
+}
+.decision-phase { font-size: 11px; color: var(--dim); font-weight: 700; text-transform: uppercase; }
+.decision-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+.db-best  { background: rgba(46,204,113,.15);  color: var(--green); }
+.db-good  { background: rgba(243,156,18,.15);  color: var(--amber); }
+.db-wrong { background: rgba(231,76,60,.15);   color: var(--red); }
+.decision-question { font-size: 13px; color: var(--dim); margin-bottom: 4px; }
+.decision-answer   { font-size: 14px; color: var(--text); }
+.decision-delta    { font-size: 12px; font-weight: 700; }
+.delta-down { color: var(--green); }
+.delta-up   { color: var(--red); }
+
+.restart-btn {
+  display: block; width: 100%; padding: 16px;
+  background: var(--accent); color: #000; font-weight: 700;
+  font-size: 16px; border: none; border-radius: 10px;
+  cursor: pointer; transition: opacity .2s; margin-top: 24px;
+}
+.restart-btn:hover { opacity: .85; }
+
+/* ── Domain Selector ───────────────────────────────────────────────────── */
+.domain-selector {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; max-width: 560px; margin: 0 auto 28px;
+}
+.domain-option {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--card-r); padding: 18px 16px;
+  cursor: pointer; transition: all .2s; text-align: left;
+}
+.domain-option:hover { border-color: var(--accent); background: rgba(0,170,255,.04); }
+.domain-option.active { border-color: var(--accent); background: rgba(0,170,255,.08); }
+.d-num {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 4px;
+}
+.domain-option.active .d-num { color: var(--accent); }
+.d-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.d-topics { font-size: 11px; color: var(--dim); line-height: 1.5; }
+.domain-option.active .d-name { color: var(--accent); }
+.domain-selector-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--dim);
+  text-align: center; margin-bottom: 10px;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .mechanics-grid { grid-template-columns: 1fr 1fr; }
+  .domain-selector { grid-template-columns: 1fr; }
+  #hud { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .hud-right { width: 100%; justify-content: space-between; }
+  .scenario-stem { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <a href="../" id="back-link">← Back to Study Platform</a>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       START SCREEN
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div id="screen-start">
+    <h1>CISO Decision Engine</h1>
+    <p class="tagline">Real decisions. Real consequences. CISSP mindset required.</p>
+    <span class="domain-badge" id="start-domain-badge">Select a domain below</span>
+
+    <div class="org-card">
+      <div class="org-name">Meridian Financial</div>
+      <div class="org-role">Your Role: Chief Information Security Officer (CISO)</div>
+      <div class="org-brief">
+        A mid-size bank processing customer PII and financial transactions across three jurisdictions.
+        The board has charged you with building and maintaining a defensible security program.
+        Every decision you make will affect the organization's risk posture — and your career.
+      </div>
+    </div>
+
+    <div class="mechanics-grid">
+      <div class="mechanic-item">
+        <div class="m-icon">⚖</div>
+        <div class="m-name">CISSP Mindset</div>
+        <div class="m-desc">Governance &gt; operations. Risk first, controls second.</div>
+      </div>
+      <div class="mechanic-item">
+        <div class="m-icon">📊</div>
+        <div class="m-name">Risk Meter</div>
+        <div class="m-desc">Decisions shift organizational risk. Keep it below 80.</div>
+      </div>
+      <div class="mechanic-item">
+        <div class="m-icon">🔗</div>
+        <div class="m-name">Chained Scenarios</div>
+        <div class="m-desc">Each decision shapes what comes next. Consequences are real.</div>
+      </div>
+    </div>
+
+    <div class="domain-selector-label">Choose Domain</div>
+    <div class="domain-selector">
+      <div class="domain-option active" id="dopt-1" onclick="selectDomain('1')">
+        <div class="d-num">Domain 1</div>
+        <div class="d-name">Security &amp; Risk Management</div>
+        <div class="d-topics">Risk assessment · governance · due diligence · cloud · GDPR · ISMS</div>
+      </div>
+      <div class="domain-option" id="dopt-6" onclick="selectDomain('6')">
+        <div class="d-num">Domain 6</div>
+        <div class="d-name">Security Assessment &amp; Testing</div>
+        <div class="d-topics">Pen testing · vulnerability mgmt · security metrics · audits · RoE</div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startGame()">Begin Simulation →</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       GAME SCREEN
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div id="screen-game" class="hidden">
+
+    <!-- HUD -->
+    <div id="hud">
+      <div class="hud-left">
+        <a href="../" style="font-size:12px;color:var(--dim);text-decoration:none;display:block;margin-bottom:4px;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--dim)'">← Home</a>
+        <div class="hud-org">Meridian Financial</div>
+        <div class="hud-domain" id="hud-domain-txt">Domain 1 — Security &amp; Risk Management</div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-stat">
+          <span class="val" id="hud-scenario-val">1/6</span>
+          <span class="lbl">Scenario</span>
+        </div>
+        <div class="hud-stat">
+          <span class="val" id="hud-decisions-val">0</span>
+          <span class="lbl">Correct</span>
+        </div>
+        <div class="hud-stat">
+          <span class="val" id="hud-risk-val" style="color:var(--gold)">50</span>
+          <span class="lbl">Risk</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Risk Meter -->
+    <div id="risk-panel">
+      <div class="risk-header">
+        <span class="risk-title">Organizational Risk Score
+          <span id="risk-delta" class="hidden"></span>
+        </span>
+        <div style="text-align:right">
+          <div id="risk-score-display">50</div>
+          <div class="risk-score-label">CAUTION ZONE</div>
+        </div>
+      </div>
+      <div class="risk-track-wrap">
+        <div class="risk-track">
+          <div class="risk-track-fill" id="risk-fill"></div>
+          <div class="risk-needle" id="risk-needle"></div>
+        </div>
+      </div>
+      <div class="risk-thresholds">
+        <span class="th-success">✓ ≤20 = Safe</span>
+        <span>50 = Start</span>
+        <span class="th-fail">≥80 = Critical ✗</span>
+      </div>
+      <div class="risk-zones">
+        <span class="zone-safe">Safe</span>
+        <span class="zone-caution">Caution</span>
+        <span class="zone-danger">Critical</span>
+      </div>
+    </div>
+
+    <!-- Consequence of previous decision (hidden on first scenario) -->
+    <div id="consequence-banner" class="hidden fade-in">
+      <div class="cons-label">Consequence of Your Previous Decision</div>
+      <div id="consequence-text"></div>
+    </div>
+
+    <!-- Scenario Card -->
+    <div id="scenario-card" class="card fade-in">
+      <div class="scenario-meta">
+        <span class="badge badge-domain" id="sc-domain"></span>
+        <span class="badge badge-phase" id="sc-phase"></span>
+      </div>
+      <div class="scenario-context" id="sc-context"></div>
+      <div class="scenario-stem" id="sc-stem"></div>
+    </div>
+
+    <!-- Answer Choices -->
+    <div id="choices-wrap">
+      <div class="choices-grid" id="choices-grid"></div>
+    </div>
+
+    <!-- Next Scenario Button — directly below choices, always visible once shown -->
+    <button id="next-btn" class="hidden" onclick="nextScenario()">Next Scenario →</button>
+
+    <!-- Explanation Panel (shown after answer) -->
+    <div id="explanation-panel" class="hidden fade-in">
+      <!-- Quality banner: best / good / wrong -->
+      <div class="expl-quality-banner" id="expl-quality-banner">
+        <span id="expl-quality-text"></span>
+        <span id="expl-risk-change"></span>
+      </div>
+
+      <!-- Why BEST is correct -->
+      <div class="expl-section">
+        <div class="expl-section-title">Why the BEST answer is correct — CISSP mindset</div>
+        <div class="expl-best-text" id="expl-best-text"></div>
+      </div>
+
+      <!-- Why others are not best -->
+      <div class="expl-section">
+        <div class="expl-section-title">Why the other options are not BEST</div>
+        <div class="others-list" id="expl-others-list"></div>
+      </div>
+
+      <!-- Framework references -->
+      <div class="expl-section">
+        <div class="expl-section-title">Framework &amp; Standard References</div>
+        <div class="frameworks-list" id="expl-frameworks"></div>
+      </div>
+    </div>
+
+
+  </div><!-- /#screen-game -->
+
+  <!-- Early termination overlay (risk >= 80 or risk <= 20) -->
+  <div id="early-end-overlay" class="hidden">
+    <div class="early-end-box fade-in">
+      <div class="end-icon" id="eo-icon"></div>
+      <h2 id="eo-title"></h2>
+      <p id="eo-body"></p>
+      <button class="end-btn end-btn-primary" onclick="endGame(true)">See Full Summary →</button>
+      <button class="end-btn end-btn-secondary" onclick="restartGame()">Restart</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       END SCREEN
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <div id="screen-end" class="hidden">
+    <div class="end-hero">
+      <div class="end-icon-lg" id="end-icon-lg"></div>
+      <h1 id="end-title"></h1>
+      <p class="end-subtitle" id="end-subtitle"></p>
+      <div class="end-risk-display" id="end-risk-display"></div>
+      <div class="end-risk-label">Final Risk Score</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Decision History</div>
+      <div id="decisions-review"></div>
+    </div>
+
+    <button class="restart-btn" onclick="restartGame()">← Run Another Simulation</button>
+  </div>
+
+</div><!-- /#app -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCENARIO DATA — Domain 1: Security & Risk Management
+   6 chained scenarios following Meridian Financial's evolving risk landscape.
+
+   Each choice has:
+     quality:    "best" | "good" | "wrong"
+     why:        explanation shown in the "why not best" list for non-selected
+   correctIndex: which choice is the BEST
+   frameworks:   array of references shown after answer
+
+   Risk deltas applied per quality:
+     BEST  → −12
+     GOOD  → +6
+     WRONG → +18
+═══════════════════════════════════════════════════════════════════════════ */
+const RISK_DELTA = { best: -12, good: 6, wrong: 18 };
+
+const SCENARIOS_BY_DOMAIN = {
+'1': [
+  {
+    id: "s1",
+    phase: 1,
+    domain: "Domain 1 — Security & Risk Management",
+    context: "You are the newly appointed CISO of <strong>Meridian Financial</strong>. The board has tasked you with establishing a formal security program. No formal program currently exists — only ad hoc technical controls.",
+    stem: "What is the MOST appropriate FIRST step in establishing Meridian Financial's security program?",
+    choices: [
+      {
+        text: "Deploy a next-generation firewall and endpoint detection system across all corporate endpoints.",
+        quality: "wrong",
+        why: "Controls must follow risk assessment. Deploying defenses without understanding what you are protecting — or which threats are most likely — wastes resources and leaves the real attack surface unaddressed."
+      },
+      {
+        text: "Conduct a comprehensive risk assessment to identify critical assets, threat sources, vulnerabilities, and business impact.",
+        quality: "best",
+        why: "Risk assessment is the foundation of any security program. Without it, you cannot prioritize controls, allocate budget defensibly, or demonstrate due diligence. This aligns with NIST RMF Step 1 and ISO 27001 Clause 6.1."
+      },
+      {
+        text: "Engage a Big 4 firm to perform an independent security audit of current controls.",
+        quality: "good",
+        why: "An external audit provides an objective baseline and demonstrates due diligence — but it evaluates existing controls against a standard. Without your own risk assessment, you have no organizational context to interpret the findings or prioritize remediation."
+      },
+      {
+        text: "Develop and deploy mandatory security awareness training for all employees.",
+        quality: "wrong",
+        why: "Training before a risk assessment is training on generic threats, not your actual threat profile. Awareness programs must target identified risk vectors to be effective — and to be defensible to a board or regulator."
+      }
+    ],
+    correctIndex: 1,
+    frameworks: [
+      "NIST RMF Step 1 — Categorize",
+      "ISO 27001 Clause 6.1 — Risk identification",
+      "CISSP CBK Domain 1 — Risk Management"
+    ],
+    consequenceGood: "The risk assessment reveals your most critical assets and top threat vectors, providing a defensible foundation for every subsequent security decision.",
+    consequencePoor: "Without a risk baseline, controls are deployed by gut instinct. The program cannot be justified to the board and will fail its first external audit."
+  },
+  {
+    id: "s2",
+    phase: 2,
+    domain: "Domain 1 — Security & Risk Management",
+    context: "The risk assessment is complete. The CTO proposes migrating all systems to a major cloud provider, citing cost reduction and resilience benefits. The migration would include systems processing customer PII.",
+    stem: "As CISO, what is the MOST important action BEFORE approving the cloud migration?",
+    choices: [
+      {
+        text: "Approve the migration — major cloud providers have better security teams and controls than Meridian's on-premises environment.",
+        quality: "wrong",
+        why: "Security capability is not the same as security responsibility. Even a world-class cloud provider only secures its own infrastructure. Meridian remains responsible for data classification, access controls, and regulatory compliance. Approving migration without governance analysis is a due diligence failure."
+      },
+      {
+        text: "Perform a Shared Responsibility Model analysis to clarify which security obligations remain with Meridian versus the provider.",
+        quality: "best",
+        why: "The Shared Responsibility Model defines exactly who is accountable for each security layer — and it differs significantly across IaaS, PaaS, and SaaS. Without this analysis, you cannot confirm that all obligations are covered. This is the most common cloud governance failure: assuming the provider covers more than it does."
+      },
+      {
+        text: "Reject the cloud migration entirely to maintain full control over the security environment.",
+        quality: "wrong",
+        why: "Risk avoidance is a valid treatment — but only when residual risk after mitigation is unacceptable. Rejecting cloud without analysis is a reactive decision that harms business agility. It also fails to evaluate whether cloud controls might actually reduce risk compared to on-premises."
+      },
+      {
+        text: "Have the legal team review compliance requirements for cloud storage of PII and financial data before proceeding.",
+        quality: "good",
+        why: "Legal and compliance review is essential — you must confirm GDPR, PCI-DSS, and banking regulations permit this configuration. But this is the second step, not the first. The Shared Responsibility Model analysis defines what Meridian is responsible for; the legal review confirms those responsibilities can be met in a cloud environment."
+      }
+    ],
+    correctIndex: 1,
+    frameworks: [
+      "CSA Cloud Controls Matrix (CCM)",
+      "NIST SP 800-145 — Cloud Definition",
+      "Shared Responsibility Model (AWS/Azure/GCP)"
+    ],
+    consequenceGood: "A clear responsibility matrix is drafted before migration begins. Every security obligation is assigned — no gaps, no assumptions.",
+    consequencePoor: "The migration proceeds on assumptions. Security gaps emerge between what Meridian expected the provider to cover and what the provider actually covers."
+  },
+  {
+    id: "s3",
+    phase: 3,
+    domain: "Domain 1 — Security & Risk Management",
+    context: "Three months into cloud operations, Meridian's payroll vendor calls you directly: their systems were breached and Meridian employee and customer PII may have been exfiltrated. You are the first Meridian executive to receive this call.",
+    stem: "What is the FIRST action you should take?",
+    choices: [
+      {
+        text: "Issue an immediate press release to demonstrate transparency and protect Meridian's public reputation.",
+        quality: "wrong",
+        why: "Communicating externally before you know what happened is a governance failure. You do not yet know the scope, the affected data, or whether the breach is even confirmed. A premature press release can create legal liability, alert the attacker, and provide inaccurate information — making the situation worse on all three dimensions."
+      },
+      {
+        text: "Notify all potentially affected customers immediately so they can take protective action.",
+        quality: "good",
+        why: "Customer notification is legally required and ethically important — but not before you know what was actually compromised. Notifying customers before scope is determined means you cannot give them accurate information about what risk they face or what actions to take. It can also interfere with the ongoing investigation."
+      },
+      {
+        text: "Activate the incident response team to investigate, determine the scope of exposure, and assess whether the threat is ongoing.",
+        quality: "best",
+        why: "Investigate before communicating externally — this is a foundational CISSP sequencing principle. The IR team must confirm the breach, determine what data was affected and at what scale, preserve evidence, and assess whether the threat is ongoing. All subsequent actions — legal notification, customer communication, regulatory reporting — depend on what the investigation reveals. This also aligns with NIST SP 800-61 incident response lifecycle: Detect → Analyze → Contain → Eradicate → Recover → Notify."
+      },
+      {
+        text: "Terminate the contract with the payroll vendor immediately to limit further exposure.",
+        quality: "wrong",
+        why: "Terminating the vendor before investigation destroys your primary source of forensic evidence and ongoing incident intelligence. It also severs the cooperative investigation channel and may violate contractual obligations. You cannot remediate a breach you have not yet understood."
+      }
+    ],
+    correctIndex: 2,
+    frameworks: [
+      "NIST SP 800-61 — Computer Security Incident Handling",
+      "ISO 27035 — Incident Management",
+      "GDPR Article 33 — 72-hour notification requirement"
+    ],
+    consequenceGood: "The IR team confirms 2,000 customer records were exfiltrated. You now have a defined scope, preserved evidence, and a factual basis for all regulatory notifications.",
+    consequencePoor: "Notifications go out before investigation is complete. The reported scope is inaccurate — triggering additional regulatory scrutiny for providing misleading breach reports."
+  },
+  {
+    id: "s4",
+    phase: 4,
+    domain: "Domain 1 — Security & Risk Management",
+    context: "Forensics confirms 2,000 customer records were exfiltrated. Legal confirms GDPR Article 33 requires notification to the supervisory authority within 72 hours of becoming aware of the breach. You have 36 hours remaining. The PR team argues that sending customer notifications first will give Meridian better control of the narrative.",
+    stem: "What is the MOST correct sequence of notifications under GDPR?",
+    choices: [
+      {
+        text: "Send customer notifications first as the PR team recommends — controlling the narrative reduces reputational and financial damage.",
+        quality: "wrong",
+        why: "GDPR Article 33 is a legal obligation, not a PR opportunity. Prioritizing narrative management over regulatory notification exposes Meridian to enforcement penalties. Regulators treat discovering a breach from media reports as a serious aggravating factor when calculating penalties — it signals that the controller prioritized reputation over compliance."
+      },
+      {
+        text: "Notify the supervisory authority first per GDPR Article 33, then notify affected data subjects per Article 34.",
+        quality: "best",
+        why: "GDPR establishes an explicit legal sequence: Article 33 (supervisory authority, within 72 hours) → Article 34 (data subjects, without undue delay when high risk to their rights and freedoms). This sequence is not optional. It reflects the regulatory hierarchy: public authorities are notified before data subjects and the media. Acting in this sequence also aligns with (ISC)² Code of Ethics Canon 2: 'Act legally.'"
+      },
+      {
+        text: "Wait for the complete forensic analysis before notifying anyone — incomplete information increases regulatory risk.",
+        quality: "wrong",
+        why: "GDPR does not require complete forensic certainty before notification. Article 33 requires notification 'without undue delay' and within 72 hours of becoming aware of the breach — even if all details are not yet known. You may submit an initial notification and supplement it. Missing the 72-hour deadline is itself a separate, serious violation."
+      },
+      {
+        text: "Notify the supervisory authority and all customers simultaneously to be transparent with all parties at once.",
+        quality: "good",
+        why: "Simultaneous notification is better than customer-first, and in emergency situations may be pragmatic. However, GDPR's structure implies that supervisory authorities should be notified before public disclosure — they may provide guidance on the content of customer notifications. True simultaneity is also operationally difficult and legally ambiguous."
+      }
+    ],
+    correctIndex: 1,
+    frameworks: [
+      "GDPR Article 33 — Supervisory Authority Notification",
+      "GDPR Article 34 — Communication to Data Subjects",
+      "(ISC)² Code of Ethics Canon 2 — Act Legally"
+    ],
+    consequenceGood: "The supervisory authority is notified within 62 hours. Their report notes Meridian's prompt, compliant response as a significant mitigating factor.",
+    consequencePoor: "The missed GDPR deadline triggers an investigation of Meridian's breach response — a new enforcement action entirely separate from the original breach."
+  },
+  {
+    id: "s5",
+    phase: 5,
+    domain: "Domain 1 — Security & Risk Management",
+    context: "The incident is contained and all notifications are complete. The board wants assurance that Meridian is managing security risk systematically going forward. They ask you to recommend the approach that BEST demonstrates due diligence — not just due care.",
+    stem: "Which approach BEST demonstrates ongoing due diligence in managing information security risk?",
+    choices: [
+      {
+        text: "Deploy an enterprise SIEM with threat intelligence feeds and contract 24/7 SOC monitoring.",
+        quality: "good",
+        why: "A SIEM with SOC represents strong due care — taking substantive protective measures. But due diligence requires more: documented evidence that risks are identified, evaluated, treated by accountable decision-makers, and periodically reviewed. A SIEM does not produce that governance record."
+      },
+      {
+        text: "Update the Acceptable Use Policy and implement mandatory annual security awareness training organization-wide.",
+        quality: "good",
+        why: "Policy and training are important administrative controls addressing the human risk vector. But they represent due care in one narrow domain. Due diligence — especially the kind regulators and courts look for — requires a comprehensive, documented risk management program across all vectors."
+      },
+      {
+        text: "Contract a reputable firm to conduct annual external penetration tests of all internet-facing systems.",
+        quality: "good",
+        why: "Annual penetration testing demonstrates due care in vulnerability identification. But it is a point-in-time assessment, not a continuous governance process. Due diligence requires ongoing, documented risk treatment decisions — a pentest report alone is insufficient for audit or regulatory evidence."
+      },
+      {
+        text: "Establish a formal risk treatment program: document identified risks, treatment decisions (accept/mitigate/transfer/avoid), senior management residual risk acceptance, and scheduled periodic review cycles.",
+        quality: "best",
+        why: "Due diligence in CISSP — and in law — means maintaining a documented, systematic, and ongoing process for identifying and managing risk. A formal risk treatment program with documented decisions and management sign-off creates the auditable governance record that satisfies regulators, courts, and boards. Due care is taking action; due diligence is proving you governed the risk responsibly over time."
+      }
+    ],
+    correctIndex: 3,
+    frameworks: [
+      "NIST RMF Step 5 — Authorize (risk acceptance)",
+      "ISO 31000 — Risk Treatment",
+      "CISSP CBK — Due Care vs Due Diligence distinction"
+    ],
+    consequenceGood: "Meridian's formal risk register documents all major risks, treatment decisions, and residual risk acceptances — producing an auditable trail for any future regulator or court.",
+    consequencePoor: "Without a governance structure, risk treatment decisions remain ad hoc. The next regulatory audit finds no documented evidence of systematic risk management."
+  },
+  {
+    id: "s6",
+    phase: 6,
+    domain: "Domain 1 — Security & Risk Management",
+    context: "Following the incident and the new risk program, a banking regulator requires Meridian to maintain and certify an Information Security Management System (ISMS) compliant with an internationally recognized standard. The board asks you to select the appropriate framework.",
+    stem: "Which framework BEST satisfies the requirement for a certifiable, internationally recognized ISMS for a financial institution subject to multiple regulatory regimes?",
+    choices: [
+      {
+        text: "ISO/IEC 27001 — International standard for ISMS with formal third-party certification scheme.",
+        quality: "best",
+        why: "ISO 27001 is the definitive international standard for a certifiable ISMS. It defines a management system using Plan-Do-Check-Act, prescribes mandatory controls through Annex A, and offers formal third-party certification recognized by regulators globally — including banking, data protection, and financial services authorities. For a multinational financial institution, this is the strongest and most defensible answer."
+      },
+      {
+        text: "NIST Cybersecurity Framework (CSF) — Widely adopted, flexible risk management framework.",
+        quality: "good",
+        why: "NIST CSF is excellent — particularly for US-regulated organizations — and maps well to NIST SP 800-53 controls. However, it is not certifiable. There is no formal third-party certification scheme for NIST CSF. The regulator requirement specifies certification, which NIST CSF cannot satisfy."
+      },
+      {
+        text: "CIS Controls — Prioritized, prescriptive set of defensive actions organized by implementation group.",
+        quality: "wrong",
+        why: "CIS Controls are operationally focused — they tell you what to implement, not how to govern risk systemically. They are not an ISMS framework, do not address management system requirements like risk assessment, risk treatment, or internal audit, and have no certification scheme. Best used as an implementation guide alongside ISO 27001."
+      },
+      {
+        text: "PCI-DSS — Payment Card Industry standard with rigorous technical and procedural security controls.",
+        quality: "wrong",
+        why: "PCI-DSS is a compliance standard governing a single data type — payment card data. Even for a financial institution, it covers only one regulatory obligation and is assessed (not certified as a management system). It cannot serve as the governance foundation for a comprehensive, certifiable ISMS across all information assets."
+      }
+    ],
+    correctIndex: 0,
+    frameworks: [
+      "ISO/IEC 27001:2022 — ISMS Requirements",
+      "ISO 27002:2022 — Controls Guidance (Annex A)",
+      "NIST CSF vs ISO 27001 — Complementary, not equivalent"
+    ],
+    consequenceGood: "Meridian pursues ISO 27001 certification. The single ISMS framework satisfies all regulatory requirements and reduces audit fatigue across jurisdictions.",
+    consequencePoor: "Without a certifiable framework, Meridian cannot satisfy the regulatory certification requirement. A new compliance remediation project is triggered."
+  }
+], // end Domain 1
+
+/* ─────────────────────────────────────────────────────────────────────────
+   DOMAIN 6 — Security Assessment & Testing
+   6 chained scenarios: Meridian Financial, post-program-establishment.
+   You are still the CISO, now tasked with validating that the controls work.
+───────────────────────────────────────────────────────────────────────── */
+'6': [
+  {
+    id: "d6s1",
+    phase: 1,
+    domain: "Domain 6 — Security Assessment & Testing",
+    context: "Meridian Financial's security program is operational. The board asks you to demonstrate that controls are actually working — not just documented. You must design an assessment strategy.",
+    stem: "What BEST characterizes a comprehensive security assessment strategy for Meridian?",
+    choices: [
+      {
+        text: "Commission an annual third-party penetration test of all internet-facing systems.",
+        quality: "good",
+        why: "Penetration testing is valuable evidence of control effectiveness, but it is a single technical assessment at a single point in time. A comprehensive assessment strategy must cover administrative controls, processes, and ongoing metrics — not just technical attack surface."
+      },
+      {
+        text: "Design a layered assessment strategy covering technical control testing, administrative process reviews, and continuous security metrics collection — aligned to a defined test schedule.",
+        quality: "best",
+        why: "CISSP Domain 6 defines assessment as multi-dimensional: technical testing (vulnerability scans, pen tests, code review), administrative review (policy, process, training effectiveness), and continuous metrics. A strategy that integrates all three — on a defined schedule with defined scope — gives management defensible assurance that controls are operating as designed. This aligns with ISO 27001 Clause 9 (Performance Evaluation) and NIST SP 800-53A."
+      },
+      {
+        text: "Implement continuous automated vulnerability scanning across all network segments.",
+        quality: "good",
+        why: "Continuous vulnerability scanning is an essential technical control — it catches newly disclosed CVEs and misconfigurations. But it covers only the vulnerability discovery dimension of assessment. It does not evaluate whether administrative controls (policies, training, access reviews) or detective controls (SIEM, logging) are operating effectively."
+      },
+      {
+        text: "Engage an external auditor for an annual compliance review against PCI-DSS and GDPR requirements.",
+        quality: "good",
+        why: "External compliance audits provide independent validation and are required by regulation. But compliance audits test against a specific standard's requirements — they do not necessarily evaluate whether Meridian's controls address its unique threat landscape. Assessment strategy must be risk-driven, not purely compliance-driven."
+      }
+    ],
+    correctIndex: 1,
+    frameworks: [
+      "NIST SP 800-53A — Assessing Security Controls",
+      "ISO 27001 Clause 9 — Performance Evaluation",
+      "CISSP CBK Domain 6 — Assessment Strategy"
+    ],
+    consequenceGood: "A layered assessment strategy is approved by the board, covering technical, administrative, and metric dimensions on a defined schedule.",
+    consequencePoor: "Assessment remains ad hoc and reactive. The next regulatory audit finds no documented evidence of a systematic control validation program."
+  },
+  {
+    id: "d6s2",
+    phase: 2,
+    domain: "Domain 6 — Security Assessment & Testing",
+    context: "You have approved an external penetration test of Meridian's internet-facing systems and internal network. The testing firm has provided their proposal and is ready to begin. You have not yet formally authorized the test.",
+    stem: "What is the MOST important document to obtain and execute BEFORE the penetration test begins?",
+    choices: [
+      {
+        text: "A detailed Statement of Work (SoW) outlining deliverables, timeline, and cost.",
+        quality: "good",
+        why: "A SoW is commercially necessary and defines the scope of work — but it is a procurement document. It does not provide the legal authorization to perform actions that would otherwise constitute unauthorized computer access. Without explicit authorization, even contracted testers can face criminal liability."
+      },
+      {
+        text: "A signed Rules of Engagement (RoE) document defining the authorized scope, target IP ranges, prohibited techniques, emergency contacts, and formal authorization from the asset owner.",
+        quality: "best",
+        why: "Rules of Engagement is the foundational document that transforms a penetration test from an unauthorized intrusion into an authorized activity. Without it: the tester has no legal protection, scope creep is uncontrolled, and critical production systems could be disrupted. The RoE must be signed by someone with legal authority to authorize testing — not just IT staff. This is non-negotiable under CFAA and equivalent computer crime laws globally."
+      },
+      {
+        text: "Approval email from the IT department head confirming the test can proceed.",
+        quality: "wrong",
+        why: "An IT department head typically does not have the legal authority to authorize activities that could affect production systems, customer data, or third-party services. Informal email approval is not a valid authorization instrument. If the test causes system disruption, this approval provides no legal protection for the tester or Meridian."
+      },
+      {
+        text: "A non-disclosure agreement (NDA) from the testing firm to protect Meridian's discovered vulnerabilities.",
+        quality: "good",
+        why: "An NDA is important — penetration test results contain highly sensitive exploitation details that must be protected. But an NDA is a confidentiality instrument, not an authorization instrument. It does not grant permission to perform the test. Both an NDA and an RoE are required; the RoE must come first."
+      }
+    ],
+    correctIndex: 1,
+    frameworks: [
+      "Computer Fraud and Abuse Act (CFAA) — Authorization requirement",
+      "PTES — Penetration Testing Execution Standard",
+      "OWASP Testing Guide — Authorization and Scope"
+    ],
+    consequenceGood: "A comprehensive RoE is signed by Meridian's General Counsel and the CTO. Scope, prohibited targets, and emergency contacts are clearly defined before a single packet is sent.",
+    consequencePoor: "Testing begins without a formal RoE. A tester pivots outside the intended scope, briefly touching a production payment system — triggering a compliance incident."
+  },
+  {
+    id: "d6s3",
+    phase: 3,
+    domain: "Domain 6 — Security Assessment & Testing",
+    context: "The vulnerability scanner has completed its run and returned 847 findings: 23 Critical, 104 High, 318 Medium, 402 Low. The IT operations team lead wants to patch every Critical and High finding within 24 hours. You have limited patching windows and several critical business systems involved.",
+    stem: "What is the MOST appropriate FIRST step after receiving the vulnerability scan results?",
+    choices: [
+      {
+        text: "Prioritize remediation by combining CVSS severity, asset criticality, and real-world exploitability — then assign remediation owners and SLAs by risk tier.",
+        quality: "best",
+        why: "Raw CVSS scores do not capture business context. A Critical CVSS finding on an isolated development server is less urgent than a High finding on the system processing live transactions. Risk-based prioritization — CVSS × asset criticality × exploitability in your environment — produces a defensible remediation roadmap. This is the CISSP approach: risk-based decision-making, not severity-first automation."
+      },
+      {
+        text: "Patch every Critical and High finding within 24 hours, regardless of which system they affect.",
+        quality: "wrong",
+        why: "Patching without business context can cause more harm than the vulnerability. Emergency patches to production systems during business hours, without change control, frequently introduce outages. Additionally, some 'Critical' findings may be false positives or may be mitigated by compensating controls already in place. Blanket urgency overrides risk judgment."
+      },
+      {
+        text: "Present the raw scan report to the board as evidence of the security team's diligence in identifying risks.",
+        quality: "wrong",
+        why: "A raw scan report with 847 unanalyzed findings is not a governance artifact — it is noise. Board-level reporting requires analysis: risk context, business impact, prioritized remediation plan, and trend data over time. Presenting raw scan output to executives is a failure of the security function to translate technical data into business intelligence."
+      },
+      {
+        text: "Re-run the scan to validate findings and eliminate false positives before beginning any remediation.",
+        quality: "good",
+        why: "Validation is sensible — vulnerability scanners produce false positives, and you should not patch based on erroneous findings. However, re-running the scan is not the FIRST step after receiving results. Risk-based prioritization should begin with the current results, with validation happening in parallel for the highest-risk findings before patch deployment."
+      }
+    ],
+    correctIndex: 0,
+    frameworks: [
+      "CVSS v3.1 — Common Vulnerability Scoring System",
+      "NIST SP 800-40 — Patch Management",
+      "CIS Control 7 — Continuous Vulnerability Management"
+    ],
+    consequenceGood: "A tiered remediation plan assigns Critical findings on customer-facing systems to a 48-hour window, others to a 30-day cycle. Change control is engaged for production systems.",
+    consequencePoor: "Emergency patches deployed without risk assessment cause two production outages, costing more in downtime than the vulnerabilities would have risked."
+  },
+  {
+    id: "d6s4",
+    phase: 4,
+    domain: "Domain 6 — Security Assessment & Testing",
+    context: "The penetration test is complete. The report reveals: a tester achieved domain admin access via a spear-phishing simulation, and 3 critical vulnerabilities were found in the customer portal. The IT director wants to immediately patch everything and share the full report with all IT staff for self-remediation.",
+    stem: "What is the MOST appropriate way to handle and distribute penetration test findings?",
+    choices: [
+      {
+        text: "Immediately remediate all identified vulnerabilities, then debrief stakeholders once systems are secured.",
+        quality: "wrong",
+        why: "Remediating before briefing stakeholders means risk acceptance decisions are made without executive visibility. Additionally, emergency remediation without a structured plan frequently introduces new vulnerabilities. The report also contains exploitable details — distributing it broadly before stakeholder briefing is a separate governance failure."
+      },
+      {
+        text: "Brief executive stakeholders and system owners first, develop a risk-prioritized remediation plan with accountable owners, then track findings to closure through change management.",
+        quality: "best",
+        why: "Penetration test findings represent organizational risk — risk acceptance and remediation prioritization are executive decisions, not IT decisions made unilaterally. The correct sequence: secure the report, brief stakeholders, prioritize by risk, assign owners with accountability, track remediation formally. This ensures due diligence is documented and the board has visibility into residual risk during the remediation window."
+      },
+      {
+        text: "Distribute the full penetration test report to all IT staff so each team can self-remediate their own systems.",
+        quality: "wrong",
+        why: "Penetration test reports are among the most sensitive security documents Meridian produces — they contain working exploit paths, credential harvesting techniques, and a roadmap for attackers. Access must be strictly controlled on a need-to-know basis. Broad distribution creates significant risk that the findings could be exfiltrated or leaked, turning the security exercise into a liability."
+      },
+      {
+        text: "Escalate only the 3 critical vulnerabilities to management and suppress medium/low findings to avoid causing unnecessary alarm.",
+        quality: "wrong",
+        why: "Selective reporting of security findings to management violates the obligation to provide complete, accurate information for risk decisions. Medium findings exploited in combination can be as dangerous as individual critical findings. Suppressing findings also creates legal and professional liability if those findings are later exploited — decision-makers can claim they were not informed."
+      }
+    ],
+    correctIndex: 1,
+    frameworks: [
+      "NIST SP 800-115 — Technical Guide to Information Security Testing",
+      "ISO 27001 Clause 9.3 — Management Review",
+      "CISSP CBK — Reporting and Communication of Assessment Results"
+    ],
+    consequenceGood: "Executive stakeholders are briefed with a risk-contextualized summary. A 30-day remediation plan with named owners is approved and tracked through the change management process.",
+    consequencePoor: "Broad report distribution causes a second incident: the report is found in an unsecured shared drive, accessible to non-IT staff, triggering a data classification review."
+  },
+  {
+    id: "d6s5",
+    phase: 5,
+    domain: "Domain 6 — Security Assessment & Testing",
+    context: "The board requests a quarterly security metrics dashboard. The security team proposes reporting 52 different metrics — everything from patch cycle times to SIEM rule counts. The board chair says the dashboard is 'impossible to act on.' You need to redesign the metrics program.",
+    stem: "What BEST characterizes an effective security metrics program for executive reporting?",
+    choices: [
+      {
+        text: "Report all 52 metrics to give the board complete visibility into security operations.",
+        quality: "wrong",
+        why: "More metrics is not more insight — it is noise. Executives cannot prioritize action from 52 undifferentiated data points. Effective security metrics for executive reporting must be selective: tied to business outcomes, actionable, and few enough to drive decisions. Reporting everything signals that the security function cannot distinguish signal from noise."
+      },
+      {
+        text: "Report only compliance metrics — percentage of controls passing their last audit — since these are what regulators will request.",
+        quality: "wrong",
+        why: "Compliance metrics measure adherence to a specific standard at a point in time — they do not tell the board whether Meridian is actually getting more or less secure, whether the threat landscape is changing, or whether controls are operating effectively between audits. Compliance is a floor, not a ceiling — and compliance metrics alone are an insufficient picture of security posture."
+      },
+      {
+        text: "Report incident counts and mean-time-to-detect/respond, since these are the most universally recognized security KPIs.",
+        quality: "good",
+        why: "MTTD/MTTR and incident counts are good leading/lagging indicators and widely understood by executives. But 'universally recognized' is not the same as 'right for Meridian.' Metrics must be tied to your specific risk environment, your board's risk appetite, and the control objectives in your security program — not just to industry defaults."
+      },
+      {
+        text: "Report a focused set of metrics that are specific, measurable, actionable, and directly tied to Meridian's defined risk objectives and board-level risk appetite.",
+        quality: "best",
+        why: "Security metrics that drive decisions must be: specific to the risk being managed, measurable over time to show trend, actionable (the board can do something when the metric is off), and tied to the risk outcomes they care about — not technical vanity metrics. A well-designed dashboard of 8–12 such metrics is infinitely more valuable than 52 disconnected operational statistics. This reflects the CISSP principle that security programs serve business objectives, not the reverse."
+      }
+    ],
+    correctIndex: 3,
+    frameworks: [
+      "NIST SP 800-55 — Security Metrics Guide",
+      "ISO 27004 — Information Security Measurement",
+      "CISSP CBK — Security Program Effectiveness Metrics"
+    ],
+    consequenceGood: "The redesigned dashboard presents 10 metrics aligned to Meridian's risk register. The board chair calls it 'the first report that actually tells us something.'",
+    consequencePoor: "The metrics program continues generating unactionable reports. The board loses confidence in the security function's ability to communicate risk in business terms."
+  },
+  {
+    id: "d6s6",
+    phase: 6,
+    domain: "Domain 6 — Security Assessment & Testing",
+    context: "A banking regulator notifies Meridian that a security compliance audit will occur in 60 days. The audit will assess Meridian's security controls against the regulatory framework. Some team members suggest rushing to patch every known vulnerability before the auditors arrive.",
+    stem: "What is the MOST appropriate FIRST response to the announced regulatory audit?",
+    choices: [
+      {
+        text: "Immediately begin emergency patching of all known vulnerabilities to present the cleanest possible posture to the auditors.",
+        quality: "wrong",
+        why: "Cosmetic remediation immediately before a regulatory audit — without a structured program — is not due diligence. It is the appearance of compliance rather than the substance of it. Auditors are trained to identify rushed, reactive remediation. More importantly, this does not address systemic control weaknesses, and emergency changes to production systems 60 days before an audit introduces its own risk of outages and new findings."
+      },
+      {
+        text: "Conduct a structured internal pre-audit gap assessment against the regulatory framework, prioritize findings by severity and audit likelihood, remediate what can be fixed in 60 days, and document everything — including what cannot be remediated and why.",
+        quality: "best",
+        why: "The correct response to a regulatory audit is a structured, documented gap assessment followed by prioritized, traceable remediation — with formal documentation of decisions made, including exceptions with risk acceptance rationale. Auditors do not expect perfection; they expect a functioning governance process. Documented, rationalized exceptions demonstrating management awareness are far more favorably received than gaps discovered by auditors without prior management knowledge."
+      },
+      {
+        text: "Engage external legal counsel to manage all communications with the regulator and limit auditor access to systems.",
+        quality: "wrong",
+        why: "Adversarial posture toward a banking regulator is among the most counterproductive responses possible. Regulators interpret restricted access and legal gatekeeping as evidence of something to hide — it converts a routine compliance audit into an enforcement investigation. Cooperative engagement, with appropriate legal guidance on scope, is the correct posture."
+      },
+      {
+        text: "Request a 90-day postponement from the regulator to allow adequate time for remediation.",
+        quality: "good",
+        why: "Requesting more time is sometimes appropriate when the program has just undergone major changes. However, it signals to the regulator that the program lacks maturity and is not audit-ready — which may itself trigger escalated scrutiny. A 60-day window is generally sufficient for a pre-audit gap assessment and prioritized remediation of the most critical findings."
+      }
+    ],
+    correctIndex: 1,
+    frameworks: [
+      "NIST SP 800-53A — Assessment Procedures",
+      "ISO 27001 Clause 9.2 — Internal Audit",
+      "Regulatory Audit Best Practices — Pre-audit gap assessment"
+    ],
+    consequenceGood: "The pre-audit gap assessment identifies 14 control gaps. 9 are remediated within 60 days. The remaining 5 are documented with risk acceptance rationale — the auditors credit Meridian for transparency and program maturity.",
+    consequencePoor: "Emergency cosmetic patching introduces two new misconfigurations. Auditors discover them and cite Meridian for both the original gaps and the change management failures introduced by the rushed response."
+  }
+] // end Domain 6
+}; // end SCENARIOS_BY_DOMAIN
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════════════════ */
+let selectedDomain = '1';
+let activeScenarios = SCENARIOS_BY_DOMAIN['1'];
+
+let state = {
+  riskScore: 50,
+  scenarioIndex: 0,
+  decisions: [],          // {scenarioId, quality, choiceIndex, choiceText, delta, stem}
+  answered: false,
+  gameOver: false
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════════════════ */
+/* Select domain on start screen */
+function selectDomain(d) {
+  selectedDomain = d;
+  activeScenarios = SCENARIOS_BY_DOMAIN[d];
+  document.querySelectorAll('.domain-option').forEach(el => el.classList.remove('active'));
+  document.getElementById('dopt-' + d).classList.add('active');
+  const labels = {
+    '1': 'Domain 1 — Security &amp; Risk Management · 6 Scenarios',
+    '6': 'Domain 6 — Security Assessment &amp; Testing · 6 Scenarios'
+  };
+  document.getElementById('start-domain-badge').innerHTML = labels[d];
+}
+
+function startGame() {
+  activeScenarios = SCENARIOS_BY_DOMAIN[selectedDomain];
+  state = { riskScore: 50, scenarioIndex: 0, decisions: [], answered: false, gameOver: false };
+  document.getElementById('screen-start').classList.add('hidden');
+  document.getElementById('screen-game').classList.remove('hidden');
+  renderScenario();
+  updateRiskMeter(false);
+}
+
+function restartGame() {
+  document.getElementById('screen-end').classList.add('hidden');
+  document.getElementById('early-end-overlay').classList.add('hidden');
+  document.getElementById('screen-game').classList.add('hidden');
+  document.getElementById('screen-start').classList.remove('hidden');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RENDER SCENARIO
+═══════════════════════════════════════════════════════════════════════════ */
+function renderScenario() {
+  const sc = activeScenarios[state.scenarioIndex];
+  state.answered = false;
+
+  // HUD
+  document.getElementById('hud-scenario-val').textContent =
+    (state.scenarioIndex + 1) + '/' + activeScenarios.length;
+  document.getElementById('hud-decisions-val').textContent =
+    state.decisions.filter(d => d.quality === 'best').length;
+  document.getElementById('hud-risk-val').textContent = state.riskScore;
+  document.getElementById('hud-domain-txt').textContent = activeScenarios[state.scenarioIndex].domain;
+
+  // Consequence banner (not on first scenario)
+  const banner = document.getElementById('consequence-banner');
+  if (state.scenarioIndex > 0 && state.decisions.length > 0) {
+    const lastDecision = state.decisions[state.decisions.length - 1];
+    const prevSc = activeScenarios[state.scenarioIndex - 1];
+    const consText = lastDecision.quality === 'best'
+      ? prevSc.consequenceGood
+      : prevSc.consequencePoor;
+    // Tint border by quality
+    banner.style.borderLeftColor = lastDecision.quality === 'best'
+      ? 'var(--green)' : lastDecision.quality === 'good'
+      ? 'var(--amber)' : 'var(--red)';
+    banner.style.background = lastDecision.quality === 'best'
+      ? 'rgba(46,204,113,.07)' : lastDecision.quality === 'good'
+      ? 'rgba(243,156,18,.07)' : 'rgba(231,76,60,.07)';
+    document.getElementById('consequence-text').textContent = consText;
+    banner.classList.remove('hidden');
+  } else {
+    banner.classList.add('hidden');
+  }
+
+  // Scenario metadata
+  document.getElementById('sc-domain').textContent = sc.domain;
+  document.getElementById('sc-phase').textContent = 'Scenario ' + sc.phase + ' of ' + activeScenarios.length;
+
+  // Context with qualifier highlights in stem
+  document.getElementById('sc-context').innerHTML = sc.context;
+  document.getElementById('sc-stem').innerHTML = highlightQualifiers(sc.stem);
+
+  // Re-add fade-in
+  const card = document.getElementById('scenario-card');
+  card.classList.remove('fade-in');
+  void card.offsetWidth; // reflow
+  card.classList.add('fade-in');
+
+  // Build choice buttons
+  const grid = document.getElementById('choices-grid');
+  grid.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  sc.choices.forEach((choice, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.dataset.index = i;
+    btn.innerHTML = `
+      <div class="choice-letter">${letters[i]}</div>
+      <div class="choice-text">${choice.text}</div>
+    `;
+    btn.addEventListener('click', () => selectAnswer(i));
+    grid.appendChild(btn);
+  });
+
+  // Hide explanation + next button
+  document.getElementById('explanation-panel').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   QUALIFIER HIGHLIGHT
+═══════════════════════════════════════════════════════════════════════════ */
+const QUALIFIERS = [
+  'MOST', 'BEST', 'FIRST', 'LEAST', 'PRIMARY', 'NEXT', 'LAST', 'WORST',
+  'INITIAL', 'PRIMARILY', 'GREATEST', 'HIGHEST', 'LOWEST', 'MAXIMUM',
+  'MINIMUM', 'BEFORE', 'ALWAYS', 'NEVER', 'ONLY', 'ALL'
+];
+
+function highlightQualifiers(text) {
+  let out = text;
+  QUALIFIERS.forEach(q => {
+    const re = new RegExp('\\b(' + q + ')\\b', 'g');
+    out = out.replace(re, '<span class="q-word">$1</span>');
+  });
+  return out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SELECT ANSWER
+═══════════════════════════════════════════════════════════════════════════ */
+function selectAnswer(choiceIndex) {
+  if (state.answered) return;
+  state.answered = true;
+
+  // Show next button immediately — before any rendering that could fail
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.classList.remove('hidden');
+
+  const sc = activeScenarios[state.scenarioIndex];
+  const choice = sc.choices[choiceIndex];
+  const quality = choice.quality;
+  const delta = RISK_DELTA[quality];
+
+  // Apply risk delta
+  state.riskScore = Math.max(0, Math.min(100, state.riskScore + delta));
+
+  // Record decision
+  state.decisions.push({
+    scenarioId: sc.id,
+    phase: sc.phase,
+    quality,
+    choiceIndex,
+    choiceText: choice.text,
+    delta,
+    stem: sc.stem
+  });
+
+  // Update HUD
+  document.getElementById('hud-risk-val').textContent = state.riskScore;
+  document.getElementById('hud-decisions-val').textContent =
+    state.decisions.filter(d => d.quality === 'best').length;
+
+  // Style choice buttons
+  const letters = ['A', 'B', 'C', 'D'];
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach((btn, i) => {
+    btn.classList.add('locked');
+    const q = sc.choices[i].quality;
+    if (i === choiceIndex) {
+      // Selected: show its quality
+      btn.classList.add('result-' + q);
+      // Add quality pill
+      const pill = document.createElement('span');
+      pill.className = 'quality-pill pill-' + q;
+      pill.textContent = q === 'best' ? '✓ BEST' : q === 'good' ? '~ ACCEPTABLE' : '✗ INCORRECT';
+      btn.appendChild(pill);
+    } else {
+      // Not selected: if it's the best, reveal it; otherwise dim
+      if (i === sc.correctIndex && choiceIndex !== sc.correctIndex) {
+        btn.classList.add('result-best');
+        const pill = document.createElement('span');
+        pill.className = 'quality-pill pill-best';
+        pill.textContent = '✓ BEST';
+        btn.appendChild(pill);
+      } else {
+        btn.classList.add('result-dim');
+      }
+    }
+  });
+
+  // Animate risk meter
+  updateRiskMeter(true, delta);
+
+  // Show explanation panel
+  renderExplanation(sc, choiceIndex, quality, delta);
+
+  // Show next button (or trigger end if game over)
+  const isLastScenario = state.scenarioIndex === activeScenarios.length - 1;
+  const isCritical = state.riskScore >= 80;
+  const isSafe = state.riskScore <= 20;
+
+  nextBtn.textContent = isLastScenario ? 'See Final Results →' : 'Next Scenario →';
+  if (isCritical || isSafe) {
+    nextBtn.classList.add('hidden');
+    setTimeout(() => showEarlyEnd(isCritical), 1200);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RENDER EXPLANATION PANEL
+═══════════════════════════════════════════════════════════════════════════ */
+function renderExplanation(sc, choiceIndex, quality, delta) {
+  const panel = document.getElementById('explanation-panel');
+  const letters = ['A', 'B', 'C', 'D'];
+
+  // Quality banner
+  const banner = document.getElementById('expl-quality-banner');
+  banner.className = 'expl-quality-banner ' + quality;
+
+  const qualityLabels = {
+    best:  '✓  BEST CHOICE — This is the CISSP answer',
+    good:  '~  ACCEPTABLE — But not the BEST choice',
+    wrong: '✗  INCORRECT — Review the reasoning below'
+  };
+  document.getElementById('expl-quality-text').textContent = qualityLabels[quality];
+
+  const deltaSign = delta < 0 ? '▼' : '▲';
+  const deltaLabel = delta < 0
+    ? `Risk ${deltaSign} ${Math.abs(delta)} pts`
+    : `Risk ${deltaSign} +${delta} pts`;
+  document.getElementById('expl-risk-change').textContent = deltaLabel;
+
+  // Best answer explanation
+  document.getElementById('expl-best-text').textContent = sc.choices[sc.correctIndex].why;
+
+  // Others (skip the correct index — it was shown above)
+  const othersList = document.getElementById('expl-others-list');
+  othersList.innerHTML = '';
+  sc.choices.forEach((ch, i) => {
+    if (i === sc.correctIndex) return; // skip best — already shown
+    const item = document.createElement('div');
+    item.className = 'other-item';
+    item.innerHTML = `
+      <span class="other-letter">${letters[i]}</span>
+      <span>${ch.why}</span>
+    `;
+    othersList.appendChild(item);
+  });
+
+  // Frameworks
+  const fwList = document.getElementById('expl-frameworks');
+  fwList.innerHTML = '';
+  sc.frameworks.forEach(fw => {
+    const tag = document.createElement('span');
+    tag.className = 'framework-tag';
+    tag.textContent = fw;
+    fwList.appendChild(tag);
+  });
+
+  panel.classList.remove('hidden');
+  panel.classList.remove('fade-in');
+  void panel.offsetWidth;
+  panel.classList.add('fade-in');
+
+  // Scroll explanation into view
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RISK METER
+═══════════════════════════════════════════════════════════════════════════ */
+function updateRiskMeter(animate, delta) {
+  const score = state.riskScore;
+  const needle = document.getElementById('risk-needle');
+  const fill = document.getElementById('risk-track-fill');
+  const display = document.getElementById('risk-score-display');
+  const deltaEl = document.getElementById('risk-delta');
+
+  // Needle position: left = score%
+  needle.style.left = score + '%';
+
+  // Fill overlay: covers the portion to the RIGHT of current score
+  // revealing color from left up to needle
+  fill.style.width = (100 - score) + '%';
+
+  // Score display color
+  let color, label;
+  if (score <= 20) {
+    color = 'var(--green)'; label = 'ACCEPTABLE';
+  } else if (score <= 50) {
+    color = '#a8c060'; label = 'LOW CAUTION';
+  } else if (score <= 65) {
+    color = 'var(--amber)'; label = 'CAUTION';
+  } else if (score < 80) {
+    color = '#e67e22'; label = 'HIGH RISK';
+  } else {
+    color = 'var(--red)'; label = 'CRITICAL';
+  }
+  display.style.color = color;
+  display.textContent = score;
+  display.nextElementSibling.textContent = label;
+
+  // HUD risk color
+  document.getElementById('hud-risk-val').style.color = color;
+
+  // Delta badge
+  if (animate && delta !== undefined) {
+    deltaEl.classList.remove('hidden', 'show', 'up', 'down');
+    void deltaEl.offsetWidth;
+    if (delta < 0) {
+      deltaEl.textContent = '▼ ' + Math.abs(delta);
+      deltaEl.classList.add('down', 'show');
+    } else {
+      deltaEl.textContent = '▲ +' + delta;
+      deltaEl.classList.add('up', 'show');
+    }
+    setTimeout(() => deltaEl.classList.remove('show'), 2500);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEXT SCENARIO
+═══════════════════════════════════════════════════════════════════════════ */
+function nextScenario() {
+  const isLastScenario = state.scenarioIndex === activeScenarios.length - 1;
+  if (isLastScenario) {
+    endGame(false);
+    return;
+  }
+  state.scenarioIndex++;
+  renderScenario();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EARLY END (risk hits threshold mid-game)
+═══════════════════════════════════════════════════════════════════════════ */
+function showEarlyEnd(isCritical) {
+  const overlay = document.getElementById('early-end-overlay');
+  if (isCritical) {
+    document.getElementById('eo-icon').textContent = '🔴';
+    document.getElementById('eo-title').textContent = 'RISK THRESHOLD BREACHED';
+    document.getElementById('eo-title').style.color = 'var(--red)';
+    document.getElementById('eo-body').textContent =
+      'Organizational risk has reached ' + state.riskScore +
+      '/100 — the board has declared a security governance crisis. Simulation ended.';
+  } else {
+    document.getElementById('eo-icon').textContent = '🟢';
+    document.getElementById('eo-title').textContent = 'RISK CONTAINED';
+    document.getElementById('eo-title').style.color = 'var(--green)';
+    document.getElementById('eo-body').textContent =
+      'Organizational risk has dropped to ' + state.riskScore +
+      '/100 — the board has declared the security program effective. Simulation complete.';
+  }
+  overlay.classList.remove('hidden');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   END GAME — FINAL SUMMARY
+═══════════════════════════════════════════════════════════════════════════ */
+function endGame(fromOverlay) {
+  document.getElementById('early-end-overlay').classList.add('hidden');
+  document.getElementById('screen-game').classList.add('hidden');
+
+  const score = state.riskScore;
+  const bestCount = state.decisions.filter(d => d.quality === 'best').length;
+  const goodCount = state.decisions.filter(d => d.quality === 'good').length;
+  const wrongCount = state.decisions.filter(d => d.quality === 'wrong').length;
+  const total = state.decisions.length;
+
+  let icon, title, subtitle, titleColor;
+  if (score <= 20) {
+    icon = '🏆'; title = 'SECURITY PROGRAM CERTIFIED';
+    subtitle = `Meridian Financial's risk posture is defensible. The board approves the security program. You answered ${bestCount}/${total} optimally.`;
+    titleColor = 'var(--green)';
+  } else if (score >= 80) {
+    icon = '🔴'; title = 'GOVERNANCE CRISIS';
+    subtitle = `Risk reached critical levels. The board has called in external consultants. Review the decisions below to identify where the program broke down.`;
+    titleColor = 'var(--red)';
+  } else if (score < 50) {
+    icon = '✅'; title = 'RISK REDUCED';
+    subtitle = `Good decisions lowered Meridian's risk profile. There is room for improvement — but the security program is on the right track.`;
+    titleColor = 'var(--green)';
+  } else {
+    icon = '⚠️'; title = 'RISK REMAINS ELEVATED';
+    subtitle = `Meridian's risk is above baseline. Several decisions did not reflect optimal CISSP governance thinking. Review the analysis below.`;
+    titleColor = 'var(--amber)';
+  }
+
+  document.getElementById('end-icon-lg').textContent = icon;
+  document.getElementById('end-title').textContent = title;
+  document.getElementById('end-title').style.color = titleColor;
+  document.getElementById('end-subtitle').textContent = subtitle;
+
+  const riskDisp = document.getElementById('end-risk-display');
+  riskDisp.textContent = score;
+  riskDisp.style.color = score <= 35 ? 'var(--green)' : score >= 80 ? 'var(--red)' : 'var(--amber)';
+
+  // Decision history
+  const review = document.getElementById('decisions-review');
+  review.innerHTML = '';
+
+  const deltaLabels = { best: '▼ −12', good: '▲ +6', wrong: '▲ +18' };
+  const qLabels = { best: 'BEST', good: 'ACCEPTABLE', wrong: 'INCORRECT' };
+  const letters = ['A', 'B', 'C', 'D'];
+
+  state.decisions.forEach((d, idx) => {
+    const item = document.createElement('div');
+    item.className = 'decision-item';
+    const deltaClass = d.delta < 0 ? 'delta-down' : 'delta-up';
+    item.innerHTML = `
+      <div class="decision-header">
+        <span class="decision-phase">Scenario ${d.phase}</span>
+        <span class="decision-badge db-${d.quality}">${qLabels[d.quality]}</span>
+      </div>
+      <div class="decision-question">${d.stem}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+        <div class="decision-answer">${letters[d.choiceIndex]}. ${d.choiceText}</div>
+        <div class="decision-delta ${deltaClass}">${deltaLabels[d.quality]}</div>
+      </div>
+    `;
+    review.appendChild(item);
+  });
+
+  document.getElementById('screen-end').classList.remove('hidden');
+  document.getElementById('screen-end').classList.add('fade-in');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Init on load ──────────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  // Pre-position needle for start screen preview feeling
+  const needle = document.getElementById('risk-needle');
+  const fill   = document.getElementById('risk-track-fill');
+  if (needle) needle.style.left = '50%';
+  if (fill)   fill.style.width  = '50%';
+  // Init domain badge to Domain 1 (default selected)
+  selectDomain('1');
+});
+</script>
+</body>
+</html>
