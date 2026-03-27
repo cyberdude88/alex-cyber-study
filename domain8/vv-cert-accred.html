@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CISSP Domain 8 drag-and-drop game — sort 12 real-world scenarios into Verification, Validation, Certification, or Accreditation. Includes touch support and lives system.">
+  <meta name="keywords" content="CISSP verification validation, CISSP certification accreditation, ATO CISSP, SDLC security domain 8, CISSP drag drop game">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain8/vv-cert-accred.html">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="V&V vs Cert vs Accreditation Drag-Drop — Domain 8 — Alex Cyber Study">
+  <meta property="og:description" content="Sort 12 CISSP scenarios into Verification, Validation, Certification, or Accreditation/ATO. Touch-enabled, lives system, instant feedback.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain8/vv-cert-accred.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="V&V vs Cert vs Accreditation Drag-Drop — Domain 8 — Alex Cyber Study">
+  <meta name="twitter:description" content="Sort 12 CISSP scenarios into Verification, Validation, Certification, or Accreditation/ATO. Touch-enabled, lives system, instant feedback.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>V&V vs Cert vs Accreditation — Domain 8 — Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── CSS variable bridge ── */
+    :root {
+      --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+      --color-background-primary:   rgba(255,255,255,0.06);
+      --color-background-secondary: rgba(255,255,255,0.11);
+
+      --color-text-primary:   #f1f5f9;
+      --color-text-secondary: rgba(255,255,255,0.65);
+      --color-text-tertiary:  rgba(255,255,255,0.38);
+
+      --color-border-secondary: rgba(255,255,255,0.14);
+      --color-border-tertiary:  rgba(255,255,255,0.07);
+
+      --color-background-info: rgba(59,130,246,0.14);
+      --color-text-info:       #60a5fa;
+      --color-border-info:     rgba(59,130,246,0.38);
+
+      --color-background-success: rgba(16,185,129,0.14);
+      --color-text-success:       #34d399;
+      --color-border-success:     rgba(16,185,129,0.38);
+
+      --color-background-danger: rgba(239,68,68,0.14);
+      --color-text-danger:       #f87171;
+      --color-border-danger:     rgba(239,68,68,0.38);
+
+      --color-background-warning: rgba(245,158,11,0.14);
+      --color-text-warning:       #fbbf24;
+      --color-border-warning:     rgba(245,158,11,0.38);
+
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
+    }
+
+    /* ── Page layout ── */
+    .game-wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+    .back-link {
+      display: inline-block;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      transition: color .15s;
+    }
+    .back-link:hover { color: #fff; }
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .page-sub {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 2rem;
+    }
+
+    /* ── Fragment styles ── */
+    .wrap { padding: 1rem 0; font-family: var(--font-sans); }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .score-box { font-size: 13px; color: var(--color-text-secondary); }
+    .score-box span { font-weight: 500; color: var(--color-text-primary); }
+    .lives { display: flex; gap: 4px; }
+    .life { width: 10px; height: 10px; border-radius: 50%; background: var(--color-text-danger); transition: opacity .3s; }
+    .life.lost { opacity: .2; }
+
+    .zones { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+    .zone { border: 1.5px dashed var(--color-border-secondary); border-radius: var(--border-radius-lg); padding: 10px 8px; min-height: 120px; transition: all .15s; position: relative; }
+    .zone-label { font-size: 11px; font-weight: 500; text-align: center; margin-bottom: 8px; padding: 4px 6px; border-radius: var(--border-radius-md); display: block; }
+    .zone[data-cat="verification"]  .zone-label { background: var(--color-background-info);    color: var(--color-text-info); }
+    .zone[data-cat="validation"]    .zone-label { background: var(--color-background-success); color: var(--color-text-success); }
+    .zone[data-cat="certification"] .zone-label { background: var(--color-background-warning); color: var(--color-text-warning); }
+    .zone[data-cat="accreditation"] .zone-label { background: var(--color-background-danger);  color: var(--color-text-danger); }
+    .zone.over          { background: var(--color-background-secondary); border-style: solid; }
+    .zone.correct-flash { border-color: var(--color-border-success); background: var(--color-background-success); transition: all .3s; }
+    .zone.wrong-flash   { border-color: var(--color-border-danger);  background: var(--color-background-danger);  transition: all .3s; }
+
+    .dropped-cards { display: flex; flex-direction: column; gap: 4px; }
+    .dropped-chip { font-size: 11px; padding: 4px 6px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); line-height: 1.4; }
+
+    .pool { display: flex; flex-wrap: wrap; gap: 8px; min-height: 56px; margin-bottom: 1rem; }
+    .card { padding: 8px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 12px; background: var(--color-background-primary); color: var(--color-text-primary); cursor: grab; user-select: none; line-height: 1.4; max-width: 200px; transition: opacity .15s, transform .15s; touch-action: none; }
+    .card:active { cursor: grabbing; opacity: .75; transform: scale(.97); }
+    .card.dragging { opacity: .4; }
+
+    .feedback { font-size: 13px; padding: 10px 14px; border-radius: var(--border-radius-md); margin-bottom: 1rem; display: none; line-height: 1.6; }
+    .feedback.show { display: block; }
+    .feedback.ok  { background: var(--color-background-success); color: var(--color-text-success); }
+    .feedback.bad { background: var(--color-background-danger);  color: var(--color-text-danger); }
+
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .btn { padding: 6px 16px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-primary); transition: all .15s; }
+    .btn:hover { background: var(--color-background-secondary); }
+    .btn.primary { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+    .progress { font-size: 12px; color: var(--color-text-tertiary); }
+
+    .endscreen { display: none; text-align: center; padding: 2rem 1rem; }
+    .endscreen.show { display: block; }
+    .end-score { font-size: 32px; font-weight: 500; margin: 1rem 0; color: var(--color-text-primary); }
+    .end-msg { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 1.5rem; line-height: 1.7; }
+
+    @media (max-width: 600px) {
+      .zones { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html" class="active">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-wrapper">
+    <a class="back-link" href="index.html">← Back to Domain 8</a>
+    <div class="page-title">🎯 V&V vs Cert vs Accreditation</div>
+    <div class="page-sub">12 real-world scenarios · 3 lives · drag each card to the correct concept</div>
+
+    <div class="wrap">
+      <div id="game">
+        <div class="header">
+          <div class="score-box">Score: <span id="score">0</span> &nbsp;|&nbsp; Round: <span id="round">1</span>/12</div>
+          <div class="lives" id="lives"></div>
+        </div>
+
+        <div class="zones">
+          <div class="zone" id="z-verification" data-cat="verification" ondragover="zOver(event)" ondrop="zDrop(event,'verification')" ondragleave="zLeave(event)">
+            <span class="zone-label">Verification</span>
+            <div class="dropped-cards" id="dc-verification"></div>
+          </div>
+          <div class="zone" id="z-validation" data-cat="validation" ondragover="zOver(event)" ondrop="zDrop(event,'validation')" ondragleave="zLeave(event)">
+            <span class="zone-label">Validation</span>
+            <div class="dropped-cards" id="dc-validation"></div>
+          </div>
+          <div class="zone" id="z-certification" data-cat="certification" ondragover="zOver(event)" ondrop="zDrop(event,'certification')" ondragleave="zLeave(event)">
+            <span class="zone-label">Certification</span>
+            <div class="dropped-cards" id="dc-certification"></div>
+          </div>
+          <div class="zone" id="z-accreditation" data-cat="accreditation" ondragover="zOver(event)" ondrop="zDrop(event,'accreditation')" ondragleave="zLeave(event)">
+            <span class="zone-label">Accreditation / ATO</span>
+            <div class="dropped-cards" id="dc-accreditation"></div>
+          </div>
+        </div>
+
+        <div class="pool" id="pool"></div>
+        <div class="feedback" id="feedback"></div>
+
+        <div class="actions">
+          <button class="btn" onclick="showHint()">Hint</button>
+          <button class="btn primary" id="next-btn" onclick="nextRound()" style="display:none">Next →</button>
+          <span class="progress" id="progress"></span>
+        </div>
+      </div>
+
+      <div class="endscreen" id="endscreen">
+        <div style="font-size:14px;color:var(--color-text-secondary)">Final result</div>
+        <div class="end-score" id="end-score"></div>
+        <div class="end-msg" id="end-msg"></div>
+        <button class="btn primary" onclick="restart()">Play again</button>
+        <a class="btn" href="sdlc-drag-drop.html" style="margin-left:8px;text-decoration:none;display:inline-block">SDLC Phase Ordering →</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 8</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+<script>
+const ALL_CARDS = [
+  {id:1,  text:"A developer runs unit tests against the design spec to confirm the module behaves as specified.", cat:"verification",  hint:"This checks conformance to a document — not user need."},
+  {id:2,  text:"End users run UAT sessions to confirm the system solves the problem they actually have.", cat:"validation",    hint:"The users are the judges here, not the spec."},
+  {id:3,  text:"An independent assessor reviews all implemented security controls and produces a Security Assessment Report (SAR).", cat:"certification", hint:"Think: technical report → feeds the AO's decision."},
+  {id:4,  text:"The Authorizing Official reviews the SAR and signs the Authority to Operate (ATO), accepting residual risk.", cat:"accreditation", hint:"Management accepts risk — this is not a technical activity."},
+  {id:5,  text:"A code reviewer checks that the authentication module matches its architectural design document.", cat:"verification",  hint:"Spec conformance = verification. No users involved."},
+  {id:6,  text:"A government system undergoes operational testing to confirm mission requirements are met in the field.", cat:"validation",    hint:"Field testing against real mission need = validation."},
+  {id:7,  text:"A third-party auditor runs NIST SP 800-53 control assessments and documents findings for the DAA.", cat:"certification", hint:"DAA = Designated Approving Authority. The report goes to them, not the decision itself."},
+  {id:8,  text:"The DAA/AO formally authorizes system operation for a 3-year period after reviewing the risk posture.", cat:"accreditation", hint:"Time-limited, risk-based management decision."},
+  {id:9,  text:"A QA engineer performs static analysis to verify no code paths deviate from the approved data flow diagram.", cat:"verification",  hint:"Static analysis against a DFD = checking it was built right."},
+  {id:10, text:"A client signs off that the delivered software meets the acceptance criteria agreed in the contract.", cat:"validation",    hint:"Client sign-off confirms the right product was delivered."},
+  {id:11, text:"A STIG compliance scan produces a CKL file documenting all finding categories for the system owner.", cat:"certification", hint:"STIG scanning is a technical control evaluation — output goes to the AO."},
+  {id:12, text:"The ISSM reviews the POA&M, residual risks, and SAR, then grants an Interim Authority to Test (IATT).", cat:"accreditation", hint:"IATT is a limited ATO variant — still a management risk decision."},
+];
+
+let deck, currentCard, score, lives, roundNum, answered;
+const MAX_LIVES = 3;
+
+function shuffle(a) {
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function buildLives() {
+  const el = document.getElementById('lives');
+  el.innerHTML = '';
+  for (let i = 0; i < MAX_LIVES; i++) {
+    const d = document.createElement('div');
+    d.className = 'life' + (i >= lives ? ' lost' : '');
+    el.appendChild(d);
+  }
+}
+
+function restart() {
+  deck = shuffle([...ALL_CARDS]);
+  score = 0; lives = MAX_LIVES; roundNum = 0; answered = false;
+  document.getElementById('score').textContent = 0;
+  document.getElementById('endscreen').classList.remove('show');
+  document.getElementById('game').style.display = 'block';
+  ['verification','validation','certification','accreditation'].forEach(c => {
+    document.getElementById('dc-'+c).innerHTML = '';
+    document.getElementById('z-'+c).className = 'zone';
+  });
+  buildLives();
+  nextRound();
+}
+
+function nextRound() {
+  if (roundNum >= deck.length) { endGame(); return; }
+  answered = false;
+  currentCard = deck[roundNum];
+  roundNum++;
+  document.getElementById('round').textContent = roundNum;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('progress').textContent = '';
+  ['verification','validation','certification','accreditation'].forEach(c => {
+    document.getElementById('z-'+c).className = 'zone';
+  });
+
+  const pool = document.getElementById('pool');
+  pool.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.id = 'active-card';
+  card.draggable = true;
+  card.textContent = currentCard.text;
+  card.ondragstart = (e) => { e.dataTransfer.setData('text','active'); card.classList.add('dragging'); };
+  card.ondragend = () => card.classList.remove('dragging');
+  card.addEventListener('touchstart', touchStart, {passive:true});
+  card.addEventListener('touchmove',  touchMove,  {passive:false});
+  card.addEventListener('touchend',   touchEnd);
+  pool.appendChild(card);
+}
+
+function zOver(e)  { e.preventDefault(); e.currentTarget.classList.add('over'); }
+function zLeave(e) { e.currentTarget.classList.remove('over'); }
+
+function zDrop(e, cat) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('over');
+  if (answered) return;
+  evaluate(cat, e.currentTarget);
+}
+
+function evaluate(cat, zoneEl) {
+  answered = true;
+  const correct = cat === currentCard.cat;
+  const fb = document.getElementById('feedback');
+  if (correct) {
+    score += 10;
+    document.getElementById('score').textContent = score;
+    zoneEl.classList.add('correct-flash');
+    const chip = document.createElement('div');
+    chip.className = 'dropped-chip';
+    chip.textContent = currentCard.text.substring(0,60) + '…';
+    document.getElementById('dc-'+cat).appendChild(chip);
+    fb.textContent = 'Correct. ' + currentCard.hint;
+    fb.className = 'feedback show ok';
+    document.getElementById('active-card').style.display = 'none';
+  } else {
+    lives--;
+    buildLives();
+    zoneEl.classList.add('wrong-flash');
+    fb.innerHTML = '<strong>Incorrect.</strong> That scenario belongs under <strong>'
+      + currentCard.cat.charAt(0).toUpperCase() + currentCard.cat.slice(1)
+      + '</strong>. ' + currentCard.hint;
+    fb.className = 'feedback show bad';
+    setTimeout(() => zoneEl.classList.remove('wrong-flash'), 600);
+    answered = false;
+    if (lives <= 0) { endGame(); return; }
+    return;
+  }
+  document.getElementById('next-btn').style.display = 'inline-block';
+  document.getElementById('progress').textContent = roundNum + '/' + deck.length + ' cards played';
+  if (roundNum >= deck.length) setTimeout(endGame, 800);
+}
+
+function showHint() {
+  if (answered) return;
+  const fb = document.getElementById('feedback');
+  fb.textContent = 'Hint: ' + currentCard.hint;
+  fb.className = 'feedback show bad';
+  score = Math.max(0, score - 2);
+  document.getElementById('score').textContent = score;
+}
+
+function endGame() {
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('endscreen').classList.add('show');
+  const pct = Math.round((score / (deck.length * 10)) * 100);
+  document.getElementById('end-score').textContent = score + ' / ' + (deck.length * 10);
+  let msg = '';
+  if (lives <= 0)  msg = "You ran out of lives — but you've identified the exact boundaries that need work. The cert/accreditation split and the V/V distinction are the two most-tested pairs in Domain 8.";
+  else if (pct >= 90) msg = "Excellent. You're distinguishing all four concepts cleanly at the scenario level — exactly what the exam expects. No surface memorization here.";
+  else if (pct >= 70) msg = "Solid. A couple of scenarios tripped you — focus on the cert/accreditation pair (technical report vs. management decision) and the dynamic-testing-is-a-method framing.";
+  else msg = "Keep going. The core anchor: Verification = spec, Validation = user need, Certification = SAR, Accreditation = ATO. Scenarios test which actor and which output, not just the definition.";
+  document.getElementById('end-msg').textContent = msg;
+}
+
+let touchCardEl, ghostEl, touchZone;
+function touchStart(e) { touchCardEl = e.currentTarget; }
+function touchMove(e) {
+  e.preventDefault();
+  const t = e.touches[0];
+  if (!ghostEl) {
+    ghostEl = touchCardEl.cloneNode(true);
+    ghostEl.style.cssText = 'position:fixed;opacity:.8;pointer-events:none;z-index:9999;font-size:12px;padding:8px 12px;border-radius:8px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);max-width:200px;color:var(--color-text-primary);';
+    document.body.appendChild(ghostEl);
+  }
+  ghostEl.style.left = (t.clientX - 80) + 'px';
+  ghostEl.style.top  = (t.clientY - 20) + 'px';
+  const el   = document.elementFromPoint(t.clientX, t.clientY);
+  const zone = el && el.closest('.zone');
+  touchZone  = zone ? zone.dataset.cat : null;
+  document.querySelectorAll('.zone').forEach(z => z.classList.remove('over'));
+  if (zone) zone.classList.add('over');
+}
+function touchEnd() {
+  if (ghostEl) { ghostEl.remove(); ghostEl = null; }
+  document.querySelectorAll('.zone').forEach(z => z.classList.remove('over'));
+  if (touchZone && !answered) evaluate(touchZone, document.getElementById('z-'+touchZone));
+  touchZone = null;
+}
+
+restart();
+</script>
+</body>
+</html>
