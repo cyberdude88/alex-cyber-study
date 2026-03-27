@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CISSP SDLC phase ordering drag-and-drop drill — ISC2 CBK 7-phase model, V&V vs Accreditation concepts, and 10-question CISSP quiz. Domain 8.">
+  <meta name="keywords" content="CISSP SDLC, software development lifecycle CISSP, SDLC phases, verification validation accreditation, CISSP domain 8">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain8/sdlc-drag-drop.html">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="SDLC Phase Ordering + CISSP Drill - Domain 8 - Alex Cyber Study">
+  <meta property="og:description" content="Drag SDLC phases into the correct ISC2 CBK order, review V&V vs Accreditation, and tackle a 10-question CISSP quiz.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain8/sdlc-drag-drop.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SDLC Phase Ordering + CISSP Drill - Domain 8 - Alex Cyber Study">
+  <meta name="twitter:description" content="Drag SDLC phases into the correct ISC2 CBK order, review V&V vs Accreditation, and tackle a 10-question CISSP quiz.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>SDLC Phase Ordering + CISSP Drill - Domain 8 - Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── CSS variable bridge: map design-system tokens to dark theme ── */
+    :root {
+      --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+      --color-background-primary:   rgba(255,255,255,0.06);
+      --color-background-secondary: rgba(255,255,255,0.11);
+
+      --color-text-primary:   #f1f5f9;
+      --color-text-secondary: rgba(255,255,255,0.65);
+      --color-text-tertiary:  rgba(255,255,255,0.38);
+
+      --color-border-secondary: rgba(255,255,255,0.14);
+      --color-border-tertiary:  rgba(255,255,255,0.07);
+
+      --color-background-info: rgba(59,130,246,0.14);
+      --color-text-info:       #60a5fa;
+      --color-border-info:     rgba(59,130,246,0.38);
+
+      --color-background-success: rgba(16,185,129,0.14);
+      --color-text-success:       #34d399;
+      --color-border-success:     rgba(16,185,129,0.38);
+
+      --color-background-danger: rgba(239,68,68,0.14);
+      --color-text-danger:       #f87171;
+      --color-border-danger:     rgba(239,68,68,0.38);
+
+      --color-background-warning: rgba(245,158,11,0.14);
+      --color-text-warning:       #fbbf24;
+
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
+    }
+
+    /* ── Page layout ── */
+    .game-wrapper {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+    .back-link {
+      display: inline-block;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+      transition: color .15s;
+    }
+    .back-link:hover { color: #fff; }
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .page-sub {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 2rem;
+    }
+
+    /* ── Fragment overrides (style.css resets margin/padding to 0) ── */
+    .container { padding: 1rem 0; }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab { padding: 6px 16px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-secondary); transition: all .15s; }
+    .tab.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+
+    #panel-drag { display: block; }
+    #panel-concepts, #panel-quiz { display: none; }
+
+    .dd-header { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem; }
+
+    .phase-slots { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 1rem; }
+    .slot { min-height: 70px; border: 1.5px dashed var(--color-border-secondary); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 11px; color: var(--color-text-tertiary); transition: all .15s; position: relative; padding: 4px; }
+    .slot.over { border-color: var(--color-text-info); background: var(--color-background-info); }
+    .slot.correct { border-color: var(--color-text-success); background: var(--color-background-success); }
+    .slot.wrong { border-color: var(--color-text-danger); background: var(--color-background-danger); }
+    .slot-label { font-size: 10px; color: var(--color-text-tertiary); text-align: center; margin-top: 4px; }
+    .slot-num { position: absolute; top: 4px; left: 6px; font-size: 10px; font-weight: 500; color: var(--color-text-tertiary); }
+
+    .cards-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; min-height: 48px; }
+    .card { padding: 6px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 12px; font-weight: 500; background: var(--color-background-primary); color: var(--color-text-primary); cursor: grab; user-select: none; transition: opacity .15s, transform .15s; }
+    .card:active { cursor: grabbing; opacity: 0.7; transform: scale(0.97); }
+    .card.placed { display: none; }
+
+    .placed-card { font-size: 11px; font-weight: 500; color: var(--color-text-primary); text-align: center; line-height: 1.3; }
+    .placed-card.success { color: var(--color-text-success); }
+    .placed-card.fail { color: var(--color-text-danger); }
+
+    .dd-actions { display: flex; gap: 8px; margin-bottom: 1rem; }
+    .btn { padding: 6px 16px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-primary); transition: all .15s; }
+    .btn:hover { background: var(--color-background-secondary); }
+    .btn.primary { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+
+    .result-bar { font-size: 13px; padding: 8px 12px; border-radius: var(--border-radius-md); display: none; }
+    .result-bar.show { display: block; }
+    .result-bar.pass { background: var(--color-background-success); color: var(--color-text-success); }
+    .result-bar.fail { background: var(--color-background-danger); color: var(--color-text-danger); }
+
+    /* Concepts panel */
+    .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .concept-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; background: var(--color-background-primary); }
+    .concept-card h3 { font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-primary); }
+    .concept-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+    .concept-card .tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 99px; margin-bottom: 6px; font-weight: 500; }
+    .tag-v  { background: var(--color-background-info);    color: var(--color-text-info); }
+    .tag-va { background: var(--color-background-success); color: var(--color-text-success); }
+    .tag-ac { background: var(--color-background-warning); color: var(--color-text-warning); }
+    .tag-ce { background: var(--color-background-danger);  color: var(--color-text-danger); }
+
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
+    .compare-table th { font-weight: 500; font-size: 11px; text-align: left; padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+    .compare-table td { padding: 6px 8px; vertical-align: top; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); line-height: 1.5; }
+    .compare-table tr:last-child td { border-bottom: none; }
+
+    /* Quiz panel */
+    .quiz-q { font-size: 14px; font-weight: 500; margin-bottom: 12px; line-height: 1.5; color: var(--color-text-primary); }
+    .quiz-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .quiz-opt { padding: 10px 14px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-primary); text-align: left; transition: all .15s; }
+    .quiz-opt:hover:not(:disabled) { background: var(--color-background-secondary); }
+    .quiz-opt.correct { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+    .quiz-opt.wrong   { background: var(--color-background-danger);  border-color: var(--color-border-danger);  color: var(--color-text-danger); }
+    .quiz-opt:disabled { cursor: default; }
+    .quiz-feedback { font-size: 12px; line-height: 1.6; padding: 10px 14px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-secondary); display: none; margin-bottom: 12px; }
+    .quiz-feedback.show { display: block; }
+    .quiz-nav { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--color-text-secondary); }
+    .quiz-score { font-weight: 500; color: var(--color-text-primary); }
+
+    @media (max-width: 640px) {
+      .phase-slots { grid-template-columns: repeat(4, 1fr); }
+      .concept-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html" class="active">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-wrapper">
+    <a class="back-link" href="index.html">← Back to Domain 8</a>
+    <div class="page-title">📋 SDLC Phase Ordering</div>
+    <div class="page-sub">ISC2 CBK 7-phase model · V&amp;V vs Accreditation · CISSP drill</div>
+
+    <div class="container">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('drag')">Phase ordering</button>
+        <button class="tab" onclick="switchTab('concepts')">V&amp;V vs Accreditation</button>
+        <button class="tab" onclick="switchTab('quiz')">CISSP drill</button>
+      </div>
+
+      <!-- DRAG DROP -->
+      <div id="panel-drag">
+        <p class="dd-header">Drag each SDLC phase card into the correct numbered slot (ISC2 CBK 7-phase model).</p>
+        <div class="phase-slots" id="slots">
+          <div>
+            <div class="slot" id="slot-1" ondragover="ev(event)" ondrop="drop(event,'1')"><span class="slot-num">1</span><span class="slot-placeholder">Drop here</span></div>
+            <div class="slot-label">Phase 1</div>
+          </div>
+          <div>
+            <div class="slot" id="slot-2" ondragover="ev(event)" ondrop="drop(event,'2')"><span class="slot-num">2</span><span class="slot-placeholder">Drop here</span></div>
+            <div class="slot-label">Phase 2</div>
+          </div>
+          <div>
+            <div class="slot" id="slot-3" ondragover="ev(event)" ondrop="drop(event,'3')"><span class="slot-num">3</span><span class="slot-placeholder">Drop here</span></div>
+            <div class="slot-label">Phase 3</div>
+          </div>
+          <div>
+            <div class="slot" id="slot-4" ondragover="ev(event)" ondrop="drop(event,'4')"><span class="slot-num">4</span><span class="slot-placeholder">Drop here</span></div>
+            <div class="slot-label">Phase 4</div>
+          </div>
+          <div>
+            <div class="slot" id="slot-5" ondragover="ev(event)" ondrop="drop(event,'5')"><span class="slot-num">5</span><span class="slot-placeholder">Drop here</span></div>
+            <div class="slot-label">Phase 5</div>
+          </div>
+          <div>
+            <div class="slot" id="slot-6" ondragover="ev(event)" ondrop="drop(event,'6')"><span class="slot-num">6</span><span class="slot-placeholder">Drop here</span></div>
+            <div class="slot-label">Phase 6</div>
+          </div>
+          <div>
+            <div class="slot" id="slot-7" ondragover="ev(event)" ondrop="drop(event,'7')"><span class="slot-num">7</span><span class="slot-placeholder">Drop here</span></div>
+            <div class="slot-label">Phase 7</div>
+          </div>
+        </div>
+        <div class="cards-pool" id="pool"></div>
+        <div class="dd-actions">
+          <button class="btn primary" onclick="checkDD()">Check order</button>
+          <button class="btn" onclick="resetDD()">Reset</button>
+        </div>
+        <div class="result-bar" id="dd-result"></div>
+      </div>
+
+      <!-- CONCEPTS -->
+      <div id="panel-concepts">
+        <div class="concept-grid">
+          <div class="concept-card">
+            <span class="tag tag-v">Verification</span>
+            <h3>Are we building it right?</h3>
+            <p>Checks that the software conforms to its <strong>specifications and design documents</strong> at each phase. Internal, process-focused. Example: code review, design walkthroughs, unit tests against spec.</p>
+          </div>
+          <div class="concept-card">
+            <span class="tag tag-va">Validation</span>
+            <h3>Are we building the right thing?</h3>
+            <p>Confirms the finished product meets the <strong>user's actual needs and intended use</strong>. External, outcome-focused. Example: acceptance testing, user acceptance testing (UAT), operational testing.</p>
+          </div>
+          <div class="concept-card">
+            <span class="tag tag-ac">Accreditation</span>
+            <h3>Management accepts the risk</h3>
+            <p>Formal <strong>management decision</strong> to accept residual risk and authorize a system to operate. In U.S. federal/DoD: <em>Authority to Operate (ATO)</em>. Done by the Authorizing Official (AO). Time-limited, risk-based.</p>
+          </div>
+          <div class="concept-card">
+            <span class="tag tag-ce">Certification</span>
+            <h3>Technical security assessment</h3>
+            <p>Comprehensive technical <strong>evaluation of security controls</strong> to determine if they meet requirements. Precedes accreditation. Produces the Security Assessment Report (SAR) used by the AO.</p>
+          </div>
+        </div>
+        <table class="compare-table" style="margin-top:16px">
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Question answered</th>
+              <th>Who owns it</th>
+              <th>SDLC phase</th>
+              <th>CISSP domain</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Verification</td><td>Built to spec?</td><td>Developers / QA</td><td>Development &amp; Testing</td><td>Domain 8 (SDLC)</td></tr>
+            <tr><td>Validation</td><td>Meets user need?</td><td>Users / QA / PM</td><td>Testing &amp; Acceptance</td><td>Domain 8 (SDLC)</td></tr>
+            <tr><td>Certification</td><td>Controls adequate?</td><td>Security assessor (3rd party or internal)</td><td>Operations &amp; Maintenance</td><td>Domain 3 (Security Arch)</td></tr>
+            <tr><td>Accreditation / ATO</td><td>Risk acceptable to operate?</td><td>Authorizing Official (AO/DAA)</td><td>Operations &amp; Maintenance</td><td>Domain 1 (Risk Mgmt)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- QUIZ -->
+      <div id="panel-quiz">
+        <div class="quiz-q" id="q-text"></div>
+        <div class="quiz-opts" id="q-opts"></div>
+        <div class="quiz-feedback" id="q-fb"></div>
+        <div class="quiz-nav">
+          <button class="btn" id="q-next" onclick="nextQ()" style="display:none">Next question →</button>
+          <span class="quiz-score" id="q-score"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 8</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2&reg;. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+<script>
+const PHASES = [
+  { id:'1', label:'Project initiation\n& planning' },
+  { id:'2', label:'Requirements\nanalysis' },
+  { id:'3', label:'System design' },
+  { id:'4', label:'Development\n(coding)' },
+  { id:'5', label:'Testing &\nintegration' },
+  { id:'6', label:'Implementation\n(deployment)' },
+  { id:'7', label:'Operations &\nmaintenance' },
+];
+
+let slotMap = {};
+let dragCardId = null;
+
+function initDD() {
+  slotMap = {};
+  const pool = document.getElementById('pool');
+  pool.innerHTML = '';
+  // shuffle cards so order isn't a giveaway
+  const shuffled = [...PHASES].sort(() => Math.random() - 0.5);
+  shuffled.forEach(p => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.id = 'card-' + p.id;
+    c.draggable = true;
+    c.textContent = p.label.replace('\n', ' ');
+    c.ondragstart = (e) => { dragCardId = p.id; e.dataTransfer.setData('text', p.id); };
+    pool.appendChild(c);
+  });
+  for (let i = 1; i <= 7; i++) {
+    const s = document.getElementById('slot-' + i);
+    s.className = 'slot';
+    s.innerHTML = '<span class="slot-num">' + i + '</span><span class="slot-placeholder">Drop here</span>';
+  }
+  document.getElementById('dd-result').className = 'result-bar';
+}
+initDD();
+
+function ev(e) { e.preventDefault(); }
+
+function drop(e, slotId) {
+  e.preventDefault();
+  const cardId = e.dataTransfer.getData('text') || dragCardId;
+  if (!cardId) return;
+
+  if (slotMap[slotId]) {
+    const prev = document.getElementById('card-' + slotMap[slotId]);
+    if (prev) prev.classList.remove('placed');
+  }
+
+  Object.keys(slotMap).forEach(k => {
+    if (slotMap[k] === cardId && k !== slotId) {
+      delete slotMap[k];
+      const s = document.getElementById('slot-' + k);
+      if (s) { s.className = 'slot'; s.innerHTML = '<span class="slot-num">' + k + '</span><span class="slot-placeholder">Drop here</span>'; }
+    }
+  });
+
+  slotMap[slotId] = cardId;
+  const card = document.getElementById('card-' + cardId);
+  if (card) card.classList.add('placed');
+
+  const phase = PHASES.find(p => p.id === cardId);
+  const s = document.getElementById('slot-' + slotId);
+  s.className = 'slot';
+  s.innerHTML = '<span class="slot-num">' + slotId + '</span><div class="placed-card">' + (phase ? phase.label.replace('\n', '<br>') : '') + '</div>';
+}
+
+function checkDD() {
+  let correct = 0;
+  for (let i = 1; i <= 7; i++) {
+    const s = document.getElementById('slot-' + i);
+    const placed = slotMap[String(i)];
+    if (!placed) { s.classList.add('wrong'); continue; }
+    if (placed === String(i)) {
+      s.classList.add('correct'); correct++;
+      const pc = s.querySelector('.placed-card'); if (pc) pc.classList.add('success');
+    } else {
+      s.classList.add('wrong');
+      const pc = s.querySelector('.placed-card'); if (pc) pc.classList.add('fail');
+    }
+  }
+  const bar = document.getElementById('dd-result');
+  bar.className = 'result-bar show ' + (correct === 7 ? 'pass' : 'fail');
+  bar.textContent = correct === 7
+    ? '✓ Perfect — all 7 phases in correct SDLC order.'
+    : correct + '/7 correct. Check the red slots and try again.';
+}
+
+function resetDD() { initDD(); }
+
+const QUESTIONS = [
+  { q:'During which SDLC phase are security requirements formally documented, including privacy and regulatory constraints?', opts:['System design','Requirements analysis','Testing & integration','Operations & maintenance'], ans:1, fb:'Requirements analysis (Phase 2) captures all functional and non-functional requirements including security, privacy, and compliance needs. ISC2 CBK Domain 8 emphasizes that security must be built in from the start — not bolted on.' },
+  { q:'Verification answers the question "Are we building the product right?" This activity primarily occurs during which SDLC phase?', opts:['Project initiation','Requirements analysis','Development and testing','Operations and maintenance'], ans:2, fb:'Verification happens throughout Development & Testing (Phases 4–5). It checks conformance to specifications via code reviews, static analysis, unit and integration tests — all before user acceptance.' },
+  { q:'An Authorizing Official (AO) signs an Authority to Operate (ATO) after reviewing a Security Assessment Report. This act is formally called:', opts:['Validation','Verification','Certification','Accreditation'], ans:3, fb:'Accreditation (ATO in NIST/DoD terms) is the management decision to accept residual risk and authorize operation. Certification is the technical assessment that precedes it; the SAR feeds the ATO decision.' },
+  { q:'A security assessor evaluates all implemented controls and produces a Security Assessment Report (SAR). This technical review is called:', opts:['Accreditation','Validation','Certification','Authorization'], ans:2, fb:'Certification is the independent technical evaluation of security controls. The SAR documents findings (controls effective, partially effective, or not effective) and is delivered to the Authorizing Official for the accreditation decision.' },
+  { q:'User acceptance testing (UAT) conducted by end users to confirm the system meets operational needs is an example of:', opts:['Verification','Certification','Validation','Accreditation'], ans:2, fb:'Validation answers "are we building the right thing?" UAT is the canonical validation activity — real users exercise the system against real requirements, not against a spec document.' },
+  { q:'Which SDLC phase includes patching, configuration management, and continuous monitoring per NIST SP 800-37?', opts:['Testing & integration','Implementation (deployment)','Operations & maintenance','System design'], ans:2, fb:'Operations & Maintenance (Phase 7) is where the system lives. NIST SP 800-37 RMF Step 6 (Monitor) is continuous — patches, config changes, and POA&M tracking all happen here throughout the system\'s life.' },
+  { q:'The PASTA threat modeling methodology is most relevant to which SDLC phase?', opts:['Operations & maintenance','System design','Project initiation','Implementation'], ans:1, fb:'PASTA (Process for Attack Simulation and Threat Analysis) is a risk-centric threat model applied during System Design (Phase 3) to identify threats before code is written. It\'s a 7-stage, business-objective-driven framework.' },
+  { q:'Functional requirements describe WHAT the system does. Non-functional requirements include all EXCEPT:', opts:['Performance and scalability','Availability and reliability','Security and auditability','Specific business workflows'], ans:3, fb:'"Specific business workflows" are functional requirements — they define what the system must do. Non-functional requirements define how the system behaves: performance, security, availability, maintainability, compliance. The CISSP exam loves this distinction.' },
+  { q:'In NIST SP 800-64, end-of-life disposal activities like media sanitization and key destruction belong to:', opts:['Phase 1 – Initiation','Phase 4 – Implementation','Phase 5 – Operations/Maintenance','Sunset/Disposition (end of life)'], ans:3, fb:'NIST SP 800-64 describes a 5-phase SDLC; the final phase is Disposal/Sunset. Secure media sanitization (NIST SP 800-88), key destruction, and data archiving are disposition activities — not operations.' },
+  { q:'Which of the following best represents the "shift-left" security principle in SDLC?', opts:['Performing penetration testing after deployment','Including security requirements and threat modeling in early design phases','Applying patches in the operations phase','Conducting SAR reviews after coding is complete'], ans:1, fb:'Shift-left means moving security activities earlier in the lifecycle — into Requirements and Design phases — where fixing issues is 10–100× cheaper than fixing them post-deployment. This is the foundational DevSecOps principle.' },
+];
+
+let qIdx = 0, score = 0, answered = false;
+function shuffleQ() { for (let i = QUESTIONS.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [QUESTIONS[i],QUESTIONS[j]] = [QUESTIONS[j],QUESTIONS[i]]; } }
+shuffleQ();
+
+function renderQ() {
+  if (qIdx >= QUESTIONS.length) {
+    document.getElementById('q-text').textContent = 'Quiz complete! Score: ' + score + '/' + QUESTIONS.length;
+    document.getElementById('q-opts').innerHTML = '<button class="btn" onclick="restartQ()">Restart quiz</button>';
+    document.getElementById('q-fb').className = 'quiz-feedback';
+    document.getElementById('q-next').style.display = 'none';
+    document.getElementById('q-score').textContent = '';
+    return;
+  }
+  answered = false;
+  const q = QUESTIONS[qIdx];
+  document.getElementById('q-text').textContent = (qIdx+1) + '. ' + q.q;
+  document.getElementById('q-score').textContent = 'Score: ' + score + '/' + QUESTIONS.length;
+  document.getElementById('q-fb').className = 'quiz-feedback';
+  document.getElementById('q-next').style.display = 'none';
+  const opts = document.getElementById('q-opts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'quiz-opt';
+    b.textContent = String.fromCharCode(65+i) + '. ' + o;
+    b.onclick = () => selectOpt(i);
+    opts.appendChild(b);
+  });
+}
+
+function selectOpt(i) {
+  if (answered) return;
+  answered = true;
+  const q = QUESTIONS[qIdx];
+  const btns = document.querySelectorAll('#q-opts .quiz-opt');
+  btns.forEach((b, j) => { b.disabled = true; if (j === q.ans) b.classList.add('correct'); else if (j === i && i !== q.ans) b.classList.add('wrong'); });
+  if (i === q.ans) score++;
+  const fb = document.getElementById('q-fb');
+  fb.textContent = q.fb;
+  fb.className = 'quiz-feedback show';
+  document.getElementById('q-next').style.display = 'inline-block';
+  document.getElementById('q-score').textContent = 'Score: ' + score + '/' + QUESTIONS.length;
+}
+
+function nextQ() { qIdx++; renderQ(); }
+function restartQ() { qIdx = 0; score = 0; shuffleQ(); renderQ(); }
+
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', ['drag','concepts','quiz'][i] === t));
+  document.getElementById('panel-drag').style.display    = t === 'drag'     ? 'block' : 'none';
+  document.getElementById('panel-concepts').style.display = t === 'concepts' ? 'block' : 'none';
+  document.getElementById('panel-quiz').style.display    = t === 'quiz'     ? 'block' : 'none';
+  if (t === 'quiz') renderQ();
+}
+</script>
+</body>
+</html>
