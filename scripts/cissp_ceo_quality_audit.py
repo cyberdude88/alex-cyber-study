@@ -48,6 +48,7 @@ import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+from string import ascii_uppercase
 from typing import Any
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -135,7 +136,7 @@ WEAK_DISTRACTOR_PATTERNS = [
 ]
 
 WORD_RE = re.compile(r"[A-Za-z0-9']+")
-NEGATIVE_STEM_RE = re.compile(r"\b(NOT|EXCEPT|LEAST|NEVER|FALSE)\b", re.I)
+NEGATIVE_STEM_RE = re.compile(r"\b(NOT|EXCEPT|NEVER|FALSE)\b", re.I)
 ABSOLUTE_WORDS = {"always", "never", "only", "must", "completely", "eliminate"}
 SCENARIO_SIGNALS = re.compile(
     r"\b(organization|company|enterprise|team|ciso|board|manager|architect|"
@@ -144,6 +145,33 @@ SCENARIO_SIGNALS = re.compile(
     re.I,
 )
 ACRONYM_RE = re.compile(r"\b[A-Z]{2,6}(?:\d{0,2})\b")
+WEAK_BINARY_STEM_RE = re.compile(
+    r"\b("
+    r"which\s+(?:one\s+)?is\s+false|"
+    r"which\s+(?:one\s+)?is\s+true|"
+    r"most\s+likely\s+to\s+be\s+false|"
+    r"most\s+likely\s+to\s+be\s+true|"
+    r"all\s+of\s+the\s+following.+except|"
+    r"all\s+are\s+true.+except"
+    r")\b",
+    re.I,
+)
+CONDITIONAL_JUDGMENT_RE = re.compile(
+    r"\b("
+    r"must\s+be\s+true|"
+    r"must\s+occur|"
+    r"must\s+be\s+in\s+place|"
+    r"most\s+likely|"
+    r"best\s+explains|"
+    r"best\s+describes|"
+    r"most\s+appropriate|"
+    r"most\s+important|"
+    r"first|"
+    r"next|"
+    r"primary"
+    r")\b",
+    re.I,
+)
 
 
 def _words(text: str) -> list[str]:
@@ -445,7 +473,7 @@ def round4_distractor_auth(item: dict[str, Any]) -> dict[str, Any]:
     for idx, choice_text in wrong_answers:
         d_score = 100
         issues = []
-        letter = "ABCD"[idx]
+        letter = ascii_uppercase[idx] if idx < len(ascii_uppercase) else f"OPT{idx + 1}"
 
         # Minimum length
         if len(choice_text.strip()) < 15:
@@ -605,6 +633,23 @@ def _choice_prefix(choice: str) -> str:
     return " ".join(words[:3])
 
 
+def _choice_shape(choice: str) -> str:
+    text = str(choice).strip()
+    lowered = text.lower()
+    if not text:
+        return "empty"
+    if re.match(r"^[A-Z][A-Z0-9-]{1,8}\b", text):
+        return "term"
+    if lowered.startswith(("to ", "implement ", "establish ", "develop ", "deploy ", "perform ", "require ", "use ")):
+        return "verb_phrase"
+    if lowered.startswith(("a ", "an ", "the ")):
+        return "noun_phrase"
+    first_words = _words(text)[:3]
+    if any(word.endswith("ing") for word in first_words):
+        return "gerund_phrase"
+    return "other"
+
+
 def round6_peer_review(item: dict[str, Any]) -> dict[str, Any]:
     """
     Simulate a human item-writer peer review.
@@ -648,6 +693,14 @@ def round6_peer_review(item: dict[str, Any]) -> dict[str, Any]:
         score -= 10
         flags.append("NEGATIVE_STEM")
 
+    if WEAK_BINARY_STEM_RE.search(stem):
+        score -= 14
+        flags.append("WEAK_BINARY_STEM")
+
+    if CONDITIONAL_JUDGMENT_RE.search(stem):
+        score += 6
+        flags.append("CONDITIONAL_JUDGMENT_STEM")
+
     qualifier_count = len(set(q.upper() for q in JUDGMENT_QUALIFIERS.findall(stem)))
     if qualifier_count == 0:
         score -= 10
@@ -667,10 +720,10 @@ def round6_peer_review(item: dict[str, Any]) -> dict[str, Any]:
         score -= 10
         flags.append("CHOICE_LENGTH_SKEW")
 
-    prefixes = [_choice_prefix(str(c)) for c in choices]
-    unique_prefixes = len(set(prefixes))
-    if unique_prefixes == len(prefixes):
-        # Completely different grammatical openings often means options are not comparable.
+    shapes = [_choice_shape(str(c)) for c in choices]
+    shape_counts = Counter(shapes)
+    dominant_shape = max(shape_counts.values()) if shape_counts else 0
+    if dominant_shape <= 2 and len(shape_counts) >= 3:
         score -= 6
         flags.append("CHOICE_STYLE_MISMATCH")
 
@@ -784,7 +837,8 @@ def audit_item(item: dict[str, Any], rounds_to_run: set[int]) -> dict[str, Any]:
         "all_flags": all_flags,
         "passed_rounds": passed_rounds,
         "failed_rounds": failed_rounds,
-        "ceo_pass": overall >= 55 and "r2_ceo_mindset" not in failed_rounds,
+        "ceo_pass": overall >= 55 and "r2_ceo_mindset" not in failed_rounds and "r6_peer_review" not in failed_rounds,
+        "overall_pass": overall >= 55 and "r2_ceo_mindset" not in failed_rounds and "r6_peer_review" not in failed_rounds,
     }
 
 
@@ -798,6 +852,7 @@ def tag_item(item: dict[str, Any], audit: dict[str, Any]) -> dict[str, Any]:
     item["ceoQuality"] = {
         "overallScore": audit["overall_score"],
         "ceoPass": audit["ceo_pass"],
+        "overallPass": audit.get("overall_pass", audit["ceo_pass"]),
         "cognitiveLevel": audit.get("rounds", {}).get("r3_cognitive", {}).get("level"),
         "distractorScore": audit.get("rounds", {}).get("r4_distractor", {}).get("score"),
         "peerReviewScore": audit.get("rounds", {}).get("r6_peer_review", {}).get("score"),
@@ -816,10 +871,12 @@ def tag_item(item: dict[str, Any], audit: dict[str, Any]) -> dict[str, Any]:
 # Reporting
 # ──────────────────────────────────────────────────────────────────────────────
 
-def build_summary(all_audits: list[dict], threshold: int, bank_path: Path) -> str:
+def build_summary(all_audits: list[dict], threshold: int, bank_path: Path, *, total_items: int | None = None, failed_items: list[str] | None = None) -> str:
     total = len(all_audits)
-    passed = sum(1 for a in all_audits if a["ceo_pass"])
+    source_total = total_items if total_items is not None else total
+    passed = sum(1 for a in all_audits if a.get("overall_pass", a["ceo_pass"]))
     failed = total - passed
+    errored = len(failed_items or [])
 
     avg_overall = sum(a["overall_score"] for a in all_audits) / max(1, total)
 
@@ -859,11 +916,13 @@ def build_summary(all_audits: list[dict], threshold: int, bank_path: Path) -> st
     weakest = sorted(all_audits, key=lambda x: x["overall_score"])[:20]
 
     lines = [
-        "# CISSP CEO Quality Audit Report",
+        "# CISSP Exam Quality Audit Report",
         f"\n**Bank:** `{bank_path.name}`  ",
-        f"**Total items audited:** {total}  ",
-        f"**CEO-pass (score ≥ {threshold}):** {passed} ({passed/max(1,total)*100:.1f}%)  ",
-        f"**CEO-fail:** {failed} ({failed/max(1,total)*100:.1f}%)  ",
+        f"**Source items considered:** {source_total}  ",
+        f"**Items audited successfully:** {total}  ",
+        f"**Items errored:** {errored}  ",
+        f"**Overall quality pass (score ≥ {threshold}):** {passed} ({passed/max(1,total)*100:.1f}%)  ",
+        f"**Overall fail:** {failed} ({failed/max(1,total)*100:.1f}%)  ",
         f"**Average composite score:** {avg_overall:.1f}/100",
         "\n---\n",
         "## Round Pass Rates\n",
@@ -922,21 +981,35 @@ def build_summary(all_audits: list[dict], threshold: int, bank_path: Path) -> st
 
     lines += [
         "\n---\n",
-        "## CEO Mindset Failure Analysis\n",
-        "Questions scoring < 55 on Round 2 (CEO Mindset) represent the highest risk —\n"
-        "they may train candidates to think technically rather than executively.\n",
+        "## Failure Analysis\n",
+        "Items failing the composite threshold typically break in one of three ways:\n"
+        "they train technical recall instead of executive judgment, they use weak distractors,\n"
+        "or they do not read like polished human-written exam questions.\n",
         "**Common failure patterns:**\n",
         "- `RECALL_STEM` — stem asks 'what is X' instead of 'what should you do'\n",
         "- `NO_QUALIFIER` — no BEST/FIRST/MOST qualifier to force prioritisation\n",
         "- `TECH_CORRECT_ANSWER` — correct answer is a technical action, not governance\n",
         "- `KNOWLEDGE_TYPE` — item tagged as knowledge, not scenario or judgment\n",
         "- `HAS_WEAK_DISTRACTOR` — at least one obviously wrong distractor (Round 4)\n",
+        "- `PEER_REVIEW_FAIL` — item would likely be rejected in human editorial review\n",
+        "- `POSSIBLE_MULTI_KEY` — more than one option may look defensible on first read\n",
+        "- `CORRECT_CHOICE_CUE` — the key is guessable because it is conspicuously fuller than distractors\n",
         "\n**Fix strategy:**\n",
         "1. Convert recall stems to scenario stems with role + context + qualifier\n",
         "2. Rewrite distractors to be plausible-but-wrong (governance near-misses)\n",
         "3. Ensure correct answer reflects policy/governance before technical action\n",
         "4. Add causal reasoning to explanations (why this beats the other options)\n",
+        "5. Normalize option grammar and length so choices feel parallel and comparably plausible\n",
+        "6. Remove cueing language and tighten stems until one answer is best for principled reasons\n",
     ]
+
+    if failed_items:
+        sample = ", ".join(f"`{iid}`" for iid in failed_items[:10])
+        lines += [
+            "\n---\n",
+            "## Audit Errors\n",
+            f"The following items failed audit execution and need schema-specific handling: {sample}",
+        ]
 
     return "\n".join(lines)
 
@@ -947,7 +1020,7 @@ def build_summary(all_audits: list[dict], threshold: int, bank_path: Path) -> st
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
-        description="CISSP CEO Quality Audit — 6-round quality pipeline",
+        description="CISSP Exam Quality Audit — 6-round quality pipeline",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     p.add_argument(
@@ -1038,7 +1111,7 @@ def main() -> int:
             audit = audit_item(item, rounds_to_run)
             all_audits.append(audit)
 
-            if args.show_flags and not audit["ceo_pass"]:
+            if args.show_flags and not audit.get("overall_pass", audit["ceo_pass"]):
                 print(f"\n  [{audit['item_id']}] score={audit['overall_score']:.1f}")
                 for f in audit["all_flags"][:6]:
                     print(f"    ↳ {f}")
@@ -1062,7 +1135,8 @@ def main() -> int:
                 "rounds_run": sorted(rounds_to_run),
                 "threshold": args.threshold,
                 "total_items": len(all_audits),
-                "ceo_pass_count": sum(1 for a in all_audits if a["ceo_pass"]),
+                "ceo_pass_count": sum(1 for a in all_audits if a.get("overall_pass", a["ceo_pass"])),
+                "overall_pass_count": sum(1 for a in all_audits if a.get("overall_pass", a["ceo_pass"])),
                 "avg_score": round(sum(a["overall_score"] for a in all_audits) / max(1, len(all_audits)), 2),
                 "items": all_audits,
             },
@@ -1072,7 +1146,13 @@ def main() -> int:
     print(f"Report JSON → {report_path}", flush=True)
 
     # ── Write summary markdown ──
-    summary_md = build_summary(all_audits, args.threshold, bank_path)
+    summary_md = build_summary(
+        all_audits,
+        args.threshold,
+        bank_path,
+        total_items=len(items),
+        failed_items=failed_items,
+    )
     summary_path = output_dir / "ceo_audit_summary.md"
     with summary_path.open("w", encoding="utf-8") as fh:
         fh.write(summary_md)
@@ -1096,7 +1176,8 @@ def main() -> int:
             "roundsRun": sorted(rounds_to_run),
             "threshold": args.threshold,
             "totalAudited": len(all_audits),
-            "ceoPassRate": round(sum(1 for a in all_audits if a["ceo_pass"]) / max(1, len(all_audits)), 4),
+            "ceoPassRate": round(sum(1 for a in all_audits if a.get("overall_pass", a["ceo_pass"])) / max(1, len(all_audits)), 4),
+            "overallPassRate": round(sum(1 for a in all_audits if a.get("overall_pass", a["ceo_pass"])) / max(1, len(all_audits)), 4),
         }
         tagged_path = output_dir / (bank_path.stem + "-ceo-audited.json")
         with tagged_path.open("w", encoding="utf-8") as fh:
@@ -1104,10 +1185,10 @@ def main() -> int:
         print(f"Tagged bank → {tagged_path}", flush=True)
 
     # ── Print quick summary ──
-    passed = sum(1 for a in all_audits if a["ceo_pass"])
+    passed = sum(1 for a in all_audits if a.get("overall_pass", a["ceo_pass"]))
     avg = sum(a["overall_score"] for a in all_audits) / max(1, len(all_audits))
     print(f"\n{'='*60}")
-    print(f"CEO MINDSET PASS: {passed}/{len(all_audits)} ({passed/max(1,len(all_audits))*100:.1f}%)")
+    print(f"OVERALL QUALITY PASS: {passed}/{len(all_audits)} ({passed/max(1,len(all_audits))*100:.1f}%)")
     print(f"AVERAGE SCORE:    {avg:.1f}/100")
     print(f"THRESHOLD:        {args.threshold}")
     print(f"{'='*60}")
