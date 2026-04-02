@@ -158,10 +158,8 @@ WEAK_BINARY_STEM_RE = re.compile(
 )
 CONDITIONAL_JUDGMENT_RE = re.compile(
     r"\b("
-    r"must\s+be\s+true|"
     r"must\s+occur|"
     r"must\s+be\s+in\s+place|"
-    r"most\s+likely|"
     r"best\s+explains|"
     r"best\s+describes|"
     r"most\s+appropriate|"
@@ -172,6 +170,11 @@ CONDITIONAL_JUDGMENT_RE = re.compile(
     r")\b",
     re.I,
 )
+MOST_LIKELY_STEM_RE = re.compile(
+    r"\bmost\s+likely\s+(?:to\s+be\s+)?(?:true|false)\b|\bis\s+most\s+likely\s+(?:true|false)\b",
+    re.I,
+)
+MUST_BE_TRUE_RE = re.compile(r"\bmust\s+be\s+true\b", re.I)
 
 
 def _words(text: str) -> list[str]:
@@ -697,7 +700,13 @@ def round6_peer_review(item: dict[str, Any]) -> dict[str, Any]:
         score -= 14
         flags.append("WEAK_BINARY_STEM")
 
-    if CONDITIONAL_JUDGMENT_RE.search(stem):
+    if MOST_LIKELY_STEM_RE.search(stem):
+        score += 8
+        flags.append("MOST_LIKELY_STEM")
+    elif MUST_BE_TRUE_RE.search(stem):
+        score += 4
+        flags.append("MUST_BE_TRUE_STEM")
+    elif CONDITIONAL_JUDGMENT_RE.search(stem):
         score += 6
         flags.append("CONDITIONAL_JUDGMENT_STEM")
 
