@@ -29,9 +29,9 @@ REPLACEMENTS = [
     (r'\bTechCorp\b',           'the organization',        re.IGNORECASE, 'TechCorp → the organization'),
     (r'\bXYZ Corp\b',           'the organization',        re.IGNORECASE, 'XYZ Corp → the organization'),
     # Named individuals (preserve Alice/Bob — standard crypto academic notation)
-    (r'\bJason\b(?!\s+Web\s+Token)',  'The CISO',          0,             'Jason → The CISO'),
+    (r'\bJason\b(?!\s+Web\s+Token)',  'The CISO',          0,             'the CISO → The CISO'),
     (r'\bHideo\b',              'The analyst',             0,             'Hideo → The analyst'),
-    (r'\bDion\b',               'the instructor',          0,             'Dion → the instructor'),
+    (r'\bDion\b',               'the instructor',          0,             'the instructor → the instructor'),
     # Fix grammar artifacts from replacements
     (r'\bThe CISO as a CISO\b', 'The CISO',               0,             'Fix double-CISO artifact'),
     (r'\bThe CISO as a CISO\b', 'The CISO',               re.IGNORECASE, 'Fix double-CISO artifact (ci)'),

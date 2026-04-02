@@ -59197,7 +59197,7 @@
     {
       "id": "d1-q104",
       "domain": "1. Security and Risk Management",
-      "stem": "Jason as a CISO has received a threat-modeling proposal for review from the newly hired security manager. The manager and team are working on the security exposure-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the threat-modeling project deliverable?",
+      "stem": "The CISO has received a threat-modeling proposal for review from the newly hired security manager. The manager and team are working on the security exposure-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the threat-modeling project deliverable?",
       "choices": [
         "Identify and mitigate various threat vectors",
         "Discover potential design flaws",
@@ -59222,7 +59222,7 @@
     {
       "id": "d1-q104__v1",
       "domain": "1. Security and Risk Management",
-      "stem": "Considering security governance and risk, jason as a CISO has received a threat-modeling proposal for review from the newly hired security manager. The manager and team are working on the threat-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the adversarial hazard-modeling project deliverable? Select the best answer.",
+      "stem": "Considering security governance and risk, The CISO has received a threat-modeling proposal for review from the newly hired security manager. The manager and team are working on the threat-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the adversarial hazard-modeling project deliverable? Select the best answer.",
       "choices": [
         "Identify and mitigate various threat vectors",
         "Discover potential design flaws",
@@ -59249,7 +59249,7 @@
     {
       "id": "d1-q104__v2",
       "domain": "1. Security and Risk Management",
-      "stem": "jason as a CISO has received a threat-modeling proposal for review from the newly hired security manager. The manager and team are working on the threat-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the security exposure-modeling project deliverable?",
+      "stem": "The CISO has received a threat-modeling proposal for review from the newly hired security manager. The manager and team are working on the threat-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the security exposure-modeling project deliverable?",
       "choices": [
         "Identify and mitigate various threat vectors",
         "Discover potential design flaws",
@@ -59276,7 +59276,7 @@
     {
       "id": "d1-q104__v3",
       "domain": "1. Security and Risk Management",
-      "stem": "jason as a CISO has received a security exposure-modeling proposal for review from the newly hired security manager. The manager and team are working on the adversarial hazard-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the threat-modeling project deliverable? Select the best answer.",
+      "stem": "The CISO has received a security exposure-modeling proposal for review from the newly hired security manager. The manager and team are working on the adversarial hazard-modeling project for the customer\u2019s e-commerce portal. Which option is MOST LIKELY NOT part of the threat-modeling project deliverable? Select the best answer.",
       "choices": [
         "Identify and mitigate various threat vectors",
         "Discover potential design flaws",
