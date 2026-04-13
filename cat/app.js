@@ -18,6 +18,29 @@ const FORCED_MODE = document.body.dataset.mode === "cat" || document.body.datase
 const PAGE_VIEW = document.body.dataset.view || "setup";
 const SCENARIO_VIEW_ENABLED = new URLSearchParams(window.location.search).get("scenario") === "1";
 const INCLUDE_SYNTHETIC_VARIANTS = new URLSearchParams(window.location.search).get("variants") === "1";
+
+// === PER-DOMAIN CEILING TRACKER (CAT mode) ===
+// Tracks competency ceiling per CISSP domain throughout the entire exam.
+// Strong domain  → push difficulty up each time you succeed (find where you fail).
+// Weak domain    → allocate more volume (more questions until ceiling is confirmed).
+// Confirmed ceiling → de-prioritize domain so question budget moves elsewhere.
+const DC_MIN_ATTEMPTS = 4;    // attempts before ceiling/weakness flags can fire
+const DC_WINDOW       = 4;    // rolling accuracy window size
+const DC_FAIL_RATE    = 0.50; // < 50% in window → ceiling confirmed (struggling here)
+const DC_STRONG_RATE  = 0.75; // ≥ 75% in window → push targetDiff up
+const DC_PROBE_STEP   = 0.30; // difficulty increment per upward push
+const DC_WEAK_BOOST   = 0.42; // selection score boost for weak (struggling) domains
+const DC_CEIL_PENALTY = 0.48; // selection score penalty when ceiling already confirmed
+
+// === AGGRESSIVE DOMAIN CEILING MODE (ADCM) ===
+const ADCM_ACTIVE = new URLSearchParams(window.location.search).get("adcm") === "1";
+const ADCM_PHASE1_COUNT = 20;     // Phase 1: stress-test all 8 domains with hard Qs
+const ADCM_HARD_FLOOR = 0.7;      // Min difficulty for Phase 1 item selection
+const ADCM_DIFF_STEP = 0.35;      // Per-streak difficulty adjustment increment
+const ADCM_CEIL_WINDOW = 4;       // Stability window size for ceiling confirmation
+const ADCM_CEIL_PASS_RATE = 0.70; // ≥70% accuracy = ceiling NOT yet hit at this level
+const ADCM_MIN_ATTEMPTS = 5;      // Min per-domain attempts before ceiling can confirm
+const ADCM_MAX_QUESTIONS = 100;   // Hard question cap per ADCM session
 const PERSON_NAME_NORMALIZE_LIST = [
   "Pallavi",
   "Arif",
@@ -857,6 +880,7 @@ function finalizeAttemptWithCurrentAnswers() {
 }
 
 function getSelectedMode() {
+  if (ADCM_ACTIVE) return "adcm";
   if (FORCED_MODE) return FORCED_MODE;
   return ui.modeCat?.checked ? "cat" : "fixed";
 }
@@ -907,6 +931,24 @@ function refreshModeUi() {
       ? "CAT mode: adaptive CISSP simulation with exam-style weighting. Note: This alone does NOT guarantee exam readiness, it is a learning tool."
       : "Custom quiz mode: choose question range and included domains.";
   }
+
+  // ADCM overrides: apply after base mode logic
+  if (ADCM_ACTIVE) {
+    if (ui.customQuizControls) ui.customQuizControls.classList.add("hidden");
+    if (ui.domainTargetPanel) ui.domainTargetPanel.classList.add("hidden");
+    if (ui.catMimicNote) {
+      ui.catMimicNote.classList.remove("hidden");
+      ui.catMimicNote.textContent = "ADCM rules: Phase 1 = 20 hard questions distributed evenly across all 8 CISSP domains. Phase 2 = adaptive targeting of weakest domains until ceilings are confirmed or 100 questions administered. All items scored — no unscored slots.";
+    }
+    if (ui.modeSummaryText) {
+      ui.modeSummaryText.textContent = "ADCM: Aggressive Domain Ceiling Mode — diagnostic tool that front-loads hard questions and maps your true competency ceiling across all 8 CISSP domains. Max 100 questions.";
+    }
+    app.domainSelectorMap.forEach((ref) => {
+      ref.checkbox.disabled = true;
+      ref.checkbox.checked = true;
+    });
+  }
+
   refreshCustomTimingNote();
 }
 
@@ -1003,7 +1045,58 @@ function isPbqAllowedNow() {
     && app.attempt.theta >= PBQ_THETA_MIN;
 }
 
+function initDomainCeilings() {
+  const state = {};
+  for (const d of DOMAIN_BLUEPRINT) {
+    state[d.name] = {
+      attempted: 0,
+      correct: 0,
+      targetDiff: 0.0,       // start probing at medium difficulty
+      ceilingConfirmed: false,
+      ceiling: null,
+      weak: false,           // true = struggling → give more volume
+    };
+  }
+  return state;
+}
+
+// Called after every answer in CAT mode. Updates per-domain ceiling state:
+// - If you're doing well → push targetDiff up (probe harder next time)
+// - If you're failing in the window → confirm ceiling, flag as weak
+function updateDomainCeilings(domain, isCorrect) {
+  if (!app.attempt.domainCeilings) return;
+  const ds = app.attempt.domainCeilings[domain];
+  if (!ds || ds.ceilingConfirmed) return;
+
+  ds.attempted++;
+  if (isCorrect) ds.correct++;
+  if (ds.attempted < DC_MIN_ATTEMPTS) return;
+
+  const history = app.attempt.itemsAnswered
+    .filter(r => r.domain === domain)
+    .slice(-DC_WINDOW);
+  const recentAcc = history.filter(r => r.correct).length / history.length;
+
+  if (recentAcc < DC_FAIL_RATE) {
+    // Consistently failing at this difficulty level — ceiling confirmed here
+    ds.ceilingConfirmed = true;
+    ds.ceiling = ds.targetDiff;
+    ds.weak = true;
+    return;
+  }
+
+  // Overall weakness check (not ceiling yet, but struggling overall)
+  ds.weak = (ds.correct / ds.attempted) < DC_FAIL_RATE;
+
+  if (recentAcc >= DC_STRONG_RATE) {
+    // Strong recent performance — push difficulty up to probe the ceiling
+    ds.targetDiff = Math.min(ds.targetDiff + DC_PROBE_STEP, 2.5);
+    ds.weak = false;
+  }
+}
+
 function selectNextItem() {
+  if (app.attempt.config.mode === "adcm") return selectNextItemADCM();
   if (app.attempt.config.mode === "fixed") {
     return selectNextItemFixed();
   }
@@ -1035,6 +1128,26 @@ function selectNextItem() {
   const passCutTheta = scaledToTheta(700); // ≈ 1.0
   const judgmentBoostStrength = clamp((app.attempt.theta - (-1)) / (passCutTheta - (-1)), 0, 1) * 0.18;
 
+  // Correct-streak complexity boost: consecutive correct answers progressively
+  // prefer longer, wordier, more complex question stems — matching how the real
+  // CISSP escalates textual complexity on a hot streak. Stem word count is used
+  // as the complexity proxy (r ≈ -0.09 vs difficulty, so nearly independent signal).
+  // Streak 0 = no boost. Streak ≥ 5 = full boost (0.10 weight toward longest stems).
+  let correctStreak = 0;
+  for (let i = app.attempt.itemsAnswered.length - 1; i >= 0; i--) {
+    if (app.attempt.itemsAnswered[i].correct) correctStreak++;
+    else break;
+  }
+  const complexityBoostStrength = clamp(correctStreak / 5, 0, 1) * 0.10;
+
+  // Domain blueprint enforcement: the first 100 questions MUST track CISSP's
+  // official domain weights (D1=16%, D2=10%, D3-D5-D7=13%, D4=13%, D6=12%, D8=10%).
+  // Strong enforcement in base phase (Q1–100); adaptive extension (Q101–150)
+  // relaxes it so the CAT can target weak domains freely.
+  const isBasePhase = nextQuestionNumber <= 100;
+  const domainDeficitMultiplier = isBasePhase ? 0.14 : 0.06;
+  const domainDeficitCap = isBasePhase ? 0.55 : 0.35;
+
   const scored = scoringPool.map((item) => {
     const domain = getCanonicalDomainName(item.domain);
     const blueprint = DOMAIN_BLUEPRINT.find((d) => d.name === domain);
@@ -1046,7 +1159,7 @@ function selectNextItem() {
     if (blueprint) {
       const targetByNow = (blueprint.pct / 100) * nextQuestionNumber;
       const deficit = targetByNow - currentCount;
-      domainBoost = clamp(deficit * 0.06, -0.2, 0.35);
+      domainBoost = clamp(deficit * domainDeficitMultiplier, -0.2, domainDeficitCap);
     }
 
     // At low theta: knowledge items are slightly preferred (establish baseline).
@@ -1058,9 +1171,74 @@ function selectNextItem() {
     const impliedBoost = item.impliedKnowledge ? 0.04 : 0;
     const pilotBoost = isUnscoredSlot && item.pilotEligible ? pilotUnscoredBoost : 0;
 
+    // Stem word count normalized to [0,1] using p10=28 and p99=104 from the bank.
+    // Capped at 1 so outliers don't dominate. Combined with correctStreak ramp.
+    const wordCount = item.stem?.split(/\s+/).length ?? 30;
+    const complexityBoost = complexityBoostStrength * clamp((wordCount - 28) / 76, 0, 1);
+
+    // Per-domain ceiling boost/penalty:
+    // - Weak domain (struggling, no ceiling yet) → big positive boost = more volume
+    // - Ceiling confirmed → penalty = de-prioritize, budget shifts elsewhere
+    // - Doing well but ceiling not confirmed → prefer items at/above targetDiff to probe harder
+    // - Super-long items (superLong=true): only served when targetDiff >= 1.2 (high ceiling)
+    // - Ambiguous items (ambiguous=true): preferred on correct streak ≥ 3 (test without keyword anchors)
+    let ceilingBoost = 0;
+    if (app.attempt.domainCeilings) {
+      const dc = app.attempt.domainCeilings[domain];
+      if (dc) {
+        if (dc.ceilingConfirmed) {
+          ceilingBoost = -DC_CEIL_PENALTY;
+        } else if (dc.weak) {
+          ceilingBoost = DC_WEAK_BOOST;
+        } else if (dc.attempted >= DC_MIN_ATTEMPTS) {
+          const delta = item.difficulty - dc.targetDiff;
+          ceilingBoost = delta >= 0
+            ? clamp(0.15 - delta * 0.06, 0, 0.15)
+            : clamp(delta * 0.08, -0.12, 0);
+        }
+
+        // Super-long items: only surface when the test-taker has confirmed high
+        // competency in this domain (targetDiff >= 1.2). Before that threshold,
+        // penalise heavily so they don't appear prematurely.
+        // If the last answer was wrong, drop back — simpler items get priority.
+        if (item.superLong) {
+          const lastWasWrong = app.attempt.itemsAnswered.length > 0
+            && !app.attempt.itemsAnswered[app.attempt.itemsAnswered.length - 1].correct;
+          if (lastWasWrong) {
+            ceilingBoost -= 0.70; // wrong answer → drop back down, not super-long
+          } else {
+            ceilingBoost += dc.targetDiff >= 1.2 ? 0.28 : -0.60;
+          }
+        }
+
+        // Ambiguous items (qualifier/role-anchor stripped): boost when on a
+        // correct streak of ≥ 3 — tests real understanding without keyword anchors.
+        // Wrong last answer → penalise; struggling domain → penalise.
+        if (item.ambiguous) {
+          const lastWasWrong = app.attempt.itemsAnswered.length > 0
+            && !app.attempt.itemsAnswered[app.attempt.itemsAnswered.length - 1].correct;
+          if (lastWasWrong || dc.weak) {
+            ceilingBoost -= 0.25;
+          } else {
+            ceilingBoost += correctStreak >= 3 ? 0.18 : 0;
+          }
+        }
+
+        // Noise-wrapped items: also step back after a wrong answer in this domain.
+        // The test-taker needs a cleaner question to rebuild confidence first.
+        if (item.noiseWrapped) {
+          const domainHistory = app.attempt.itemsAnswered.filter(r => r.domain === domain);
+          const lastDomainAnswer = domainHistory[domainHistory.length - 1];
+          if (lastDomainAnswer && !lastDomainAnswer.correct) {
+            ceilingBoost -= 0.30;
+          }
+        }
+      }
+    }
+
     return {
       item,
-      score: info + domainBoost + judgmentBoost + impliedBoost + pilotBoost + Math.random() * 0.02,
+      score: info + domainBoost + judgmentBoost + impliedBoost + pilotBoost + complexityBoost + ceilingBoost + Math.random() * 0.02,
     };
   });
 
@@ -1147,6 +1325,12 @@ function updateAbility(item, isCorrect, partialScore) {
 
 function shouldStop() {
   const n = app.attempt.itemsAnswered.length;
+  if (app.attempt.config.mode === "adcm") {
+    if (n >= ADCM_MAX_QUESTIONS) return true;
+    const adcm = app.attempt.adcmState;
+    if (!adcm) return n >= 80;
+    return Object.values(adcm.domainData).every((d) => d.ceilingConfirmed);
+  }
   if (app.attempt.config.mode === "fixed") {
     return n >= (app.attempt.targetQuestionCount || app.attempt.config.maxQuestions);
   }
@@ -1154,6 +1338,12 @@ function shouldStop() {
   const { minQuestions, maxQuestions } = app.attempt.config;
   if (n >= maxQuestions) return true;
   if (n < minQuestions) return false;
+
+  // Secondary stop: all 8 domain ceilings confirmed — complete picture obtained.
+  if (app.attempt.domainCeilings) {
+    const allConfirmed = Object.values(app.attempt.domainCeilings).every(d => d.ceilingConfirmed);
+    if (allConfirmed) return true;
+  }
 
   // Certification CAT stopping rule: stop when the 95% CI is entirely on one
   // side of the pass cut. This is the correct psychometric criterion for a
@@ -1295,7 +1485,7 @@ function renderDomainSelectionStatus() {
 }
 
 function applyQuestionHeaderMode(mode, showRunningScore = false) {
-  const isCat = mode === "cat";
+  const isCat = mode === "cat" || mode === "adcm";
   const setVisible = (el, visible) => {
     if (!el) return;
     el.style.display = visible ? "" : "none";
@@ -1361,18 +1551,37 @@ function renderMetrics() {
   ui.passProbText.textContent = `${passConf.toFixed(1)}%`;
   if (ui.scoreText) ui.scoreText.textContent = `Score: ${scaled.toFixed(2).replace(".", ",")} / 1000`;
 
-  if (ui.scoredTrackerText) ui.scoredTrackerText.textContent = `Scored: ${scoredCount} | Unscored: ${unscoredCount}`;
+  if (ui.scoredTrackerText) {
+    if (app.attempt.config.mode === "adcm") {
+      const adcmSt = app.attempt.adcmState;
+      const confirmed = adcmSt ? Object.values(adcmSt.domainData).filter(d => d.ceilingConfirmed).length : 0;
+      ui.scoredTrackerText.textContent = `ADCM: ${n} answered | Ceilings: ${confirmed}/8`;
+    } else {
+      ui.scoredTrackerText.textContent = `Scored: ${scoredCount} | Unscored: ${unscoredCount}`;
+    }
+  }
   if (ui.unscoredRuleText) {
-    ui.unscoredRuleText.textContent =
-      app.attempt.config.mode === "cat"
-        ? `Unscored markers shown on graph`
-        : "All items scored in custom mode";
+    if (app.attempt.config.mode === "adcm") {
+      ui.unscoredRuleText.textContent = "ADCM: All items scored — no unscored slots";
+    } else {
+      ui.unscoredRuleText.textContent =
+        app.attempt.config.mode === "cat"
+          ? `Unscored markers shown on graph`
+          : "All items scored in custom mode";
+    }
   }
   if (ui.ciStopText) {
-    ui.ciStopText.textContent =
-      app.attempt.config.mode === "cat"
-        ? `Stop rule: 95% CI clears pass cut (${thetaToScaled(scaledToTheta(700)).toFixed(0)}). Borderline candidates run to 150.`
-        : `Custom Quiz Stop Rule: ${app.attempt.targetQuestionCount || app.attempt.config.maxQuestions} questions`;
+    if (app.attempt.config.mode === "adcm") {
+      const adcmSt = app.attempt.adcmState;
+      const confirmed = adcmSt ? Object.values(adcmSt.domainData).filter(d => d.ceilingConfirmed).length : 0;
+      const phase = adcmSt?.phase ?? 1;
+      ui.ciStopText.textContent = `ADCM Phase ${phase} | Domain ceilings confirmed: ${confirmed}/8 | Cap: ${ADCM_MAX_QUESTIONS} questions`;
+    } else {
+      ui.ciStopText.textContent =
+        app.attempt.config.mode === "cat"
+          ? `Stop rule: 95% CI clears pass cut (${thetaToScaled(scaledToTheta(700)).toFixed(0)}). Borderline candidates run to 150.`
+          : `Custom Quiz Stop Rule: ${app.attempt.targetQuestionCount || app.attempt.config.maxQuestions} questions`;
+    }
   }
 
   ui.avgQuestionTimeText.textContent = `${avgSec.toFixed(1)}s`;
@@ -1488,7 +1697,18 @@ function renderCurrentQuestion() {
     app.attempt.config.mode === "fixed"
       ? app.attempt.targetQuestionCount || app.attempt.config.maxQuestions
       : app.attempt.config.maxQuestions;
-  if (ui.progressText) ui.progressText.textContent = `Question ${qNum} / ${totalPlanned}${app.attempt.config.mode === "cat" && isUnscoredPlanned ? " (UNSCORED ITEM)" : ""}`;
+  if (ui.progressText) {
+    if (app.attempt.config.mode === "adcm" && app.attempt.adcmState) {
+      const adcmSt = app.attempt.adcmState;
+      const confirmed = Object.values(adcmSt.domainData).filter((d) => d.ceilingConfirmed).length;
+      const phaseLabel = adcmSt.phase === 1
+        ? `Phase 1 — Domain Stress Test (${qNum}/${ADCM_PHASE1_COUNT})`
+        : `Phase 2 — Ceiling Detection`;
+      ui.progressText.textContent = `${phaseLabel} | Q${qNum} | Ceilings confirmed: ${confirmed}/8`;
+    } else {
+      ui.progressText.textContent = `Question ${qNum} / ${totalPlanned}${app.attempt.config.mode === "cat" && isUnscoredPlanned ? " (UNSCORED ITEM)" : ""}`;
+    }
+  }
   if (ui.domainText) ui.domainText.textContent = getCanonicalDomainName(item.domain);
   if (ui.difficultyText) ui.difficultyText.textContent = `Difficulty: ${difficultyBand(item.difficulty)}`;
   ui.questionStem.textContent = getPresentedPrompt(item);
@@ -1757,7 +1977,10 @@ function renderResults() {
   const passCut = 700;
 
   if (ui.outcomeBanner) {
-    if (app.attempt.config.mode === "fixed") {
+    if (app.attempt.config.mode === "adcm") {
+      ui.outcomeBanner.textContent = "ADCM Diagnostic Complete — Domain Ceiling Report below.";
+      ui.outcomeBanner.className = "outcome adcm-complete";
+    } else if (app.attempt.config.mode === "fixed") {
       ui.outcomeBanner.textContent = "";
       ui.outcomeBanner.className = "outcome hidden";
     } else {
@@ -1787,10 +2010,16 @@ function renderResults() {
   renderDomainStrengthChart(domainStats, n);
   if (ui.analyticsNotes) {
     const stopReason = app.attempt.stopReason || "unknown";
-    ui.analyticsNotes.textContent =
-      app.attempt.config.mode === "cat"
-        ? `CAT stopped automatically by adaptive rules. Stop reason: ${stopReason}.`
-        : `Custom quiz completed at configured question count (${app.attempt.targetQuestionCount || app.attempt.config.maxQuestions}).`;
+    if (app.attempt.config.mode === "adcm") {
+      const adcmSt = app.attempt.adcmState;
+      const confirmed = adcmSt ? Object.values(adcmSt.domainData).filter((d) => d.ceilingConfirmed).length : 0;
+      ui.analyticsNotes.textContent = `ADCM diagnostic stopped. Reason: ${stopReason}. Domain ceilings confirmed: ${confirmed}/8.`;
+    } else {
+      ui.analyticsNotes.textContent =
+        app.attempt.config.mode === "cat"
+          ? `CAT stopped automatically by adaptive rules. Stop reason: ${stopReason}.`
+          : `Custom quiz completed at configured question count (${app.attempt.targetQuestionCount || app.attempt.config.maxQuestions}).`;
+    }
   }
 
   if (ui.reviewText) ui.reviewText.value = buildReviewText();
@@ -1798,6 +2027,16 @@ function renderResults() {
   renderExplanationReview();
   setActiveFilterButtons();
 
+  // Inject ADCM domain ceiling report at the top of results
+  if (app.attempt.config.mode === "adcm") {
+    let adcmContainer = document.getElementById("adcmResultsContainer");
+    if (!adcmContainer) {
+      adcmContainer = document.createElement("div");
+      adcmContainer.id = "adcmResultsContainer";
+      if (ui.resultsPanel) ui.resultsPanel.insertBefore(adcmContainer, ui.resultsPanel.firstChild);
+    }
+    adcmContainer.innerHTML = renderADCMResults();
+  }
   if (ui.resultsPanel) ui.resultsPanel.classList.remove("hidden");
   if (ui.questionPanel) ui.questionPanel.classList.add("hidden");
   if (ui.setupPanel) ui.setupPanel.classList.add("hidden");
@@ -1908,6 +2147,18 @@ function answerCurrentQuestion() {
   });
   rememberRecentItem(item);
 
+  if (app.attempt.config.mode === "cat") {
+    updateDomainCeilings(getCanonicalDomainName(item.domain), correct);
+  }
+  if (app.attempt.config.mode === "adcm") {
+    updateADCMState(
+      getCanonicalDomainName(item.domain),
+      item,
+      correct,
+      app.attempt.itemsAnswered.length
+    );
+  }
+
   app.attempt.scoreHistory.push({
     questionNumber,
     scaled: scaledAfter,
@@ -1940,6 +2191,305 @@ function sampleUnscoredPositions() {
     arr[j] = t;
   }
   return arr.slice(0, 25).sort((a, b) => a - b);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADCM — Aggressive Domain Ceiling Mode
+// ─────────────────────────────────────────────────────────────────────────────
+
+function initADCMState() {
+  const domainData = {};
+  for (const d of DOMAIN_BLUEPRINT) {
+    domainData[d.name] = {
+      attempted: 0,
+      correct: 0,
+      targetDiff: 1.0,         // starts in Hard territory
+      streak: 0,               // positive = consecutive correct, negative = consecutive wrong
+      ceilingConfirmed: false,
+      ceiling: null,           // difficulty value once ceiling is confirmed
+      recentResults: [],       // last 5: { diff: number, correct: boolean }
+    };
+  }
+  return { phase: 1, domainData };
+}
+
+function adcmDomainAccuracy(ds) {
+  return ds.attempted > 0 ? ds.correct / ds.attempted : 0.5;
+}
+
+function adcmOpenDomains(adcmState) {
+  return DOMAIN_BLUEPRINT.map((d) => d.name)
+    .filter((name) => !adcmState.domainData[name]?.ceilingConfirmed);
+}
+
+function updateADCMState(domainName, item, correct, totalAnswered) {
+  const adcm = app.attempt.adcmState;
+  if (!adcm) return;
+  const ds = adcm.domainData[domainName];
+  if (!ds) return;
+
+  ds.attempted++;
+  if (correct) ds.correct++;
+
+  // Streak: positive = correct run, negative = wrong run (reset on direction change)
+  ds.streak = correct
+    ? (ds.streak < 0 ? 1 : ds.streak + 1)
+    : (ds.streak > 0 ? -1 : ds.streak - 1);
+
+  ds.recentResults.push({ diff: item.difficulty, correct });
+  if (ds.recentResults.length > 5) ds.recentResults.shift();
+
+  if (!ds.ceilingConfirmed) {
+    // Adjust target difficulty on 2-streak (reset streak counter after adjustment)
+    if (ds.streak >= 2) {
+      ds.targetDiff = Math.min(2.0, ds.targetDiff + ADCM_DIFF_STEP);
+      ds.streak = 0;
+    } else if (ds.streak <= -2) {
+      ds.targetDiff = Math.max(-0.5, ds.targetDiff - ADCM_DIFF_STEP);
+      ds.streak = 0;
+    }
+
+    // Ceiling confirmation requires ADCM_MIN_ATTEMPTS and a stable stability window
+    if (ds.attempted >= ADCM_MIN_ATTEMPTS) {
+      const windowSlice = ds.recentResults.slice(-ADCM_CEIL_WINDOW);
+      if (windowSlice.length >= ADCM_CEIL_WINDOW) {
+        const windowAcc = windowSlice.filter((r) => r.correct).length / windowSlice.length;
+        // Consistently failing at current level → ceiling is at or below current target
+        if (windowAcc < ADCM_CEIL_PASS_RATE && ds.targetDiff <= 0.0) {
+          ds.ceilingConfirmed = true;
+          ds.ceiling = Math.max(-1.0, ds.targetDiff);
+        }
+        // Consistently passing at high difficulty → near-max ceiling confirmed
+        if (windowAcc >= ADCM_CEIL_PASS_RATE && ds.targetDiff >= 1.5) {
+          ds.ceilingConfirmed = true;
+          ds.ceiling = ds.targetDiff;
+        }
+      }
+      // Force confirmation after 8+ per-domain attempts regardless of stability
+      if (ds.attempted >= 8 && !ds.ceilingConfirmed) {
+        const overallAcc = ds.correct / ds.attempted;
+        ds.ceilingConfirmed = true;
+        ds.ceiling = overallAcc >= ADCM_CEIL_PASS_RATE
+          ? ds.targetDiff
+          : Math.max(-1.0, ds.targetDiff - ADCM_DIFF_STEP);
+      }
+    }
+  }
+
+  // Phase 1 → Phase 2 transition after ADCM_PHASE1_COUNT questions answered
+  if (adcm.phase === 1 && totalAnswered >= ADCM_PHASE1_COUNT) {
+    adcm.phase = 2;
+  }
+}
+
+function selectADCMPhase1Item(pool) {
+  // Distribute evenly across all 8 domains: domain with fewest phase-1 Qs goes next
+  const domainCounts = {};
+  for (const d of DOMAIN_BLUEPRINT) domainCounts[d.name] = 0;
+  for (const row of app.attempt.itemsAnswered) {
+    domainCounts[row.domain] = (domainCounts[row.domain] || 0) + 1;
+  }
+
+  const domainsByNeed = DOMAIN_BLUEPRINT.map((d) => d.name)
+    .sort((a, b) => domainCounts[a] - domainCounts[b]);
+
+  for (const targetDomain of domainsByNeed) {
+    const hard = pool.filter((item) =>
+      getCanonicalDomainName(item.domain) === targetDomain
+      && item.difficulty >= ADCM_HARD_FLOOR
+      && item.questionType !== "knowledge"
+    );
+    if (hard.length > 0) {
+      const scored = hard.map((item) => ({
+        item,
+        score: item.difficulty + (item.judgmentLevel ?? 1) * 0.08 + Math.random() * 0.05,
+      })).sort((a, b) => b.score - a.score);
+      return pickRankWeighted(scored, 0.3, 5, 20);
+    }
+  }
+
+  // Fallback: any hard item across all domains
+  const hardAny = pool.filter((item) => item.difficulty >= ADCM_HARD_FLOOR);
+  if (hardAny.length > 0) {
+    const scored = hardAny.map((item) => ({
+      item,
+      score: item.difficulty + Math.random() * 0.05,
+    })).sort((a, b) => b.score - a.score);
+    return pickRankWeighted(scored, 0.3, 5, 20);
+  }
+
+  return pool[Math.floor(Math.random() * pool.length)] ?? null;
+}
+
+function selectADCMPhase2Item(pool) {
+  const adcm = app.attempt.adcmState;
+  const open = adcmOpenDomains(adcm);
+  if (!open.length) return null;
+
+  // Rank open domains: weakest (lowest accuracy) gets priority
+  const ranked = [...open].sort((a, b) =>
+    adcmDomainAccuracy(adcm.domainData[a]) - adcmDomainAccuracy(adcm.domainData[b])
+  );
+
+  for (const targetDomain of ranked) {
+    const ds = adcm.domainData[targetDomain];
+    const target = ds.targetDiff;
+
+    // Items within ±0.4 of target difficulty in this domain
+    let domainPool = pool.filter((item) =>
+      getCanonicalDomainName(item.domain) === targetDomain
+      && Math.abs(item.difficulty - target) <= 0.4
+    );
+
+    // Relax difficulty window if pool too small
+    if (domainPool.length < 3) {
+      domainPool = pool.filter((item) =>
+        getCanonicalDomainName(item.domain) === targetDomain
+      );
+    }
+
+    if (domainPool.length > 0) {
+      const scored = domainPool.map((item) => ({
+        item,
+        score: (1 - Math.abs(item.difficulty - target) * 0.4)
+          + (item.questionType === "judgment" ? 0.15 : item.questionType === "scenario" ? 0.07 : 0)
+          + (item.judgmentLevel ?? 1) * 0.06
+          + Math.random() * 0.04,
+      })).sort((a, b) => b.score - a.score);
+      return pickRankWeighted(scored, 0.3, 5, 20);
+    }
+  }
+
+  // Fallback: any item from a domain without confirmed ceiling
+  const fallback = pool.filter((item) =>
+    !adcm.domainData[getCanonicalDomainName(item.domain)]?.ceilingConfirmed
+  );
+  return fallback.length > 0
+    ? fallback[Math.floor(Math.random() * fallback.length)]
+    : (pool[Math.floor(Math.random() * pool.length)] ?? null);
+}
+
+function selectNextItemADCM() {
+  const attempted = getAttemptedDedupSets();
+  const candidates = app.bank.items.filter((item) =>
+    !attempted.families.has(getItemFamilyKey(item))
+    && !attempted.stems.has(getStemKey(item.stem))
+    && !isPbqItem(item)
+    && shouldIncludeItemByQuality(item)
+  );
+  if (!candidates.length) return null;
+
+  const eligible = filterRecentlySeen(candidates, 80);
+  const pool = eligible.length >= 10 ? eligible : candidates;
+
+  const adcm = app.attempt.adcmState;
+  return (!adcm || adcm.phase === 1)
+    ? selectADCMPhase1Item(pool)
+    : selectADCMPhase2Item(pool);
+}
+
+function adcmCeilingLabel(ceiling) {
+  if (ceiling === null || ceiling === undefined) return "Not determined";
+  if (ceiling >= 1.5) return "Expert (≥1.5)";
+  if (ceiling >= 0.9) return "Advanced (0.9–1.4)";
+  if (ceiling >= 0.3) return "Intermediate (0.3–0.8)";
+  return "Foundational (<0.3)";
+}
+
+function adcmFailurePattern(ds) {
+  const acc = adcmDomainAccuracy(ds);
+  if (acc < 0.30) return "Significant knowledge gap — foundational review required.";
+  if (acc < 0.50) return "Knowledge gaps + judgment errors — study then apply in context.";
+  if (acc < 0.70) return "Judgment/wording traps — precision reading practice needed.";
+  return "Strong performance — ceiling confirmed above passing threshold.";
+}
+
+function adcmNextSessionDiff(ds) {
+  const acc = adcmDomainAccuracy(ds);
+  if (acc < 0.40) return "Begin at Easy (difficulty < 0)";
+  if (acc < 0.60) return "Begin at Medium (difficulty 0–0.7)";
+  return "Begin at Hard (difficulty > 0.7) — extend ceiling";
+}
+
+function renderADCMResults() {
+  const adcm = app.attempt?.adcmState;
+  if (!adcm) return "";
+
+  const rows = DOMAIN_BLUEPRINT.map((d) => {
+    const ds = adcm.domainData[d.name] || { attempted: 0, correct: 0, ceilingConfirmed: false, ceiling: null };
+    const acc = adcmDomainAccuracy(ds);
+    return {
+      name: d.name,
+      acc,
+      accPct: (acc * 100).toFixed(0),
+      attempted: ds.attempted,
+      correct: ds.correct,
+      ceilingLabel: adcmCeilingLabel(ds.ceiling),
+      confirmed: ds.ceilingConfirmed,
+      pattern: adcmFailurePattern(ds),
+      nextDiff: adcmNextSessionDiff(ds),
+    };
+  });
+
+  const sortedByWeakness = [...rows].sort((a, b) => a.acc - b.acc);
+  const weakest3 = sortedByWeakness.slice(0, 3);
+
+  const tableHtml = `
+    <div class="adcm-table-wrap">
+      <table class="adcm-results-table">
+        <thead><tr>
+          <th>Domain</th><th>Asked</th><th>Accuracy</th><th>Ceiling</th><th>Confirmed</th>
+        </tr></thead>
+        <tbody>${rows.map((r) => `
+          <tr class="${r.acc < 0.50 ? "adcm-row-weak" : r.acc >= 0.70 ? "adcm-row-strong" : ""}">
+            <td>${escapeHtml(r.name)}</td>
+            <td>${r.correct}/${r.attempted}</td>
+            <td class="adcm-acc">${r.accPct}%</td>
+            <td>${escapeHtml(r.ceilingLabel)}</td>
+            <td>${r.confirmed ? "✓ Yes" : "—"}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>`;
+
+  const weakHtml = `
+    <div class="adcm-priority">
+      <h4>Priority Focus Areas (Weakest → Strongest)</h4>
+      <ol class="adcm-focus-list">${weakest3.map((r) => `
+        <li>
+          <strong>${escapeHtml(r.name)}</strong>
+          <span class="adcm-acc-badge adcm-acc-${r.acc < 0.50 ? "low" : r.acc < 0.70 ? "mid" : "high"}">${r.accPct}%</span>
+          <div class="small-note">${escapeHtml(r.pattern)}</div>
+          <div class="small-note adcm-next">Next session: ${escapeHtml(r.nextDiff)}</div>
+        </li>`).join("")}
+      </ol>
+    </div>`;
+
+  const totalItems = app.attempt.itemsAnswered.length;
+  const totalCorrect = app.attempt.itemsAnswered.filter((x) => x.correct).length;
+  const overallAcc = totalItems > 0 ? totalCorrect / totalItems : 0;
+
+  let rec;
+  if (overallAcc >= 0.70) {
+    rec = "Above threshold overall. Sharpen ambiguity training on the 1–2 weakest domains before your next exam attempt.";
+  } else if (overallAcc >= 0.50) {
+    rec = "Mixed performance. Prioritize the red domains using scenario and judgment-level practice before re-testing.";
+  } else {
+    rec = "Below threshold across most domains. Return to foundational CBK review in priority domains before ADCM re-testing.";
+  }
+
+  return `
+    <section class="adcm-results-section">
+      <h3>ADCM Diagnostic Report</h3>
+      <p class="small-note adcm-subtitle">Aggressive Domain Ceiling Mode — maps your true competency ceiling per domain using progressive difficulty targeting and domain-specific adaptive selection.</p>
+      <p><strong>Overall:</strong> ${totalCorrect}/${totalItems} correct (${(overallAcc * 100).toFixed(0)}%) | Phase reached: ${adcm.phase} | Questions administered: ${totalItems}/${ADCM_MAX_QUESTIONS}</p>
+      ${tableHtml}
+      ${weakHtml}
+      <div class="adcm-rec">
+        <h4>Recommendation for Next Session</h4>
+        <p>${escapeHtml(rec)}</p>
+      </div>
+    </section>`;
 }
 
 function startNewAttempt() {
@@ -1994,7 +2544,21 @@ function startNewAttempt() {
     currentPresentedAtMs: 0,
   };
 
-  app.attempt.currentItem = config.mode === "cat" ? selectFirstItem(config.startTheta) : selectNextItemFixed();
+  if (config.mode === "cat") {
+    app.attempt.domainCeilings = initDomainCeilings();
+  }
+  if (config.mode === "adcm") {
+    app.attempt.theta = 1.0;          // start above midpoint for aggressive mode
+    app.attempt.unscoredPositions = []; // ADCM scores everything
+    app.attempt.durationSec = null;    // no time limit — pure diagnostic
+    app.attempt.targetQuestionCount = ADCM_MAX_QUESTIONS;
+    app.attempt.adcmState = initADCMState();
+  }
+  app.attempt.currentItem = config.mode === "adcm"
+    ? selectNextItemADCM()
+    : config.mode === "cat"
+      ? selectFirstItem(config.startTheta)
+      : selectNextItemFixed();
   app.attempt.currentPresentedAtMs = Date.now();
 
   if (!app.attempt.currentItem) {
@@ -2040,17 +2604,57 @@ function loadBank(bank) {
   refreshModeUi();
 }
 
+// Background-fetch the variants bank (__nw / __ambig / __xl) and merge into
+// app.bank without blocking the exam. Called once after the base bank loads.
+async function loadVariantsInBackground(pageHref) {
+  const candidates = [
+    new URL("./question-bank.variants.json",      import.meta.url).href,
+    new URL("../cat/question-bank.variants.json",  pageHref).href,
+    new URL("./cat/question-bank.variants.json",   pageHref).href,
+    new URL("./question-bank.variants.json",       pageHref).href,
+  ];
+  for (const path of Array.from(new Set(candidates))) {
+    try {
+      const res = await fetch(path, { cache: "force-cache" });
+      if (!res.ok) continue;
+      const varBank = await res.json();
+      if (!varBank?.variantBank || !Array.isArray(varBank.items)) continue;
+      if (!app.bank) return; // base bank gone — abort
+      const existingIds = new Set(app.bank.items.map(i => i.id));
+      const newItems = varBank.items.filter(i => !existingIds.has(i.id));
+      app.bank.items.push(...newItems);
+      if (ui.bankStatus) {
+        ui.bankStatus.textContent = ui.bankStatus.textContent.replace(
+          /\d+ questions?/,
+          `${app.bank.items.length} questions`
+        );
+      }
+      return;
+    } catch { /* variants are optional — silent fail */ }
+  }
+}
+
 async function loadDefaultBank() {
   const pageHref = window.location.href;
+  // Priority order: quality-fixed (base + synonym variants) → augmented → sample
+  // Variants (__nw/__ambig/__xl) are fetched separately in the background.
   const candidates = [
-    new URL("./question-bank.sample.json", import.meta.url).href,
-    new URL("../cat/question-bank.sample.json", pageHref).href,
-    new URL("./cat/question-bank.sample.json", pageHref).href,
-    new URL("./question-bank.sample.json", pageHref).href,
-    new URL("./question-bank.qa.json", import.meta.url).href,
-    new URL("../cat/question-bank.qa.json", pageHref).href,
-    new URL("./cat/question-bank.qa.json", pageHref).href,
-    new URL("./question-bank.qa.json", pageHref).href,
+    new URL("./question-bank.quality-fixed.json",       import.meta.url).href,
+    new URL("../cat/question-bank.quality-fixed.json",   pageHref).href,
+    new URL("./cat/question-bank.quality-fixed.json",    pageHref).href,
+    new URL("./question-bank.quality-fixed.json",        pageHref).href,
+    new URL("./question-bank.augmented.json",            import.meta.url).href,
+    new URL("../cat/question-bank.augmented.json",       pageHref).href,
+    new URL("./cat/question-bank.augmented.json",        pageHref).href,
+    new URL("./question-bank.augmented.json",            pageHref).href,
+    new URL("./question-bank.sample.json",               import.meta.url).href,
+    new URL("../cat/question-bank.sample.json",          pageHref).href,
+    new URL("./cat/question-bank.sample.json",           pageHref).href,
+    new URL("./question-bank.sample.json",               pageHref).href,
+    new URL("./question-bank.qa.json",                   import.meta.url).href,
+    new URL("../cat/question-bank.qa.json",              pageHref).href,
+    new URL("./cat/question-bank.qa.json",               pageHref).href,
+    new URL("./question-bank.qa.json",                   pageHref).href,
   ];
   const uniqueCandidates = Array.from(new Set(candidates));
   let lastErr = null;
@@ -2064,6 +2668,8 @@ async function loadDefaultBank() {
         continue;
       }
       loadBank(bank);
+      // Kick off background variant fetch — does not block exam start
+      loadVariantsInBackground(pageHref);
       return;
     } catch (err) {
       lastErr = err;

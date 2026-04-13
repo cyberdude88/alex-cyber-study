@@ -4,9 +4,9 @@
 **Source items considered:** 947  
 **Items audited successfully:** 947  
 **Items errored:** 0  
-**Overall quality pass (score ≥ 55):** 278 (29.4%)  
-**Overall fail:** 669 (70.6%)  
-**Average composite score:** 58.1/100
+**Overall quality pass (score ≥ 55):** 811 (85.6%)  
+**Overall fail:** 136 (14.4%)  
+**Average composite score:** 81.3/100
 
 ---
 
@@ -14,12 +14,7 @@
 
 | Round | Pass | Fail | Pass% |
 |-------|------|------|-------|
-| Round 1 — Structural | 947 | 0 | 100.0% |
-| Round 2 — CEO Mindset | 328 | 619 | 34.6% |
-| Round 3 — Cognitive Level | 552 | 395 | 58.3% |
-| Round 4 — Distractor Auth | 805 | 142 | 85.0% |
-| Round 5 — Explanation Depth | 926 | 21 | 97.8% |
-| Round 6 — Peer Review | 797 | 150 | 84.2% |
+| Round 6 — Peer Review | 811 | 136 | 85.6% |
 
 ---
 
@@ -27,11 +22,11 @@
 
 | Level | Count | % |
 |-------|-------|---|
-| Judgment | 4 | 0.4% |
-| Analysis | 548 | 57.9% |
-| Application | 393 | 41.5% |
-| Recall | 2 | 0.2% |
-| Unknown | 0 | 0.0% |
+| Judgment | 0 | 0.0% |
+| Analysis | 0 | 0.0% |
+| Application | 0 | 0.0% |
+| Recall | 0 | 0.0% |
+| Unknown | 947 | 100.0% |
 
 ---
 
@@ -39,22 +34,22 @@
 
 | Domain | Items | Avg Score | Pass% |
 |--------|-------|-----------|-------|
-| 1 Security and Risk Management | 53 | 62.2 | 83.0% |
-| 1. Security and Risk Management | 108 | 58.3 | 63.9% |
-| 2 Asset Security | 30 | 61.4 | 83.3% |
-| 2. Asset Security | 63 | 56.7 | 61.9% |
-| 3 Security Architecture and Engineering | 37 | 59.0 | 86.5% |
-| 3. Security Architecture and Engineering | 85 | 56.4 | 61.2% |
-| 4 Communication and Network Security | 39 | 57.0 | 64.1% |
-| 4. Communication and Network Security | 75 | 57.3 | 61.3% |
-| 5 Identity and Access Management | 38 | 59.5 | 78.9% |
-| 5. Identity and Access Management (IAM) | 84 | 58.6 | 71.4% |
-| 6 Security Assessment and Testing | 49 | 60.3 | 87.8% |
-| 6. Security Assessment and Testing | 74 | 58.1 | 71.6% |
-| 7 Security Operations | 38 | 59.6 | 81.6% |
-| 7. Security Operations | 84 | 55.6 | 56.0% |
-| 8 Software Development Security | 29 | 55.7 | 58.6% |
-| 8. Software Development Security | 61 | 58.5 | 72.1% |
+| 1 Security and Risk Management | 53 | 83.8 | 98.1% |
+| 1. Security and Risk Management | 108 | 82.3 | 95.4% |
+| 2 Asset Security | 30 | 86.4 | 96.7% |
+| 2. Asset Security | 63 | 81.7 | 95.2% |
+| 3 Security Architecture and Engineering | 37 | 77.6 | 100.0% |
+| 3. Security Architecture and Engineering | 85 | 78.1 | 89.4% |
+| 4 Communication and Network Security | 39 | 80.3 | 97.4% |
+| 4. Communication and Network Security | 75 | 78.7 | 93.3% |
+| 5 Identity and Access Management | 38 | 78.5 | 97.4% |
+| 5. Identity and Access Management (IAM) | 84 | 83.0 | 90.5% |
+| 6 Security Assessment and Testing | 49 | 83.9 | 93.9% |
+| 6. Security Assessment and Testing | 74 | 82.1 | 98.6% |
+| 7 Security Operations | 38 | 83.8 | 97.4% |
+| 7. Security Operations | 84 | 81.0 | 97.6% |
+| 8 Software Development Security | 29 | 75.1 | 89.7% |
+| 8. Software Development Security | 61 | 82.4 | 100.0% |
 
 ---
 
@@ -62,21 +57,21 @@
 
 | Flag | Count |
 |------|-------|
-| `DISTRACTORS_NOT_ADDRESSED` | 946 |
-| `NO_STANDARD_REF` | 860 |
-| `D` | 812 |
-| `A` | 749 |
-| `C` | 746 |
-| `B` | 701 |
-| `CEO_MINDSET_FAIL` | 619 |
-| `MGMT_CONTEXT` | 579 |
 | `NO_OPTION_CONTRAST` | 559 |
-| `GOV_CONCEPTS` | 550 |
-| `NO_QUALIFIER` | 523 |
 | `PEER_NO_QUALIFIER` | 523 |
-| `QUALIFIERS` | 424 |
-| `NO_CAUSAL_CONNECTOR` | 423 |
-| `NO_GOVERNANCE_CONCEPT` | 397 |
+| `NO_ROLE_OR_SCENARIO` | 206 |
+| `CONDITIONAL_JUDGMENT_STEM` | 179 |
+| `CORRECT_CHOICE_CUE` | 171 |
+| `NEGATIVE_STEM` | 144 |
+| `PEER_REVIEW_FAIL` | 136 |
+| `CHOICE_LENGTH_SKEW` | 113 |
+| `POSSIBLE_MULTI_KEY` | 62 |
+| `ACRONYM_HEAVY` | 62 |
+| `SCENARIO_THIN` | 49 |
+| `CHOICE_STYLE_MISMATCH` | 39 |
+| `PEER_RECALL_STYLE` | 32 |
+| `WEAK_ABSOLUTE_DISTRACTORS` | 22 |
+| `STEM_BLOATED` | 3 |
 
 ---
 
@@ -84,26 +79,26 @@
 
 | # | Item ID | Domain | Score | Key Flags |
 |---|---------|--------|-------|-----------|
-| 1 | `d4-q14` | 4 Communication and Network Securit | 40.9 | r2_ceo_mindset | r3_cognitive | r6_peer_review |
-| 2 | `d3-q56` | 3. Security Architecture and Engine | 41.5 | r2_ceo_mindset | r3_cognitive | r4_distractor | r6_peer_review |
-| 3 | `d7-q39` | 7. Security Operations | 42.8 | r2_ceo_mindset | r3_cognitive | r4_distractor | r6_peer_review |
-| 4 | `d2-q53` | 2. Asset Security | 42.9 | r2_ceo_mindset | r3_cognitive | r4_distractor |
-| 5 | `d3-pbq-dd1` | 3. Security Architecture and Engine | 43.5 | r2_ceo_mindset | r3_cognitive | r4_distractor |
-| 6 | `d6-q20` | 6 Security Assessment and Testing | 43.7 | r2_ceo_mindset | r3_cognitive | r6_peer_review |
-| 7 | `d3-q75` | 3. Security Architecture and Engine | 43.7 | r2_ceo_mindset | r3_cognitive | r4_distractor |
-| 8 | `d4-q50` | 4. Communication and Network Securi | 43.8 | r2_ceo_mindset | r3_cognitive | r4_distractor | r5_explanation | r6_peer_review |
-| 9 | `d3-q73` | 3. Security Architecture and Engine | 43.8 | r2_ceo_mindset | r3_cognitive | r6_peer_review |
-| 10 | `d3-q90` | 3. Security Architecture and Engine | 43.8 | r2_ceo_mindset | r4_distractor | r6_peer_review |
-| 11 | `d6-q51` | 6. Security Assessment and Testing | 44.0 | r2_ceo_mindset | r3_cognitive | r4_distractor | r6_peer_review |
-| 12 | `d6-q92` | 6. Security Assessment and Testing | 44.0 | r2_ceo_mindset | r4_distractor | r6_peer_review |
-| 13 | `d4-q61` | 4. Communication and Network Securi | 44.2 | r2_ceo_mindset | r4_distractor |
-| 14 | `d2-q31` | 2. Asset Security | 44.4 | r2_ceo_mindset | r3_cognitive | r4_distractor |
-| 15 | `d7-q89` | 7. Security Operations | 44.5 | r2_ceo_mindset | r3_cognitive | r4_distractor | r6_peer_review |
-| 16 | `d4-q105` | 4. Communication and Network Securi | 44.6 | r2_ceo_mindset | r4_distractor |
-| 17 | `d1-q55` | 1. Security and Risk Management | 44.8 | r2_ceo_mindset | r3_cognitive | r4_distractor |
-| 18 | `d4-q56` | 4. Communication and Network Securi | 44.8 | r2_ceo_mindset | r6_peer_review |
-| 19 | `d8-q16` | 8 Software Development Security | 45.0 | r2_ceo_mindset | r3_cognitive | r6_peer_review |
-| 20 | `d1-q63` | 1. Security and Risk Management | 45.0 | r2_ceo_mindset | r4_distractor | r6_peer_review |
+| 1 | `d6-q20` | 6 Security Assessment and Testing | 36.0 | r6_peer_review |
+| 2 | `d2-q46` | 2. Asset Security | 36.0 | r6_peer_review |
+| 3 | `d8-q16` | 8 Software Development Security | 38.0 | r6_peer_review |
+| 4 | `d8-q19` | 8 Software Development Security | 38.0 | r6_peer_review |
+| 5 | `d4-q56` | 4. Communication and Network Securi | 38.0 | r6_peer_review |
+| 6 | `d5-q31` | 5 Identity and Access Management | 44.0 | r6_peer_review |
+| 7 | `d7-q39` | 7. Security Operations | 44.0 | r6_peer_review |
+| 8 | `d7-q46` | 7. Security Operations | 44.0 | r6_peer_review |
+| 9 | `d5-q92` | 5. Identity and Access Management ( | 44.0 | r6_peer_review |
+| 10 | `d4-q14` | 4 Communication and Network Securit | 46.0 | r6_peer_review |
+| 11 | `d1-q61` | 1. Security and Risk Management | 46.0 | r6_peer_review |
+| 12 | `d3-q53` | 3. Security Architecture and Engine | 46.0 | r6_peer_review |
+| 13 | `d1-q113` | 1. Security and Risk Management | 46.0 | r6_peer_review |
+| 14 | `d3-q56` | 3. Security Architecture and Engine | 48.0 | r6_peer_review |
+| 15 | `d2-q14` | 2 Asset Security | 50.0 | r6_peer_review |
+| 16 | `d4-q49` | 4. Communication and Network Securi | 50.0 | r6_peer_review |
+| 17 | `d4-q94` | 4. Communication and Network Securi | 50.0 | r6_peer_review |
+| 18 | `d1-q32` | 1 Security and Risk Management | 52.0 | r6_peer_review |
+| 19 | `d8-q28` | 8 Software Development Security | 52.0 | r6_peer_review |
+| 20 | `d3-q43` | 3. Security Architecture and Engine | 52.0 | r6_peer_review |
 
 ---
 
