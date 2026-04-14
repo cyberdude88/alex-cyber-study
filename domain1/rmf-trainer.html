@@ -29,17 +29,30 @@
       gap: 2rem;
       max-width: 1200px;
       margin: 0 auto;
+      height: calc(100vh - 260px);
+      min-height: 420px;
     }
     .rmf-column {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 14px;
       padding: 1.25rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .rmf-column h3 {
+      position: sticky;
+      top: 0;
+      background: rgba(15,12,41,0.92);
+      backdrop-filter: blur(8px);
+      padding: 0.5rem 0 0.75rem;
+      margin: -0.25rem 0 0.5rem;
+      z-index: 2;
     }
     .rmf-column h3 {
       text-align: center;
       font-size: 1.1rem;
-      margin-bottom: 1rem;
     }
     .scenario-item {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -97,7 +110,8 @@
     }
     .step-drop .scenario-item { margin: 0.4rem 0; }
     @media (max-width: 768px) {
-      .rmf-layout { grid-template-columns: 1fr; }
+      .rmf-layout { grid-template-columns: 1fr; height: auto; }
+      .rmf-column { max-height: 60vh; }
     }
   </style>
 </head>
