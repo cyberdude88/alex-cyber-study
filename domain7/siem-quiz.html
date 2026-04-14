@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CISSP scenario quiz — choose between IDS, IPS, NGFW, and SIEM. Know when each control is the BEST answer. Domain 7.">
+  <meta name="keywords" content="CISSP SIEM IDS IPS NGFW, security monitoring, domain 7, security operations">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain7/siem-quiz.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="IDS / IPS / NGFW / SIEM Quiz — Domain 7 | Alex Cyber Study">
+  <meta property="og:description" content="CISSP scenario quiz — choose the correct detection/response control: IDS, IPS, NGFW, or SIEM.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain7/siem-quiz.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IDS / IPS / NGFW / SIEM Quiz — Domain 7 | Alex Cyber Study">
+  <meta name="twitter:description" content="CISSP scenario quiz — choose IDS, IPS, NGFW, or SIEM for each scenario.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>IDS / IPS / NGFW / SIEM Scenario Quiz — Domain 7 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .quiz-container { max-width: 800px; margin: 0 auto; padding: 0 2rem 3rem; }
+    .question-block {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 1.75rem; margin-bottom: 1.5rem;
+    }
+    .question-text { font-size: 1.08rem; font-weight: 600; margin-bottom: 1.25rem; line-height: 1.55; }
+    .options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .option {
+      background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.13);
+      border-radius: 10px; padding: 0.85rem 1.2rem; cursor: pointer;
+      transition: background 0.2s, border-color 0.2s; font-size: 0.96rem; line-height: 1.4;
+    }
+    .option:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.28); }
+    .option.correct  { background: rgba(16,185,129,0.18); border-color: #10b981; color: #4ade80; }
+    .option.incorrect{ background: rgba(239,68,68,0.13); border-color: #ef4444; color: #fca5a5; }
+    .option.disabled { pointer-events: none; }
+    .explanation {
+      margin-top: 1rem; padding: 0.85rem 1.1rem;
+      background: rgba(255,255,255,0.04); border-left: 3px solid #ec4899;
+      border-radius: 0 8px 8px 0; font-size: 0.88rem; color: rgba(255,255,255,0.72);
+      display: none; line-height: 1.5;
+    }
+    .score-board { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 1.5rem; color: #4ade80; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html" class="active">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🖥️ IDS / IPS / NGFW / SIEM Quiz</h1>
+      <p class="game-subtitle">Domain 7 — IDS detects. IPS blocks. SIEM aggregates. NGFW enforces. Know the difference.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 7</a>
+      <button class="reset-btn" onclick="initQuiz()">🔄 Reset</button>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / <span id="total">0</span></div>
+  </div>
+
+  <div class="quiz-container" id="quizContainer"></div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 7 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        q: "An organization operates manual security logs at servers, causing missed alerts and poor incident prevention. Management approves ONE control that must improve detection, prevention, and reduce analyst workload. What is MOST effective?",
+        opts: ["A. A system that detects, alerts, and blocks malicious network traffic (IPS)", "B. A tool that detects suspicious traffic and generates alerts (IDS)", "C. A device filtering application-level network traffic (NGFW)", "D. Security Information and Event Management (SIEM)"],
+        correct: 3,
+        exp: "The SIEM solves the ROOT problem — manual log review. IPS, NGFW, and IDS all generate more alerts that still feed into a manual system. SIEM aggregates, correlates, and automates the detection process across all sources."
+      },
+      {
+        q: "Leadership wants a system that can AUTOMATICALLY BLOCK attacks on the enterprise NETWORK in real time — not just alert. Alert fatigue in the SOC is a key concern. What is the BEST control?",
+        opts: ["A. HIDS (Host-based IDS)", "B. NIDS (Network IDS)", "C. HIPS (Host-based IPS)", "D. NIPS (Network IPS)"],
+        correct: 3,
+        exp: "Enterprise-wide + automatically block = NIPS. NIDS only detects. HIPS/HIDS operate at endpoint level — the question specifies enterprise network traffic. 'System' in CISSP context can mean the broader network/program."
+      },
+      {
+        q: "A SOC needs to correlate events across 40 different security tools and generate compliance reports automatically. Which control BEST serves this need?",
+        opts: ["A. IPS", "B. NGFW", "C. SIEM", "D. DLP"],
+        correct: 2,
+        exp: "SIEM is built for aggregation, correlation, and reporting across multiple data sources. IPS blocks. NGFW enforces at the network level. DLP manages data movement. Only SIEM connects all the dots."
+      },
+      {
+        q: "A web application is experiencing injection attacks embedded in legitimate HTTPS traffic on port 443. Which firewall type can inspect and block these at the application layer?",
+        opts: ["A. Stateless packet filter", "B. Stateful inspection firewall", "C. Circuit-level gateway", "D. Next-Generation Firewall (NGFW)"],
+        correct: 3,
+        exp: "NGFW (Next-Generation Firewall) includes deep packet inspection and application-layer awareness — it can inspect HTTPS content and identify injection payloads inside legitimate traffic. Traditional stateful firewalls only track connection state."
+      },
+      {
+        q: "Ransomware has encrypted 200 endpoints across the network. The security team receives an alert about unusual lateral movement behavior. Which system most likely generated this alert?",
+        opts: ["A. DLP — it detected data exfiltration", "B. SIEM — it correlated endpoint alerts to identify lateral movement pattern", "C. RAID — the redundant storage detected corruption", "D. IDS — it blocked the ransomware payload"],
+        correct: 1,
+        exp: "SIEM correlates events across multiple sources — when many endpoints show similar behavior simultaneously, SIEM recognizes the pattern as lateral movement. RAID does not generate alerts. DLP focuses on data movement. IDS detects, not blocks."
+      }
+    ];
+
+    let correct = 0;
+
+    function initQuiz() {
+      correct = 0; updateScore();
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      questions.forEach((q, qi) => {
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        const shuffled = q.opts.map((o,i)=>({text:o,orig:i})).sort(()=>Math.random()-0.5);
+        block.innerHTML = `
+          <div class="question-text">Q${qi+1}. ${q.q}</div>
+          <div class="options">
+            ${shuffled.map(o=>`<div class="option" onclick="pick(this,${o.orig},${q.correct},${qi})">${o.text}</div>`).join('')}
+          </div>
+          <div class="explanation" id="exp-${qi}">${q.exp}</div>
+        `;
+        container.appendChild(block);
+      });
+    }
+
+    function pick(el, chosen, correctOrig, qi) {
+      const block = el.closest('.question-block');
+      if (block.dataset.answered) return;
+      block.dataset.answered = '1';
+      const opts = block.querySelectorAll('.option');
+      opts.forEach(o => o.classList.add('disabled'));
+      if (chosen === correctOrig) { el.classList.add('correct'); correct++; }
+      else {
+        el.classList.add('incorrect');
+        opts.forEach(o => {
+          const m = o.getAttribute('onclick').match(/pick\(this,(\d+)/);
+          if (m && parseInt(m[1]) === correctOrig) o.classList.add('correct');
+        });
+      }
+      document.getElementById(`exp-${qi}`).style.display = 'block';
+      updateScore();
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = correct;
+      document.getElementById('total').textContent = questions.length;
+    }
+
+    initQuiz();
+  </script>
+</body>
+</html>

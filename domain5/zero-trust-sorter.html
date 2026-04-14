@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sort Zero Trust components — PE, PDP, PA, PEP — into the correct plane: Control Plane or Data Plane. Domain 5.">
+  <meta name="keywords" content="CISSP zero trust, control plane data plane, PEP PDP PE PA, zero trust architecture, domain 5">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain5/zero-trust-sorter.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Zero Trust Planes Sorter — Domain 5 | Alex Cyber Study">
+  <meta property="og:description" content="Sort Zero Trust components into Control Plane or Data Plane. PE, PDP, PA, PEP — know the difference.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain5/zero-trust-sorter.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Zero Trust Planes Sorter — Domain 5 | Alex Cyber Study">
+  <meta name="twitter:description" content="Sort Zero Trust components into Control Plane or Data Plane for CISSP Domain 5.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Zero Trust Planes Sorter — Domain 5 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .sorter-container { max-width: 1000px; margin: 0 auto; padding: 0 2rem 3rem; }
+    .sorter-pool {
+      background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 14px; padding: 1.5rem; min-height: 80px; margin-bottom: 2rem;
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .sorter-pool.drag-over { border-color: rgba(255,255,255,0.5); }
+    .sorter-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media(max-width:600px){ .sorter-columns{ grid-template-columns:1fr; } }
+    .sorter-zone {
+      border-radius: 14px; padding: 1.25rem; min-height: 200px;
+      border: 2px solid; transition: background 0.2s;
+    }
+    .sorter-zone.drag-over { filter: brightness(1.2); }
+    .zone-control { border-color: rgba(96,165,250,0.5); background: rgba(96,165,250,0.08); }
+    .zone-data    { border-color: rgba(251,146,60,0.5); background: rgba(251,146,60,0.08); }
+    .zone-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.75rem; text-align: center; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .zone-control .zone-header { color: #60a5fa; }
+    .zone-data    .zone-header { color: #fb923c; }
+    .sorter-card {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff; padding: 0.8rem 1rem; border-radius: 10px;
+      cursor: grab; font-size: 0.9rem; font-weight: 700; line-height: 1.35;
+      user-select: none; transition: transform 0.15s; box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+      width: fit-content; max-width: 320px;
+    }
+    .sorter-card:hover { transform: translateY(-2px); }
+    .sorter-card.dragging { opacity: 0.4; cursor: grabbing; }
+    .sorter-card.correct { background: linear-gradient(135deg,#10b981,#059669); }
+    .sorter-card.incorrect { background: linear-gradient(135deg,#ef4444,#b91c1c); animation: shake 0.3s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    .sorter-zone .sorter-card { width: 100%; max-width: 100%; margin-bottom: 0.5rem; }
+    .check-btn {
+      display: block; margin: 2rem auto 0;
+      background: linear-gradient(135deg,#10b981,#059669);
+      color: #fff; border: none; padding: 0.85rem 2.5rem;
+      font-size: 1.05rem; border-radius: 999px; cursor: pointer;
+      font-weight: 800; box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+      transition: transform 0.2s;
+    }
+    .check-btn:hover { transform: translateY(-2px); }
+    .result-msg { text-align: center; margin-top: 1.5rem; padding: 1rem; border-radius: 12px; font-size: 1.15rem; font-weight: 700; display: none; }
+    .result-msg.ok  { background: rgba(16,185,129,0.2); border: 2px solid #10b981; color: #4ade80; }
+    .result-msg.err { background: rgba(239,68,68,0.15); border: 2px solid #ef4444; color: #fca5a5; }
+    .pool-label { font-size: 0.95rem; color: rgba(255,255,255,0.55); margin-bottom: 0.5rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html" class="active">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🔒 Zero Trust Planes Sorter</h1>
+      <p class="game-subtitle">Domain 5 — Zero Trust has brains (Control) and gates (Data) — not a privileged admin highway.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 5</a>
+      <button class="reset-btn" onclick="initSorter()">🔄 Reset</button>
+    </div>
+  </div>
+
+  <div class="sorter-container">
+    <div class="pool-label">📦 Components — drag each to the correct plane</div>
+    <div class="sorter-pool" id="pool"></div>
+    <div class="sorter-columns">
+      <div class="sorter-zone zone-control" id="zone-control">
+        <div class="zone-header">🧠 Control Plane<br><small style="font-weight:400;font-size:0.8rem;">Decides access — policy engine, decisions</small></div>
+      </div>
+      <div class="sorter-zone zone-data" id="zone-data">
+        <div class="zone-header">🚦 Data Plane<br><small style="font-weight:400;font-size:0.8rem;">Enforces decisions — carries traffic</small></div>
+      </div>
+    </div>
+    <button class="check-btn" onclick="checkAnswers()">✅ Check Answers</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+
+  <footer style="margin-top:3rem;">
+    <p><a href="index.html">← Back to Domain 5 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script>
+    const items = [
+      { text: "Policy Engine (PE) — evaluates access requests against policy rules, risk, and context", answer: "control" },
+      { text: "Policy Decision Point (PDP) — aggregates the policy engine decision", answer: "control" },
+      { text: "Policy Administrator (PA) — communicates allow/deny to the enforcement point", answer: "control" },
+      { text: "Policy Enforcement Point (PEP) — enforces the access decision; the gateway the user passes through", answer: "data" },
+      { text: "Constrained Interfaces — limit what actions users can perform after access is granted", answer: "data" },
+      { text: "Protected Resources — the assets being secured: apps, services, data, devices", answer: "data" }
+    ];
+
+    let dragged = null;
+
+    function initSorter() {
+      const pool = document.getElementById('pool');
+      const zC = document.getElementById('zone-control');
+      const zD = document.getElementById('zone-data');
+      document.getElementById('resultMsg').style.display = 'none';
+      [...zC.querySelectorAll('.sorter-card')].forEach(c => c.remove());
+      [...zD.querySelectorAll('.sorter-card')].forEach(c => c.remove());
+      pool.innerHTML = '';
+
+      const shuffled = [...items].sort(() => Math.random() - 0.5);
+      shuffled.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'sorter-card';
+        card.textContent = item.text;
+        card.dataset.answer = item.answer;
+        card.draggable = true;
+        card.addEventListener('dragstart', e => { dragged = card; card.classList.add('dragging'); });
+        card.addEventListener('dragend', () => card.classList.remove('dragging'));
+        pool.appendChild(card);
+      });
+
+      [pool, zC, zD].forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+        zone.addEventListener('drop', e => {
+          e.preventDefault(); zone.classList.remove('drag-over');
+          if (!dragged) return;
+          dragged.classList.remove('correct','incorrect');
+          zone.appendChild(dragged); dragged = null;
+        });
+      });
+    }
+
+    function checkAnswers() {
+      const zC = document.getElementById('zone-control');
+      const zD = document.getElementById('zone-data');
+      const pool = document.getElementById('pool');
+      let correct = 0;
+
+      zC.querySelectorAll('.sorter-card').forEach(c => {
+        c.classList.remove('correct','incorrect');
+        if (c.dataset.answer === 'control') { c.classList.add('correct'); correct++; }
+        else c.classList.add('incorrect');
+      });
+      zD.querySelectorAll('.sorter-card').forEach(c => {
+        c.classList.remove('correct','incorrect');
+        if (c.dataset.answer === 'data') { c.classList.add('correct'); correct++; }
+        else c.classList.add('incorrect');
+      });
+
+      const poolLeft = pool.querySelectorAll('.sorter-card').length;
+      const msg = document.getElementById('resultMsg');
+      msg.style.display = 'block';
+      if (poolLeft > 0) {
+        msg.className = 'result-msg err';
+        msg.textContent = `⚠️ ${poolLeft} card(s) still in pool — place all components first.`;
+      } else if (correct === items.length) {
+        msg.className = 'result-msg ok';
+        msg.textContent = `🎉 Perfect! PE + PDP + PA = Control Plane. PEP + Interfaces + Resources = Data Plane.`;
+        launchConfetti();
+      } else {
+        msg.className = 'result-msg err';
+        msg.textContent = `${correct}/${items.length} correct — red cards are in the wrong plane.`;
+      }
+    }
+
+    function launchConfetti() {
+      const colors = ['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa'];
+      for (let i = 0; i < 60; i++) {
+        const dot = document.createElement('div');
+        dot.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;background:${colors[i%colors.length]};left:${50+(Math.random()-.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;
+        document.body.appendChild(dot);
+        const xEnd = (Math.random()-.5)*500, yEnd = window.innerHeight+50, dur = 1200+Math.random()*800;
+        dot.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${xEnd}px,${yEnd}px)`,opacity:0}],{duration:dur});
+        setTimeout(()=>dot.remove(),dur);
+      }
+    }
+
+    initSorter();
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match fire suppression systems — Wet Pipe, Dry Pipe, Pre-Action, and Deluge — to their CISSP scenarios and key characteristics. Domain 3.">
+  <meta name="keywords" content="CISSP fire suppression, wet pipe, dry pipe, pre-action, deluge, physical security, domain 3">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain3/fire-suppression-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Fire Suppression Systems Matcher — Domain 3 | Alex Cyber Study">
+  <meta property="og:description" content="Match Wet Pipe, Dry Pipe, Pre-Action, and Deluge fire suppression systems to scenarios.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain3/fire-suppression-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fire Suppression Systems Matcher — Domain 3 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match fire suppression systems — Wet, Dry, Pre-Action, Deluge — to CISSP scenarios.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Fire Suppression Systems Matcher — Domain 3 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🔥 Fire Suppression Systems Matcher</h1>
+      <p class="game-subtitle">Domain 3 — What's in the pipes and what triggers the water?</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 4)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">4</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Fire Suppression Mastered! Wet=always, Dry=air first, Pre-action=detect→fill→spray, Deluge=everything. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">System Type</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Scenario / Key Characteristics</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 3 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Wet Pipe": "Pipes are always filled with pressurized water. Individual sprinkler heads activate when a heat threshold is reached. Most common, fastest response. Risk: accidental discharge in cold environments.",
+      "Dry Pipe": "Pipes filled with pressurized air or nitrogen. Sprinkler activation releases the air, allowing water to flow in. Used in freezing environments such as cold storage or parking garages.",
+      "Pre-Action": "Pipes are normally empty. Two-step activation: (1) detection system triggers and pipes fill with water, (2) individual sprinkler activates and water discharges. Ideal for data centers — prevents accidental discharge.",
+      "Deluge": "Pipes are empty and all sprinkler heads are open. Any fire detection signal opens the main valve and ALL sprinklers discharge simultaneously. Used in extreme high-risk environments: aircraft hangars, chemical plants."
+    };
+    initMatchGame(pairs, 4);
+  </script>
+</body>
+</html>

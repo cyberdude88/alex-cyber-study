@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Order the 8 eDiscovery steps in sequence for the CISSP exam: Identify, Preserve, Collect, Process, Review, Analyze, Produce, Present. Domain 7.">
+  <meta name="keywords" content="CISSP eDiscovery steps, legal hold, chain of custody, identify preserve collect, domain 7">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain7/ediscovery-sequence.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="eDiscovery Sequence — Domain 7 | Alex Cyber Study">
+  <meta property="og:description" content="Order the 8 ISC2 eDiscovery steps: Identify → Preserve → Collect → Process → Review → Analyze → Produce → Present.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain7/ediscovery-sequence.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="eDiscovery Sequence — Domain 7 | Alex Cyber Study">
+  <meta name="twitter:description" content="Order the 8 ISC2 eDiscovery steps for CISSP Domain 7.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>eDiscovery Sequence Game — Domain 7 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .seq-container { max-width: 780px; margin: 0 auto; padding: 0 2rem 3rem; }
+    .seq-pool {
+      display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;
+      background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 14px; padding: 1.5rem; min-height: 70px; margin-bottom: 2rem;
+    }
+    .seq-pool.drag-over { border-color: rgba(255,255,255,0.5); }
+    .seq-track { display: flex; flex-direction: column; gap: 0.65rem; }
+    .seq-slot {
+      display: flex; align-items: center; gap: 1rem;
+      background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.15);
+      border-radius: 12px; padding: 0.9rem 1.25rem; min-height: 68px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .seq-slot.drag-over { border-color: rgba(236,72,153,0.7); background: rgba(236,72,153,0.08); }
+    .seq-slot.correct { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+    .seq-slot.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+    .slot-num { font-size: 1.2rem; font-weight: 900; min-width: 1.8rem; color: rgba(255,255,255,0.4); }
+    .slot-content { flex: 1; }
+    .seq-card {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      color: #fff; padding: 0.75rem 1.1rem; border-radius: 10px;
+      cursor: grab; font-weight: 700; font-size: 0.93rem;
+      user-select: none; transition: transform 0.15s; box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    }
+    .seq-card:hover { transform: translateY(-2px); }
+    .seq-card.dragging { opacity: 0.4; cursor: grabbing; }
+    .check-btn {
+      display: block; margin: 2rem auto 0;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff; border: none; padding: 0.85rem 2.5rem;
+      font-size: 1.05rem; border-radius: 999px; cursor: pointer;
+      font-weight: 800; box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+      transition: transform 0.2s;
+    }
+    .check-btn:hover { transform: translateY(-2px); }
+    .result-msg {
+      text-align: center; margin-top: 1.5rem; padding: 1rem;
+      border-radius: 12px; font-size: 1.1rem; font-weight: 700; display: none;
+    }
+    .result-msg.ok  { background: rgba(16,185,129,0.2); border: 2px solid #10b981; color: #4ade80; }
+    .result-msg.err { background: rgba(239,68,68,0.15); border: 2px solid #ef4444; color: #fca5a5; }
+    .pool-label { font-size: 0.95rem; color: rgba(255,255,255,0.55); margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
+    .hint { font-size: 0.82rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html" class="active">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>⚖️ eDiscovery Sequence</h1>
+      <p class="game-subtitle">Domain 7 — Preserve = legal hold. Collect = chain of custody. Process ≠ Review.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 7</a>
+      <button class="reset-btn" onclick="initSeq()">🔄 Reset</button>
+    </div>
+  </div>
+
+  <div class="seq-container">
+    <div class="pool-label">📦 8 eDiscovery steps — drag them into the correct order (1 = first)</div>
+    <div class="seq-pool" id="pool"></div>
+    <div class="hint">Hover a card to see its description</div>
+    <div class="seq-track" id="track"></div>
+    <button class="check-btn" onclick="checkSeq()">✅ Check Order</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+
+  <footer style="margin-top:2rem;">
+    <p><a href="index.html">← Back to Domain 7 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script>
+    const steps = [
+      { id: 1, label: "Identify", desc: "Determine what data exists and where it lives — custodians, systems, locations." },
+      { id: 2, label: "Preserve", desc: "Legal hold — freeze the data, stop deletion, rotation, or overwriting." },
+      { id: 3, label: "Collect", desc: "Acquire data defensibly while protecting chain of custody." },
+      { id: 4, label: "Process", desc: "Filter, de-duplicate, index, and make data review-ready. NOT the same as Review." },
+      { id: 5, label: "Review", desc: "Decide relevance and privilege. Attorney work. NOT the same as Process." },
+      { id: 6, label: "Analyze", desc: "Build timelines, connect the story, identify key evidence." },
+      { id: 7, label: "Produce", desc: "Deliver evidence in required format with metadata rules intact." },
+      { id: 8, label: "Present", desc: "Use evidence officially — court proceedings, hearings, legal briefs." }
+    ];
+
+    let dragged = null;
+
+    function initSeq() {
+      const pool = document.getElementById('pool');
+      const track = document.getElementById('track');
+      document.getElementById('resultMsg').style.display = 'none';
+      pool.innerHTML = ''; track.innerHTML = '';
+
+      const shuffled = [...steps].sort(() => Math.random() - 0.5);
+      shuffled.forEach(s => pool.appendChild(mkCard(s)));
+
+      for (let i = 1; i <= steps.length; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'seq-slot';
+        slot.dataset.pos = i;
+        slot.innerHTML = `<div class="slot-num">${i}</div><div class="slot-content"></div>`;
+        addSlotEvents(slot);
+        track.appendChild(slot);
+      }
+      addZoneEvents(pool);
+    }
+
+    function mkCard(s) {
+      const card = document.createElement('div');
+      card.className = 'seq-card';
+      card.dataset.id = s.id;
+      card.textContent = s.label;
+      card.title = s.desc;
+      card.draggable = true;
+      card.addEventListener('dragstart', () => { dragged = card; card.classList.add('dragging'); });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      return card;
+    }
+
+    function addZoneEvents(zone) {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault(); zone.classList.remove('drag-over');
+        if (!dragged) return;
+        zone.appendChild(dragged); dragged = null; clearFeedback();
+      });
+    }
+
+    function addSlotEvents(slot) {
+      slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
+      slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+      slot.addEventListener('drop', e => {
+        e.preventDefault(); slot.classList.remove('drag-over');
+        if (!dragged) return;
+        const content = slot.querySelector('.slot-content');
+        const existing = content.querySelector('.seq-card');
+        if (existing) document.getElementById('pool').appendChild(existing);
+        content.appendChild(dragged); dragged = null; clearFeedback();
+      });
+    }
+
+    function clearFeedback() {
+      document.querySelectorAll('.seq-slot').forEach(s => s.classList.remove('correct','incorrect'));
+      document.getElementById('resultMsg').style.display = 'none';
+    }
+
+    function checkSeq() {
+      const slots = document.querySelectorAll('.seq-slot');
+      let correct = 0;
+      slots.forEach(slot => {
+        slot.classList.remove('correct','incorrect');
+        const card = slot.querySelector('.seq-card');
+        if (!card) return;
+        if (parseInt(card.dataset.id) === parseInt(slot.dataset.pos)) { slot.classList.add('correct'); correct++; }
+        else slot.classList.add('incorrect');
+      });
+      const filled = document.querySelectorAll('.seq-slot .seq-card').length;
+      const msg = document.getElementById('resultMsg');
+      msg.style.display = 'block';
+      if (filled < steps.length) {
+        msg.className = 'result-msg err';
+        msg.textContent = `⚠️ Place all ${steps.length} steps in the slots first.`;
+      } else if (correct === steps.length) {
+        msg.className = 'result-msg ok';
+        msg.textContent = `🎉 Perfect! Identify → Preserve → Collect → Process → Review → Analyze → Produce → Present!`;
+        launchConfetti();
+      } else {
+        msg.className = 'result-msg err';
+        msg.textContent = `${correct}/${steps.length} correct — red slots are in the wrong position.`;
+      }
+    }
+
+    function launchConfetti() {
+      const colors = ['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa'];
+      for (let i = 0; i < 60; i++) {
+        const dot = document.createElement('div');
+        dot.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;background:${colors[i%colors.length]};left:${50+(Math.random()-.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;
+        document.body.appendChild(dot);
+        const xEnd = (Math.random()-.5)*500, yEnd = window.innerHeight+50, dur = 1200+Math.random()*800;
+        dot.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${xEnd}px,${yEnd}px)`,opacity:0}],{duration:dur});
+        setTimeout(()=>dot.remove(),dur);
+      }
+    }
+
+    initSeq();
+  </script>
+</body>
+</html>

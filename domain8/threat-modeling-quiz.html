@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CISSP quiz on threat modeling — what's in scope, what's out, and how ISC2 vs ISACA view it differently. Domain 8.">
+  <meta name="keywords" content="CISSP threat modeling, SDLC design phase, STRIDE, threat modeling scope, domain 8">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain8/threat-modeling-quiz.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Threat Modeling Quiz — Domain 8 | Alex Cyber Study">
+  <meta property="og:description" content="CISSP quiz on threat modeling scope, SDLC placement, and ISC2 vs ISACA perspectives.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain8/threat-modeling-quiz.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Threat Modeling Quiz — Domain 8 | Alex Cyber Study">
+  <meta name="twitter:description" content="CISSP quiz on threat modeling scope, SDLC placement, ISC2 vs ISACA for Domain 8.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Threat Modeling Quiz — Domain 8 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .quiz-container { max-width: 800px; margin: 0 auto; padding: 0 2rem 3rem; }
+    .question-block {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 1.75rem; margin-bottom: 1.5rem;
+    }
+    .question-text { font-size: 1.08rem; font-weight: 600; margin-bottom: 1.25rem; line-height: 1.55; }
+    .options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .option {
+      background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.13);
+      border-radius: 10px; padding: 0.85rem 1.2rem; cursor: pointer;
+      transition: background 0.2s, border-color 0.2s; font-size: 0.96rem; line-height: 1.4;
+    }
+    .option:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.28); }
+    .option.correct  { background: rgba(16,185,129,0.18); border-color: #10b981; color: #4ade80; }
+    .option.incorrect{ background: rgba(239,68,68,0.13); border-color: #ef4444; color: #fca5a5; }
+    .option.disabled { pointer-events: none; }
+    .explanation {
+      margin-top: 1rem; padding: 0.85rem 1.1rem;
+      background: rgba(255,255,255,0.04); border-left: 3px solid #14b8a6;
+      border-radius: 0 8px 8px 0; font-size: 0.88rem; color: rgba(255,255,255,0.72);
+      display: none; line-height: 1.5;
+    }
+    .score-board { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 1.5rem; color: #4ade80; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html" class="active">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🎯 Threat Modeling Quiz</h1>
+      <p class="game-subtitle">Domain 8 — Threat modeling ≠ bug fixing. Design decisions, attack paths, and vulnerabilities — not code quality.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 8</a>
+      <button class="reset-btn" onclick="initQuiz()">🔄 Reset</button>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / <span id="total">0</span></div>
+  </div>
+
+  <div class="quiz-container" id="quizContainer"></div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 8 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        q: "A security leader reviews a threat modeling deliverable for an e-commerce platform. Which item would LEAST likely be included in threat modeling output?",
+        opts: [
+          "A. Identifying architectural weaknesses and attack paths",
+          "B. Analyzing design-level vulnerabilities",
+          "C. Prioritizing mitigations for potential attack paths",
+          "D. Improving code quality and reducing software bugs"
+        ],
+        correct: 3,
+        exp: "Threat modeling is about DESIGN — attack paths, architectural weaknesses, and vulnerabilities. Reducing software bugs belongs to secure coding and testing (later SDLC phases). While mitigations (C) result FROM threat modeling, bug fixing (D) does not — making D the LEAST likely element."
+      },
+      {
+        q: "According to ISC2 / CISSP, when in the SDLC should threat modeling PRIMARILY occur?",
+        opts: [
+          "A. During the testing phase — after code is written",
+          "B. During the design phase — before implementation",
+          "C. During operations — as part of continuous monitoring",
+          "D. During the requirements phase — before design"
+        ],
+        correct: 1,
+        exp: "ISC2 places threat modeling in the DESIGN phase of the SDLC. This is where cost of change is lowest — before code is written. Identifying attack paths at design reduces expensive rework later. This aligns with ISC2's view that threat modeling controls cost."
+      },
+      {
+        q: "ISC2 (CISSP) and ISACA (CISM) both support threat modeling — but for different primary reasons. Which statement BEST describes the ISC2 perspective?",
+        opts: [
+          "A. Threat modeling supports enterprise risk reduction and stakeholder governance",
+          "B. Threat modeling reduces the cost of change by identifying design flaws early in the SDLC",
+          "C. Threat modeling ensures regulatory compliance requirements are met",
+          "D. Threat modeling provides evidence for audit findings"
+        ],
+        correct: 1,
+        exp: "ISC2 treats threat modeling as a technical cost-control step inside software development. Risk reduction is the OUTCOME — cost reduction is the PRIMARY reason. ISACA views it primarily as an enterprise risk reduction tool. Same activity, different motivations."
+      },
+      {
+        q: "You cannot mitigate a threat VECTOR — you mitigate what instead?",
+        opts: [
+          "A. The threat source (actor)",
+          "B. The threat event (action taken)",
+          "C. The vulnerabilities inherent in the vector",
+          "D. The impact of the threat event"
+        ],
+        correct: 2,
+        exp: "A threat vector is the PATH used — e.g., admin credentials, phishing. You cannot block a vector directly; you mitigate the VULNERABILITIES that make the vector exploitable — e.g., MFA removes privilege creep vulnerability. This is a core CISSP mindset distinction in threat modeling."
+      },
+      {
+        q: "What does STRIDE stand for in the context of CISSP threat modeling?",
+        opts: [
+          "A. Security, Threats, Risks, Impacts, Design, Evaluation",
+          "B. Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privilege",
+          "C. System, Topology, Risk, Integration, Data, Endpoints",
+          "D. Standards, Testing, Review, Impact, Detection, Enforcement"
+        ],
+        correct: 1,
+        exp: "STRIDE is the Microsoft threat modeling framework: Spoofing identity, Tampering with data, Repudiation, Information Disclosure, Denial of Service, and Elevation of Privilege. Each maps to a security property violation — useful for systematically identifying design-phase threats."
+      }
+    ];
+
+    let correct = 0;
+
+    function initQuiz() {
+      correct = 0; updateScore();
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      questions.forEach((q, qi) => {
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        const shuffled = q.opts.map((o,i)=>({text:o,orig:i})).sort(()=>Math.random()-0.5);
+        block.innerHTML = `
+          <div class="question-text">Q${qi+1}. ${q.q}</div>
+          <div class="options">
+            ${shuffled.map(o=>`<div class="option" onclick="pick(this,${o.orig},${q.correct},${qi})">${o.text}</div>`).join('')}
+          </div>
+          <div class="explanation" id="exp-${qi}">${q.exp}</div>
+        `;
+        container.appendChild(block);
+      });
+    }
+
+    function pick(el, chosen, correctOrig, qi) {
+      const block = el.closest('.question-block');
+      if (block.dataset.answered) return;
+      block.dataset.answered = '1';
+      const opts = block.querySelectorAll('.option');
+      opts.forEach(o => o.classList.add('disabled'));
+      if (chosen === correctOrig) { el.classList.add('correct'); correct++; }
+      else {
+        el.classList.add('incorrect');
+        opts.forEach(o => {
+          const m = o.getAttribute('onclick').match(/pick\(this,(\d+)/);
+          if (m && parseInt(m[1]) === correctOrig) o.classList.add('correct');
+        });
+      }
+      document.getElementById(`exp-${qi}`).style.display = 'block';
+      updateScore();
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = correct;
+      document.getElementById('total').textContent = questions.length;
+    }
+
+    initQuiz();
+  </script>
+</body>
+</html>

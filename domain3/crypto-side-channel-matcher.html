@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match CISSP cryptographic attack types — Side-Channel, Timing, Fault Injection, and Statistical attacks — to their descriptions. Domain 3.">
+  <meta name="keywords" content="CISSP crypto attacks, side channel attack, timing attack, fault injection, statistical attack, domain 3">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain3/crypto-side-channel-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Crypto Attack Types Matcher — Domain 3 | Alex Cyber Study">
+  <meta property="og:description" content="Match Side-Channel, Timing, Fault Injection, and Statistical crypto attacks to their definitions.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain3/crypto-side-channel-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Crypto Attack Types Matcher — Domain 3 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match Side-Channel, Timing, Fault Injection, and Statistical attacks to definitions.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Crypto Attack Types Matcher — Domain 3 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>⚡ Crypto Attack Types Matcher</h1>
+      <p class="game-subtitle">Domain 3 — Watching = side-channel. Breaking = fault injection. Timing = timing. Math = statistical.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 4)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">4</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Crypto Attacks Mastered! You know how attackers observe instead of breaking the math. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Attack Type</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Description &amp; Example</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 3 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Side-Channel Attack": "Exploits physical or implementation characteristics of a system rather than the math — e.g., electromagnetic radiation leaking from CPUs, power consumption patterns, or cache access timing. The attacker OBSERVES the system.",
+      "Timing Attack": "Measures the execution time of cryptographic operations to infer key material. Response time differences reveal secret information. A specific type of side-channel attack.",
+      "Fault Injection Attack": "Deliberately induces errors in a cryptographic device — voltage glitches, clock manipulation, laser faults — causing the system to output values that reveal key material. BREAKS the system physically.",
+      "Statistical Attack": "Analyzes mathematical patterns in ciphertext — frequency analysis, entropy measurements, differential analysis. Targets the algorithm's mathematical weaknesses rather than the implementation."
+    };
+    initMatchGame(pairs, 4);
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match biometric control types — Iris Scan, Retina Scan, Fingerprint, and more — to their CISSP characteristics. Domain 5.">
+  <meta name="keywords" content="CISSP biometrics, iris scan retina scan, fingerprint, biometric authentication, domain 5">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain5/biometrics-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Biometrics Matcher — Domain 5 | Alex Cyber Study">
+  <meta property="og:description" content="Match Iris Scan, Retina Scan, and biometric characteristics for CISSP Domain 5.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain5/biometrics-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Biometrics Matcher — Domain 5 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match Iris Scan, Retina Scan, and biometric characteristics for CISSP Domain 5.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Biometrics Matcher — Domain 5 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html" class="active">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>👁️ Biometrics Matcher</h1>
+      <p class="game-subtitle">Domain 5 — Iris = convenient &amp; scalable. Retina = maximum security, less comfort.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 5</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 6)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">6</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Biometrics Mastered! You know convenience vs security for every type. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Biometric Type</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Key Characteristics</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 5 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Iris Scan": "Scans the colored ring around the pupil. Non-intrusive, works from a distance. Fast, accurate, and user-friendly. Common in enterprise access control and border control. Convenient and scalable.",
+      "Retina Scan": "Scans blood vessel patterns at the back of the eye. Extremely accurate and very hard to spoof. Requires close contact and a fixed gaze — intrusive. Used in high-security environments requiring maximum assurance.",
+      "Fingerprint": "Analyzes ridge patterns on a fingertip. Most widely deployed biometric — low cost, fast, acceptable accuracy. Susceptible to spoofing with high-quality replicas. FRR increases with dirty or damaged fingers.",
+      "Voice Recognition": "Analyzes vocal patterns and speech characteristics. Convenient for remote authentication via phone. Sensitive to background noise, illness, and voice changes. Moderate security level.",
+      "Facial Recognition": "Maps facial geometry and features from a camera feed. Non-intrusive and scalable for physical access or device unlock. Can be affected by lighting, aging, and disguises. Privacy concerns in many jurisdictions.",
+      "Crossover Error Rate (CER)": "The point where False Acceptance Rate (FAR) equals False Rejection Rate (FRR). Lower CER = more accurate system. Used to compare biometric system accuracy independent of sensitivity settings."
+    };
+    initMatchGame(pairs, 6);
+  </script>
+</body>
+</html>

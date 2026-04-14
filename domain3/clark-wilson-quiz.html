@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Test your knowledge of the Clark-Wilson integrity model — CDI, UDI, TP, IVP, and separation of duties — with this CISSP quiz. Domain 3.">
+  <meta name="keywords" content="CISSP Clark Wilson model, CDI UDI TP IVP, integrity model, access control model, domain 3">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain3/clark-wilson-quiz.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Clark-Wilson Model Quiz — Domain 3 | Alex Cyber Study">
+  <meta property="og:description" content="Test your CISSP knowledge of the Clark-Wilson integrity model — CDI, UDI, TP, IVP, and separation of duties.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain3/clark-wilson-quiz.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Clark-Wilson Model Quiz — Domain 3 | Alex Cyber Study">
+  <meta name="twitter:description" content="Test Clark-Wilson model knowledge: CDI, UDI, TP, IVP — for CISSP Domain 3.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Clark-Wilson Model Quiz — Domain 3 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .quiz-container { max-width: 780px; margin: 0 auto; padding: 0 2rem 3rem; }
+    .question-block {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 1.75rem; margin-bottom: 1.5rem;
+    }
+    .question-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; line-height: 1.5; }
+    .options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .option {
+      background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 10px; padding: 0.9rem 1.25rem; cursor: pointer;
+      transition: background 0.2s, border-color 0.2s; font-size: 0.97rem; line-height: 1.4;
+    }
+    .option:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); }
+    .option.correct { background: rgba(16,185,129,0.2); border-color: #10b981; color: #4ade80; }
+    .option.incorrect { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #fca5a5; }
+    .option.disabled { pointer-events: none; }
+    .explanation {
+      margin-top: 1rem; padding: 0.9rem 1.1rem;
+      background: rgba(255,255,255,0.04); border-left: 3px solid #a78bfa;
+      border-radius: 0 8px 8px 0; font-size: 0.9rem; color: rgba(255,255,255,0.75);
+      display: none; line-height: 1.5;
+    }
+    .score-board {
+      text-align: center; font-size: 1.3rem; font-weight: 700;
+      margin-bottom: 1.5rem; color: #4ade80;
+    }
+    .restart-btn {
+      display: block; margin: 1.5rem auto 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff; border: none; padding: 0.85rem 2.5rem;
+      font-size: 1.05rem; border-radius: 999px; cursor: pointer;
+      font-weight: 800; box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+      transition: transform 0.2s;
+    }
+    .restart-btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🧾 Clark-Wilson Model Quiz</h1>
+      <p class="game-subtitle">Domain 3 — Well-defined transactions and separation of duties. INTEGRITY.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="initQuiz()">🔄 Reset</button>
+    </div>
+    <div class="score-board">Score: <span id="score">0</span> / <span id="total">0</span></div>
+  </div>
+
+  <div class="quiz-container" id="quizContainer"></div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 3 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        q: "In the Clark-Wilson model, what term describes the sensitive, well-formed data items that must be protected — such as financial records, medical records, or grades?",
+        opts: ["UDI — Unconstrained Data Item", "CDI — Constrained Data Item", "TP — Transformation Procedure", "IVP — Integrity Verification Procedure"],
+        correct: 1,
+        exp: "CDI (Constrained Data Item) is protected data that must maintain integrity. Only TPs can modify CDIs — never direct user access."
+      },
+      {
+        q: "A user submits a web form (unvalidated input). In Clark-Wilson, this raw input is called what?",
+        opts: ["CDI — because it came from the user", "TP — because it triggers a function", "UDI — Unconstrained Data Item", "IVP — Integrity Verification Procedure"],
+        correct: 2,
+        exp: "UDI (Unconstrained Data Item) is raw, untrusted input — like a web form, file upload, or typed text. A TP must validate it before it can become a CDI."
+      },
+      {
+        q: "In Clark-Wilson, what is the ONLY authorized way to change or modify a CDI?",
+        opts: ["Direct admin access to the database", "A Transformation Procedure (TP)", "An Integrity Verification Procedure (IVP)", "Role-Based Access Control (RBAC)"],
+        correct: 1,
+        exp: "The TP (Transformation Procedure) is the only authorized, approved mechanism to modify CDIs — an approved button, form, or function. No direct access is allowed."
+      },
+      {
+        q: "Clark-Wilson uses 'separation of duties' to enforce integrity. What does this mean in practice?",
+        opts: ["One admin manages all CDIs to centralize control", "Different people perform different steps — one adds, one approves, one audits", "Users are separated into groups by clearance level", "Custodians separate UDI from CDI storage"],
+        correct: 1,
+        exp: "Separation of duties prevents fraud and errors: one person adds, another approves, another audits. No single person controls an entire transaction. This is a core Clark-Wilson principle."
+      },
+      {
+        q: "An IVP (Integrity Verification Procedure) in Clark-Wilson is used to do what?",
+        opts: ["Modify CDIs in bulk for system updates", "Validate that CDIs conform to integrity rules — like a periodic audit check", "Convert UDIs to CDIs after user submission", "Enforce access control decisions in real-time"],
+        correct: 1,
+        exp: "IVPs verify that all CDIs are in a valid, consistent state — think of them as a periodic system-wide integrity audit. They don't change data; they check it."
+      },
+      {
+        q: "Which security property does Clark-Wilson PRIMARILY enforce?",
+        opts: ["Confidentiality", "Availability", "Non-repudiation", "Integrity"],
+        correct: 3,
+        exp: "Clark-Wilson is an INTEGRITY model. It enforces well-defined transactions (TPs), prevents unauthorized modification of CDIs, and uses separation of duties. Compare with Bell-LaPadula (confidentiality) and Biba (also integrity but different approach)."
+      }
+    ];
+
+    let answered = 0, correct = 0;
+
+    function initQuiz() {
+      answered = 0; correct = 0;
+      updateScore();
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      questions.forEach((q, qi) => {
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        const shuffled = q.opts.map((o,i)=>({text:o,orig:i})).sort(()=>Math.random()-0.5);
+        block.innerHTML = `
+          <div class="question-text">Q${qi+1}. ${q.q}</div>
+          <div class="options">
+            ${shuffled.map((o,i)=>`<div class="option" onclick="pick(this,${o.orig},${q.correct},${qi})">${o.text}</div>`).join('')}
+          </div>
+          <div class="explanation" id="exp-${qi}">${q.exp}</div>
+        `;
+        container.appendChild(block);
+      });
+    }
+
+    function pick(el, chosen, correctOrig, qi) {
+      const block = el.closest('.question-block');
+      if (block.dataset.answered) return;
+      block.dataset.answered = '1';
+      const opts = block.querySelectorAll('.option');
+      opts.forEach(o => o.classList.add('disabled'));
+      if (chosen === correctOrig) {
+        el.classList.add('correct');
+        correct++;
+      } else {
+        el.classList.add('incorrect');
+        opts.forEach(o => {
+          if (parseInt(o.getAttribute('onclick').match(/pick\(this,(\d+)/)[1]) === correctOrig) {
+            o.classList.add('correct');
+          }
+        });
+      }
+      answered++;
+      document.getElementById(`exp-${qi}`).style.display = 'block';
+      updateScore();
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = correct;
+      document.getElementById('total').textContent = questions.length;
+    }
+
+    initQuiz();
+  </script>
+</body>
+</html>

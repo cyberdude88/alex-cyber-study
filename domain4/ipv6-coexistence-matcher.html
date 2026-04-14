@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match IPv4/IPv6 coexistence strategies — Dual Stack, Tunneling, NAT-PT — and identify what does NOT help coexistence. Domain 4.">
+  <meta name="keywords" content="CISSP IPv6 IPv4 coexistence, dual stack, tunneling, NAT-PT, network security, domain 4">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain4/ipv6-coexistence-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="IPv4/IPv6 Coexistence Matcher — Domain 4 | Alex Cyber Study">
+  <meta property="og:description" content="Match Dual Stack, Tunneling, and NAT-PT to definitions. Know what helps vs. what doesn't.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain4/ipv6-coexistence-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IPv4/IPv6 Coexistence Matcher — Domain 4 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match Dual Stack, Tunneling, and NAT-PT to definitions for CISSP Domain 4.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>IPv4/IPv6 Coexistence Matcher — Domain 4 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html" class="active">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🌐 IPv4/IPv6 Coexistence Matcher</h1>
+      <p class="game-subtitle">Domain 4 — Dual = Speak both. Tunnel = Wrap it. NAT-PT = Translate it.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 4</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 4)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">4</span></div>
+    <div class="completion-message" id="completionMessage">🎉 IPv6 Coexistence Mastered! Dual, Tunnel, NAT-PT — and IPSec is NOT about coexistence. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Strategy / Protocol</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">How It Works</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 4 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Dual Stack": "A device runs both IPv4 and IPv6 simultaneously and uses whichever version works for a given connection. The most flexible and preferred long-term approach.",
+      "Tunneling": "Encapsulates one IP version's packets inside the other so traffic can cross a network running a different version — e.g., IPv6 traffic wrapped inside IPv4 packets to traverse a legacy network.",
+      "NAT-PT (Network Address Translation — Protocol Translation)": "A translation device converts IPv4 addresses and headers to IPv6 and back. Considered a last resort — introduces complexity and is deprecated. Memory hook: Translate it (bad idea).",
+      "IPSec": "A security protocol suite that provides confidentiality, integrity, and authentication for IP traffic. It is NOT an IPv4/IPv6 coexistence strategy — it is native to IPv6 but must be added to IPv4."
+    };
+    initMatchGame(pairs, 4);
+  </script>
+</body>
+</html>

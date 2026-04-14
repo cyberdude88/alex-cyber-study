@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match the four security planning levels — Strategic, Tactical, Operational, and Roadmap — aligned to NIST and COBIT frameworks. Domain 1.">
+  <meta name="keywords" content="CISSP security planning, strategic plan, tactical plan, operational plan, security roadmap, NIST COBIT">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain1/planning-levels-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Security Planning Levels Matcher — Domain 1 | Alex Cyber Study">
+  <meta property="og:description" content="Match Strategic, Tactical, Operational, and Roadmap planning levels to their definitions.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain1/planning-levels-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Security Planning Levels Matcher — Domain 1 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match Strategic, Tactical, Operational, and Roadmap planning levels to their definitions.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Security Planning Levels Matcher — Domain 1 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html" class="active">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🗺️ Security Planning Levels Matcher</h1>
+      <p class="game-subtitle">Domain 1 — WHY + WHAT → HOW + WHEN → DO + RUN → ORDER + TIMELINE</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 1</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 4)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">4</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Planning Levels Mastered! Strategic thinker confirmed. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Plan Type</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Definition (NIST Tier / COBIT Alignment)</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 1 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Strategic Plan": "Sets direction at the org level — business priorities, risk strategy, and target outcomes. (NIST Tier 1 / COBIT Governance). Answers WHY and WHAT.",
+      "Tactical Plan": "Turns strategy into action — initiatives, priorities, resourcing, and measurable execution plans. (NIST Tier 2 / COBIT Management Objectives). Answers HOW and WHEN.",
+      "Operational Plan": "Runs the machine daily — procedures, control operation, repeatable tasks, and steady-state security. (NIST Tier 3 / ISO 27001 Clause 8.1). Answers DO and RUN.",
+      "Security Roadmap": "The timeline view showing what comes first, next, and later — phased delivery and maturity progression. (COBIT / ISO-aligned sequencing). Answers ORDER and TIMELINE."
+    };
+    initMatchGame(pairs, 4);
+  </script>
+</body>
+</html>

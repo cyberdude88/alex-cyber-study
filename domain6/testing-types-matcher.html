@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match software testing types — Regression, Mutation, Penetration, Fuzzing, and more — to their CISSP definitions. Domain 6.">
+  <meta name="keywords" content="CISSP testing types, regression testing, mutation testing, penetration testing, fuzz testing, domain 6">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain6/testing-types-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Software Testing Types Matcher — Domain 6 | Alex Cyber Study">
+  <meta property="og:description" content="Match Regression, Mutation, Penetration, Fuzz, and other testing types to CISSP definitions.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain6/testing-types-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Software Testing Types Matcher — Domain 6 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match Regression, Mutation, Penetration, Fuzz testing types for CISSP Domain 6.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Software Testing Types Matcher — Domain 6 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html" class="active">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🧬 Software Testing Types Matcher</h1>
+      <p class="game-subtitle">Domain 6 — Regression checks stability. Mutation checks test quality. Know the difference.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 6</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 6)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">6</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Testing Types Mastered! You can identify every test type on the CISSP exam. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Test Type</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Definition &amp; Key Distinction</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 6 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Regression Testing": "Verifies that existing functionality still works correctly after code changes or updates. Ensures that new features or bug fixes have not introduced new defects. Typically automated in CI/CD pipelines. Answers: 'Did my changes break anything that used to work?'",
+      "Mutation Testing": "Introduces small, intentional faults (mutations) into the code, then runs the test suite to verify the tests catch them. Measures test suite QUALITY — not whether the software works. Answers: 'Does my test suite actually detect bugs?'",
+      "Fuzz Testing (Fuzzing)": "Sends large volumes of random, malformed, or unexpected inputs to an application to discover crashes, memory errors, or undefined behavior. Effective for finding input validation failures and buffer overflows.",
+      "Penetration Testing": "Simulates a real-world attack against systems, networks, or applications with authorization. Identifies exploitable vulnerabilities from an attacker's perspective. Provides evidence of actual risk, not just theoretical.",
+      "Static Analysis (SAST)": "Analyzes source code without executing it — looking for security flaws, logic errors, and policy violations at the code level. Occurs early in SDLC. Cannot detect runtime-only vulnerabilities.",
+      "Dynamic Analysis (DAST)": "Tests a running application by sending inputs and observing behavior. Identifies runtime vulnerabilities that static analysis cannot find — XSS, injection, session handling flaws. 'Black box' in nature."
+    };
+    initMatchGame(pairs, 6);
+  </script>
+</body>
+</html>

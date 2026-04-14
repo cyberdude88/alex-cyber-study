@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match data roles — Owner, Custodian, Processor, Controller, Steward — to real-world CISSP scenarios. Domain 2.">
+  <meta name="keywords" content="CISSP data roles, data owner, data custodian, data processor, data controller, GDPR, domain 2">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain2/data-roles-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Data Roles Matcher — Domain 2 | Alex Cyber Study">
+  <meta property="og:description" content="Match data roles — Owner, Custodian, Processor, Controller, Steward — to real-world CISSP scenarios.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain2/data-roles-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Data Roles Matcher — Domain 2 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match data roles — Owner, Custodian, Processor, Controller, Steward — to CISSP scenarios.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Data Roles Matcher — Domain 2 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html" class="active">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>👤 Data Roles Matcher</h1>
+      <p class="game-subtitle">Domain 2 — Who does what with data? Drag each role to its scenario.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 2</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 5)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">5</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Data Roles Mastered! You know who owns, guards, processes, and controls the data. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Role</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Scenario</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 2 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Data Owner": "The senior manager or business executive accountable for a dataset — defines classification and access requirements, but does not manage systems directly.",
+      "Data Custodian": "The IT department or team responsible for implementing the owner's directives — stores, backs up, generates reports on, and maintains the data day-to-day.",
+      "Data Processor": "Usually a third-party vendor that processes data on behalf of the controller — e.g., a payroll company handling employee records. Governed by GDPR.",
+      "Data Controller": "The entity that determines the purpose and means of processing personal data. Sets the why and how. Primary GDPR accountability sits here.",
+      "Data Steward": "Manages data quality, governance policies, and metadata standards. Bridges the gap between the data owner's intent and the technical custodian's implementation."
+    };
+    initMatchGame(pairs, 5);
+  </script>
+</body>
+</html>

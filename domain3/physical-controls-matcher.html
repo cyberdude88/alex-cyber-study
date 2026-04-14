@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match physical security controls — Vestibule, Mantrap, and the physical security order (Deter, Deny, Detect, Delay) — for the CISSP exam. Domain 3.">
+  <meta name="keywords" content="CISSP physical security, vestibule, mantrap, deter deny detect delay, physical access control, domain 3">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain3/physical-controls-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Physical Security Controls Matcher — Domain 3 | Alex Cyber Study">
+  <meta property="og:description" content="Match physical security controls — Vestibule vs Mantrap and the physical security layered model.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain3/physical-controls-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Physical Security Controls Matcher — Domain 3 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match Vestibule, Mantrap, and the physical security layered model for CISSP.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Physical Security Controls Matcher — Domain 3 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🏢 Physical Security Controls Matcher</h1>
+      <p class="game-subtitle">Domain 3 — Vestibule = hallway. Mantrap = airlock. Know the layers.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 8)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">8</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Physical Security Mastered! Scare → Stop → Spot → Slow → Study → Act. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Control / Layer</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Purpose / Definition</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 3 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Vestibule": "Entry buffer — small waiting area before a secure space. May involve a receptionist or badge check. Does NOT physically prevent tailgating — slows people down but does not stop them.",
+      "Mantrap": "Security airlock — two doors where only one opens at a time. Identity must be verified before exiting. Physically enforces access and prevents tailgating. Use when question says 'prevent tailgating'.",
+      "Deter": "Make the attacker not try. Lights, signage, visible cameras, fencing — anything that signals 'this looks risky.' First layer of defense.",
+      "Deny": "Block entry. Fences, locked doors, gates, security guards. The attacker thinks 'I cannot get in.' Second layer.",
+      "Detect": "Notice the attempt is happening. CCTV, motion sensors, alarms, intrusion detection. The attacker thinks 'They will know I am here.' Third layer.",
+      "Delay": "Slow the attacker down. Mantraps, reinforced doors, cable locks. Forces the attacker to spend time and resources. Fourth layer.",
+      "Determine": "Assess whether the situation is real. Guards or SOC review alerts — 'Is this an actual intrusion?' Fifth layer.",
+      "Decide": "Take action: intercept, investigate, escalate. The response phase. Sixth and final layer of the physical security model."
+    };
+    initMatchGame(pairs, 8);
+  </script>
+</body>
+</html>

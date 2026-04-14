@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match CISSP risk modeling terminology — threat source, vector, vulnerability, event, asset, impact, and risk. Domain 1.">
+  <meta name="keywords" content="CISSP risk terms, threat source, threat vector, vulnerability, risk modeling, NIST SP 800-30">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain1/risk-terms-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Risk Modeling Terminology Matcher — Domain 1 | Alex Cyber Study">
+  <meta property="og:description" content="Match CISSP risk modeling terminology — threat source, vector, vulnerability, event, asset, impact, and risk. Domain 1.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain1/risk-terms-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Risk Modeling Terminology Matcher — Domain 1 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match CISSP risk modeling terminology — threat source, vector, vulnerability, event, asset, impact, and risk. Domain 1.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Risk Modeling Terms Matcher — Domain 1 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html" class="active">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>⚠️ Risk Modeling Terms Matcher</h1>
+      <p class="game-subtitle">Domain 1 — Drag each term to its precise definition (NIST SP 800-30 / ISO 27005)</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 1</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 7)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">7</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Risk Modeling Mastered! Your analysis is defensible. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Terms</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Definitions</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 1 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Threat Source": "The actor behind a potential attack — e.g., an insider, nation-state, or script kiddie. This is WHO could cause harm.",
+      "Threat Vector": "The means or path used by the threat source — e.g., admin accounts, phishing email, or unpatched service. This is HOW they gain access.",
+      "Vulnerability": "A weakness in a system, process, or control that can be exploited — e.g., privilege creep, missing patch, or misconfiguration.",
+      "Threat Event": "The specific action taken by the threat source — e.g., exfiltrating data, encrypting files, or escalating privileges.",
+      "Asset": "What is at risk and being protected — e.g., sensitive PII, intellectual property, or critical infrastructure.",
+      "Impact": "The harm that results if the threat event succeeds — loss of confidentiality, regulatory fines, or mission disruption.",
+      "Risk": "The combination of likelihood and impact: how probable is exploitation, and how severe is the resulting harm? Risk = Likelihood × Impact."
+    };
+    initMatchGame(pairs, 7);
+  </script>
+</body>
+</html>

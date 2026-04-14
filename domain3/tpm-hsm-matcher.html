@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match TPM and HSM characteristics for the CISSP exam. Know the difference between embedded and external crypto hardware. Domain 3.">
+  <meta name="keywords" content="CISSP TPM HSM, trusted platform module, hardware security module, cryptographic hardware, domain 3">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain3/tpm-hsm-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="TPM vs HSM Matcher — Domain 3 | Alex Cyber Study">
+  <meta property="og:description" content="Match TPM and HSM characteristics for CISSP. Embedded vs external, device-level vs enterprise.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain3/tpm-hsm-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TPM vs HSM Matcher — Domain 3 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match TPM and HSM characteristics for CISSP. Embedded vs external, device-level vs enterprise.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>TPM vs HSM Matcher — Domain 3 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🔐 TPM vs HSM Matcher</h1>
+      <p class="game-subtitle">Domain 3 — Drag each characteristic to TPM (device-level) or HSM (enterprise-level).</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 6)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">6</span></div>
+    <div class="completion-message" id="completionMessage">🎉 Crypto Hardware Mastered! Embedded vs external — no confusion. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Characteristic</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Belongs To</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 3 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Embedded directly on the device motherboard": "TPM — Trusted Platform Module (device-level, built-in chip)",
+      "Dedicated external appliance for key management": "HSM — Hardware Security Module (enterprise-level, standalone)",
+      "Used for device attestation, BitLocker, Secure Boot": "TPM — Trusted Platform Module (device-level, built-in chip)",
+      "Offers higher performance, scalability, and FIPS 140-2 Level 3+": "HSM — Hardware Security Module (enterprise-level, standalone)",
+      "Protects one endpoint — laptop, workstation, or server": "TPM — Trusted Platform Module (device-level, built-in chip)",
+      "Serves organizational PKI, code signing, and payment processing at scale": "HSM — Hardware Security Module (enterprise-level, standalone)"
+    };
+    initMatchGame(pairs, 6);
+  </script>
+</body>
+</html>

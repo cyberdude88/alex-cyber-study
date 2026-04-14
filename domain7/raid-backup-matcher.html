@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master the CISSP distinction between RAID and Backup — availability vs recoverability. Domain 7.">
+  <meta name="keywords" content="CISSP RAID backup, availability recoverability, fault tolerance, domain 7, security operations">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain7/raid-backup-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="RAID vs Backup Matcher — Domain 7 | Alex Cyber Study">
+  <meta property="og:description" content="RAID keeps the system running. Backup recovers the data. Master this CISSP distinction.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain7/raid-backup-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RAID vs Backup Matcher — Domain 7 | Alex Cyber Study">
+  <meta name="twitter:description" content="RAID = fault tolerance. Backup = recoverability. Match the characteristics for CISSP Domain 7.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>RAID vs Backup Matcher — Domain 7 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html" class="active">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>💾 RAID vs Backup Matcher</h1>
+      <p class="game-subtitle">Domain 7 — RAID = Keep the system running. Backup = Recover the data. Availability ≠ Recoverability.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 7</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 6)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">6</span></div>
+    <div class="completion-message" id="completionMessage">🎉 RAID vs Backup Mastered! If ransomware hits, RAID mirrors the damage — only backup saves you. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Characteristic</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Belongs To</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 7 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Keeps the system running when a disk fails": "RAID — Redundant Array of Independent Disks (fault tolerance, availability)",
+      "Allows recovery of data after deletion, corruption, or ransomware": "Backup — point-in-time copy stored separately (recoverability)",
+      "Faithfully mirrors encrypted ransomware across all disks": "RAID — Redundant Array of Independent Disks (fault tolerance, availability)",
+      "Supports the RPO (Recovery Point Objective) — how much data can be lost": "Backup — point-in-time copy stored separately (recoverability)",
+      "Reduces hardware failure impact — NOT a protection against logical data loss": "RAID — Redundant Array of Independent Disks (fault tolerance, availability)",
+      "The only protection against accidental deletion, corruption, or malicious encryption": "Backup — point-in-time copy stored separately (recoverability)"
+    };
+    initMatchGame(pairs, 6);
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match IDaaS vs FIM scenarios for the CISSP exam. Understand when Identity-as-a-Service vs Federated Identity Management is the best answer. Domain 5.">
+  <meta name="keywords" content="CISSP IDaaS FIM, identity as a service, federated identity management, domain 5, IAM">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain5/idaas-fim-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="IDaaS vs FIM Matcher — Domain 5 | Alex Cyber Study">
+  <meta property="og:description" content="Match IDaaS vs FIM scenarios for CISSP. FIM enables trust. IDaaS delivers IAM as a service.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain5/idaas-fim-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IDaaS vs FIM Matcher — Domain 5 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match IDaaS vs FIM scenarios for CISSP. FIM enables trust. IDaaS delivers IAM as a service.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>IDaaS vs FIM Matcher — Domain 5 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html" class="active">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🌐 IDaaS vs FIM Matcher</h1>
+      <p class="game-subtitle">Domain 5 — FIM enables trust between orgs. IDaaS centrally manages identities across SaaS &amp; legacy systems.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 5</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 6)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">6</span></div>
+    <div class="completion-message" id="completionMessage">🎉 IDaaS vs FIM Mastered! FIM = trust. IDaaS = managed IAM. Perfect. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">Concept / Trigger</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Definition / When to Choose It</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 5 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "Federated Identity Management (FIM)": "Allows one organization to trust another organization's authentication. Enables cross-domain SSO using standards like SAML, OAuth, or OIDC. Answers: 'Can we trust their login?'",
+      "Identity as a Service (IDaaS)": "Cloud-delivered IAM platform that centrally manages identities, provisioning, deprovisioning, and access policies across SaaS apps and legacy systems. Answers: 'Who manages our identities and access?'",
+      "Choose IDaaS when...": "The scenario mentions SaaS dependency, legacy system integration, centralized provisioning/deprovisioning, or managing policies across multiple apps. IDaaS is the BEST answer in these contexts.",
+      "Choose FIM when...": "The scenario involves two separate organizations needing to authenticate users across their boundaries — e.g., a contractor using their own company credentials to access a partner's systems.",
+      "Provisioning vs Onboarding": "Provisioning is a SUBSET of onboarding. Onboarding = the full new-hire process (compliance tasks, equipment, access). Provisioning = specifically creating accounts and assigning group/role memberships.",
+      "Constrained Interface (Zero Trust)": "Sits alongside the PEP and limits WHAT the user can do — not whether they get access. Restricts available commands, fields, or functions based on role. Different from the PEP which enforces the access decision itself."
+    };
+    initMatchGame(pairs, 6);
+  </script>
+</body>
+</html>

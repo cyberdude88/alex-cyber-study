@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Order the certificate revocation timeline: CRL, OCSP, OCSP Stapling, HPKP, and Modern Model. Drag-and-drop sequence game for CISSP Domain 3.">
+  <meta name="keywords" content="CISSP OCSP stapling CRL HPKP certificate revocation timeline, domain 3, PKI">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain3/ocsp-sequence.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="Certificate Revocation Timeline — Domain 3 | Alex Cyber Study">
+  <meta property="og:description" content="Drag and drop: Order CRL → OCSP → OCSP Stapling → HPKP → Modern Model in chronological sequence.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain3/ocsp-sequence.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Certificate Revocation Timeline — Domain 3 | Alex Cyber Study">
+  <meta name="twitter:description" content="Order CRL → OCSP → OCSP Stapling → HPKP → Modern Model in chronological sequence.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>Certificate Revocation Timeline Sequence — Domain 3 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .seq-container { max-width: 860px; margin: 0 auto; padding: 0 2rem 3rem; }
+    .seq-pool {
+      display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;
+      background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 14px; padding: 1.5rem; min-height: 80px; margin-bottom: 2rem;
+    }
+    .seq-pool.drag-over { border-color: rgba(255,255,255,0.5); }
+    .seq-track { display: flex; flex-direction: column; gap: 0.75rem; }
+    .seq-slot {
+      display: flex; align-items: center; gap: 1rem;
+      background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.18);
+      border-radius: 12px; padding: 1rem 1.25rem; min-height: 72px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .seq-slot.drag-over { border-color: rgba(168,85,247,0.7); background: rgba(168,85,247,0.08); }
+    .seq-slot.correct { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+    .seq-slot.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+    .slot-num {
+      font-size: 1.3rem; font-weight: 900; min-width: 2rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .slot-content { flex: 1; }
+    .seq-card {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff; padding: 0.85rem 1.25rem; border-radius: 10px;
+      cursor: grab; font-weight: 700; font-size: 0.95rem;
+      user-select: none; transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    }
+    .seq-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+    .seq-card.dragging { opacity: 0.4; cursor: grabbing; }
+    .check-btn {
+      display: block; margin: 2rem auto 0;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff; border: none; padding: 0.85rem 2.5rem;
+      font-size: 1.05rem; border-radius: 999px; cursor: pointer;
+      font-weight: 800; box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .check-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(16,185,129,0.5); }
+    .result-msg {
+      text-align: center; margin-top: 1.5rem; padding: 1rem;
+      border-radius: 12px; font-size: 1.15rem; font-weight: 700; display: none;
+    }
+    .result-msg.all-correct { background: rgba(16,185,129,0.2); border: 2px solid #10b981; color: #4ade80; }
+    .result-msg.has-errors { background: rgba(239,68,68,0.15); border: 2px solid #ef4444; color: #fca5a5; }
+    .hint { font-size: 0.85rem; color: rgba(255,255,255,0.45); text-align: center; margin-bottom: 1rem; }
+    .pool-label { font-size: 1rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html" class="active">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>📅 Certificate Revocation Timeline</h1>
+      <p class="game-subtitle">Domain 3 — Drag the technologies into chronological order (earliest → most modern)</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 3</a>
+      <button class="reset-btn" onclick="initSeq()">🔄 Reset</button>
+    </div>
+  </div>
+
+  <div class="seq-container">
+    <div class="pool-label">📦 Technologies — drag into the numbered slots below (1 = earliest)</div>
+    <div class="seq-pool" id="pool"></div>
+    <div class="hint">OCSP is the protocol. Stapling is the optimization. Same proof, better delivery.</div>
+    <div class="seq-track" id="track"></div>
+    <button class="check-btn" onclick="checkSeq()">✅ Check Order</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+
+  <footer style="margin-top:2rem;">
+    <p><a href="index.html">← Back to Domain 3 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script>
+    const items = [
+      { id: 1, label: "CRLs — Certificate Revocation Lists", desc: "Early 1990s. Large static lists downloaded from CA. Slow, outdated, high bandwidth." },
+      { id: 2, label: "OCSP — Online Certificate Status Protocol", desc: "1999. Real-time revocation check. Client queries CA directly. Privacy and latency concerns." },
+      { id: 3, label: "OCSP Stapling", desc: "2011. Server pre-fetches and 'staples' signed OCSP response into TLS handshake. Faster, private." },
+      { id: 4, label: "HPKP — HTTP Public Key Pinning", desc: "RFC 7469 (2015). Pins specific public keys to reduce CA compromise risk. Deprecated by browsers 2018–2020 due to misconfiguration risks." },
+      { id: 5, label: "Modern Model", desc: "Today. OCSP Stapling + short-lived certs + Certificate Transparency + app-level pinning only." }
+    ];
+
+    let dragged = null;
+
+    function initSeq() {
+      const pool = document.getElementById('pool');
+      const track = document.getElementById('track');
+      document.getElementById('resultMsg').style.display = 'none';
+      pool.innerHTML = '';
+      track.innerHTML = '';
+
+      const shuffled = [...items].sort(() => Math.random() - 0.5);
+      shuffled.forEach(item => {
+        const card = mkCard(item);
+        pool.appendChild(card);
+      });
+
+      for (let i = 1; i <= items.length; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'seq-slot';
+        slot.dataset.pos = i;
+        slot.innerHTML = `<div class="slot-num">${i}</div><div class="slot-content"></div>`;
+        addSlotEvents(slot);
+        track.appendChild(slot);
+      }
+
+      addZoneEvents(pool);
+    }
+
+    function mkCard(item) {
+      const card = document.createElement('div');
+      card.className = 'seq-card';
+      card.dataset.id = item.id;
+      card.textContent = item.label;
+      card.title = item.desc;
+      card.draggable = true;
+      card.addEventListener('dragstart', e => { dragged = card; card.classList.add('dragging'); });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      return card;
+    }
+
+    function addZoneEvents(zone) {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        if (!dragged) return;
+        const existing = zone === document.getElementById('pool') ? null : zone.querySelector('.seq-card');
+        if (existing) document.getElementById('pool').appendChild(existing);
+        if (zone === document.getElementById('pool')) {
+          zone.appendChild(dragged);
+        } else {
+          zone.querySelector('.slot-content').appendChild(dragged);
+        }
+        dragged = null;
+        clearResults();
+      });
+    }
+
+    function addSlotEvents(slot) {
+      slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
+      slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+      slot.addEventListener('drop', e => {
+        e.preventDefault();
+        slot.classList.remove('drag-over');
+        if (!dragged) return;
+        const content = slot.querySelector('.slot-content');
+        const existing = content.querySelector('.seq-card');
+        if (existing) document.getElementById('pool').appendChild(existing);
+        content.appendChild(dragged);
+        dragged = null;
+        clearResults();
+      });
+    }
+
+    function clearResults() {
+      document.querySelectorAll('.seq-slot').forEach(s => s.classList.remove('correct','incorrect'));
+      document.getElementById('resultMsg').style.display = 'none';
+    }
+
+    function checkSeq() {
+      const slots = document.querySelectorAll('.seq-slot');
+      let correct = 0;
+      slots.forEach(slot => {
+        slot.classList.remove('correct','incorrect');
+        const card = slot.querySelector('.seq-card');
+        if (!card) return;
+        const expectedId = parseInt(slot.dataset.pos);
+        if (parseInt(card.dataset.id) === expectedId) { slot.classList.add('correct'); correct++; }
+        else slot.classList.add('incorrect');
+      });
+
+      const filled = document.querySelectorAll('.seq-slot .seq-card').length;
+      const msg = document.getElementById('resultMsg');
+      msg.style.display = 'block';
+
+      if (filled < items.length) {
+        msg.className = 'result-msg has-errors';
+        msg.textContent = `⚠️ Place all ${items.length} cards in the slots first.`;
+      } else if (correct === items.length) {
+        msg.className = 'result-msg all-correct';
+        msg.textContent = `🎉 Perfect! CRL → OCSP → Stapling → HPKP → Modern — nailed it!`;
+        launchConfetti();
+      } else {
+        msg.className = 'result-msg has-errors';
+        msg.textContent = `${correct}/${items.length} correct — Red slots are out of order. Try again!`;
+      }
+    }
+
+    function launchConfetti() {
+      const colors = ['#4ade80','#f472b6','#60a5fa','#facc15','#a78bfa','#fb923c'];
+      for (let i = 0; i < 60; i++) {
+        const dot = document.createElement('div');
+        dot.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;background:${colors[i%colors.length]};left:${50+(Math.random()-.5)*30}%;top:-10px;z-index:9999;pointer-events:none;`;
+        document.body.appendChild(dot);
+        const xEnd = (Math.random()-.5)*500, yEnd = window.innerHeight+50, dur = 1200+Math.random()*800;
+        dot.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${xEnd}px,${yEnd}px)`,opacity:0}],{duration:dur});
+        setTimeout(()=>dot.remove(),dur);
+      }
+    }
+
+    initSeq();
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Match OTP types — HOTP, TOTP, S/KEY, Synchronous, Asynchronous, and Hardcopy — to their CISSP definitions. Domain 5.">
+  <meta name="keywords" content="CISSP OTP types, HOTP TOTP, one time password, S/KEY, synchronous asynchronous, domain 5">
+  <meta name="author" content="Alex Cyber Study">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cyberdude88.github.io/alex-cyber-study/domain5/otp-types-matcher.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alex Cyber Study">
+  <meta property="og:title" content="OTP Types Matcher — Domain 5 | Alex Cyber Study">
+  <meta property="og:description" content="Match HOTP, TOTP, S/KEY, Synchronous, Asynchronous, and Hardcopy OTP types for CISSP Domain 5.">
+  <meta property="og:url" content="https://cyberdude88.github.io/alex-cyber-study/domain5/otp-types-matcher.html">
+  <meta property="og:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OTP Types Matcher — Domain 5 | Alex Cyber Study">
+  <meta name="twitter:description" content="Match HOTP, TOTP, S/KEY, Synchronous, and Asynchronous OTP for CISSP Domain 5.">
+  <meta name="twitter:image" content="https://cyberdude88.github.io/alex-cyber-study/og-image.png">
+  <title>OTP Types Matcher — Domain 5 | Alex Cyber Study</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="../index.html"><span class="logo-icon">🛡️</span> Alex Cyber Study</a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../domain1/index.html">D1</a></li>
+        <li><a href="../domain2/index.html">D2</a></li>
+        <li><a href="../domain3/index.html">D3</a></li>
+        <li><a href="../domain4/index.html">D4</a></li>
+        <li><a href="../domain5/index.html" class="active">D5</a></li>
+        <li><a href="../domain6/index.html">D6</a></li>
+        <li><a href="../domain7/index.html">D7</a></li>
+        <li><a href="../domain8/index.html">D8</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🔑 OTP Types Matcher</h1>
+      <p class="game-subtitle">Domain 5 — Clock drift can cause false negatives (false rejections). Know your OTP types.</p>
+    </div>
+    <div class="game-controls">
+      <a href="index.html" class="back-btn">← Back to Domain 5</a>
+      <button class="reset-btn" onclick="initMatchGame(pairs, 6)">🔄 Reset</button>
+    </div>
+    <div class="score-display">Matched: <span id="score">0</span> / <span id="total">6</span></div>
+    <div class="completion-message" id="completionMessage">🎉 OTP Types Mastered! HOTP = counter, TOTP = time, S/KEY = hash-chain. Nailed it. 🎉</div>
+    <div class="game-area">
+      <div class="terms-column">
+        <div class="column-header">OTP Type</div>
+        <div id="termsContainer"></div>
+      </div>
+      <div class="scenarios-column">
+        <div class="column-header">Definition</div>
+        <div id="scenariosContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="index.html">← Back to Domain 5 Games</a></p>
+    <p class="footer-disclaimer">Not affiliated with, endorsed by, or sponsored by ISC2®. CISSP is a registered trademark of ISC2.</p>
+  </footer>
+
+  <script src="../game.js"></script>
+  <script>
+    const pairs = {
+      "HOTP (HMAC-based OTP)": "Counter-based one-time password. Each authentication increments a counter. The token and server must stay in sync by counter value. Codes do not expire unless used.",
+      "TOTP (Time-based OTP)": "Time-based one-time password. The code changes every 30 or 60 seconds based on the current time. Token and server must be time-synchronized via NTP. Clock drift causes false rejections.",
+      "Synchronous Dynamic OTP": "Token and server stay in sync — either by time (TOTP) or counter (HOTP). Both sides independently generate the same code without direct communication each time.",
+      "Asynchronous Dynamic OTP": "Challenge-response mechanism. Server sends a challenge, user enters it into the token, token computes a response. No synchronization between token and server required.",
+      "Hardcopy OTP": "A printed list of pre-generated one-time codes. Each code is used once and crossed off. Simple, offline, and resistant to remote attacks — but physical security of the list is critical.",
+      "S/KEY OTP": "Hash-chain based one-time password system. A seed is hashed N times to create a list of codes; authentication consumes them in reverse order. Each use reveals the next valid code."
+    };
+    initMatchGame(pairs, 6);
+  </script>
+</body>
+</html>
