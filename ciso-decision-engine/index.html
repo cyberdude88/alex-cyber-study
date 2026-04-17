@@ -1235,7 +1235,7 @@ function renderScenario() {
   document.getElementById('sc-phase').textContent = 'Scenario ' + sc.phase + ' of ' + activeScenarios.length;
 
   // Context with qualifier highlights in stem
-  document.getElementById('sc-context').innerHTML = sc.context;
+  document.getElementById('sc-context').innerHTML = escapeHtml(sc.context);
   document.getElementById('sc-stem').innerHTML = highlightQualifiers(sc.stem);
 
   // Re-add fade-in
@@ -1254,7 +1254,7 @@ function renderScenario() {
     btn.dataset.index = i;
     btn.innerHTML = `
       <div class="choice-letter">${letters[i]}</div>
-      <div class="choice-text">${choice.text}</div>
+      <div class="choice-text">${escapeHtml(choice.text)}</div>
     `;
     btn.addEventListener('click', () => selectAnswer(i));
     grid.appendChild(btn);
@@ -1277,8 +1277,17 @@ const QUALIFIERS = [
   'MINIMUM', 'BEFORE', 'ALWAYS', 'NEVER', 'ONLY', 'ALL'
 ];
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function highlightQualifiers(text) {
-  let out = text;
+  let out = escapeHtml(text);
   QUALIFIERS.forEach(q => {
     const re = new RegExp('\\b(' + q + ')\\b', 'g');
     out = out.replace(re, '<span class="q-word">$1</span>');
@@ -1403,7 +1412,7 @@ function renderExplanation(sc, choiceIndex, quality, delta) {
     item.className = 'other-item';
     item.innerHTML = `
       <span class="other-letter">${letters[i]}</span>
-      <span>${ch.why}</span>
+      <span>${escapeHtml(ch.why)}</span>
     `;
     othersList.appendChild(item);
   });
@@ -1573,9 +1582,9 @@ function endGame(fromOverlay) {
         <span class="decision-phase">Scenario ${d.phase}</span>
         <span class="decision-badge db-${d.quality}">${qLabels[d.quality]}</span>
       </div>
-      <div class="decision-question">${d.stem}</div>
+      <div class="decision-question">${escapeHtml(d.stem)}</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
-        <div class="decision-answer">${letters[d.choiceIndex]}. ${d.choiceText}</div>
+        <div class="decision-answer">${letters[d.choiceIndex]}. ${escapeHtml(d.choiceText)}</div>
         <div class="decision-delta ${deltaClass}">${deltaLabels[d.quality]}</div>
       </div>
     `;

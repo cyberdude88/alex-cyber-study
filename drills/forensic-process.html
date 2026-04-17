@@ -681,7 +681,9 @@ function buildLanes(fw) {
     lane.addEventListener('drop', e => {
       e.preventDefault(); lane.classList.remove('drag-over');
       if (submitted) return;
-      const chip = document.querySelector(`.activity[data-uid="${e.dataTransfer.getData('text/plain')}"]`);
+      const uid = e.dataTransfer.getData('text/plain');
+      if (!/^\d+$/.test(uid)) return;
+      const chip = document.querySelector(`.activity[data-uid="${uid}"]`);
       if (chip) moveChipToLane(chip, ph.id, ph.color);
     });
     lane.addEventListener('click', () => {
@@ -718,7 +720,9 @@ function buildSourcePile(activities) {
   pile.addEventListener('drop', e => {
     e.preventDefault(); pile.classList.remove('drag-over');
     if (submitted) return;
-    const chip = document.querySelector(`.activity[data-uid="${e.dataTransfer.getData('text/plain')}"]`);
+    const uid = e.dataTransfer.getData('text/plain');
+    if (!/^\d+$/.test(uid)) return;
+    const chip = document.querySelector(`.activity[data-uid="${uid}"]`);
     if (chip) pile.appendChild(chip);
   });
 }

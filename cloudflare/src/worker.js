@@ -14,38 +14,46 @@ const BANK_CACHE_TTL_MS = 5 * 60 * 1000;
 const PASS_CUT_SCALED = 700;
 
 let bankCache = null;
+let bankCacheInflight = null; // Promise deduplication — prevents concurrent fetches racing to overwrite the cache.
 
 export default {
   async fetch(request, env) {
+    const cors = corsHeaders(request);
     try {
       if (request.method === "OPTIONS") {
-        return new Response(null, { status: 204, headers: corsHeaders() });
+        return new Response(null, { status: 204, headers: cors });
       }
 
       const url = new URL(request.url);
       const path = url.pathname.replace(/\/+$/, "");
 
+      let response;
       if (request.method === "GET" && path === "/api/cat/health") {
-        return json({ ok: true, now: new Date().toISOString() });
+        response = json({ ok: true, now: new Date().toISOString() });
+      } else if (request.method === "POST" && path === "/api/cat/session") {
+        response = await createSession(request, env);
+      } else {
+        const answerMatch = path.match(/^\/api\/cat\/session\/([^/]+)\/answer$/);
+        if (request.method === "POST" && answerMatch) {
+          response = await answerQuestion(request, env, answerMatch[1]);
+        } else {
+          const stateMatch = path.match(/^\/api\/cat\/session\/([^/]+)\/state$/);
+          if (request.method === "GET" && stateMatch) {
+            response = await getSessionState(env, stateMatch[1]);
+          } else {
+            response = json({ error: "Not found." }, 404);
+          }
+        }
       }
 
-      if (request.method === "POST" && path === "/api/cat/session") {
-        return createSession(request, env);
-      }
-
-      const answerMatch = path.match(/^\/api\/cat\/session\/([^/]+)\/answer$/);
-      if (request.method === "POST" && answerMatch) {
-        return answerQuestion(request, env, answerMatch[1]);
-      }
-
-      const stateMatch = path.match(/^\/api\/cat\/session\/([^/]+)\/state$/);
-      if (request.method === "GET" && stateMatch) {
-        return getSessionState(env, stateMatch[1]);
-      }
-
-      return json({ error: "Not found." }, 404);
+      // Apply CORS to every response centrally.
+      const out = new Response(response.body, response);
+      Object.entries(cors).forEach(([k, v]) => out.headers.set(k, v));
+      return out;
     } catch (err) {
-      return json({ error: String(err?.message || err) }, 500);
+      const errResp = json({ error: String(err?.message || err) }, 500);
+      Object.entries(cors).forEach(([k, v]) => errResp.headers.set(k, v));
+      return errResp;
     }
   },
 };
@@ -112,6 +120,10 @@ async function answerQuestion(request, env, sessionId) {
 
   const item = bank.byId.get(questionId);
   if (!item) return json({ error: "Question not found in bank." }, 404);
+
+  if (selectedIndex >= item.choices.length) {
+    return json({ error: "selectedIndex out of range for this question." }, 400);
+  }
 
   const qNum = session.itemsAnswered.length + 1;
   const correct = selectedIndex === item.correctIndex;
@@ -215,33 +227,55 @@ async function loadBank(env) {
     return bankCache;
   }
 
+  // Deduplicate concurrent fetches: if another request is already fetching,
+  // await the same Promise instead of firing a second parallel request.
+  // Without this, concurrent requests that all see an expired cache would each
+  // fetch independently — the last one to resolve overwrites the cache, causing
+  // sessions created mid-stampede to reference item IDs from a different version.
+  if (bankCacheInflight) {
+    return bankCacheInflight;
+  }
+
   const bankUrl = env.BANK_URL;
   if (!bankUrl) {
     throw new Error("BANK_URL is not configured.");
   }
 
-  const res = await fetch(bankUrl, { cf: { cacheTtl: 120, cacheEverything: true } });
-  if (!res.ok) throw new Error(`Failed to fetch bank: ${res.status}`);
+  bankCacheInflight = (async () => {
+    try {
+      const res = await fetch(bankUrl, { cf: { cacheTtl: 120, cacheEverything: true } });
+      if (!res.ok) throw new Error(`Failed to fetch bank: ${res.status}`);
 
-  const raw = await res.json();
-  if (!raw || !Array.isArray(raw.items) || raw.items.length < 8) {
-    throw new Error("Invalid bank payload.");
-  }
+      const raw = await res.json();
+      if (!raw || !Array.isArray(raw.items) || raw.items.length < 8) {
+        throw new Error("Invalid bank payload.");
+      }
 
-  const items = raw.items.map((it) => normalizeItem(it));
-  const byId = new Map(items.map((it) => [it.id, it]));
-  bankCache = { loadedAt: now, items, byId, sourceCatalog: raw.sourceCatalog || {} };
-  return bankCache;
+      const items = raw.items.map((it) => normalizeItem(it));
+      const byId = new Map(items.map((it) => [it.id, it]));
+      bankCache = { loadedAt: Date.now(), items, byId, sourceCatalog: raw.sourceCatalog || {} };
+      return bankCache;
+    } finally {
+      bankCacheInflight = null;
+    }
+  })();
+
+  return bankCacheInflight;
 }
 
 function normalizeItem(item) {
   const normalizedChoices = Array.isArray(item.choices) ? item.choices.map((x) => String(x)) : [];
+  const rawCorrectIndex = Number(item.correctIndex);
+  const correctIndex = Number.isInteger(rawCorrectIndex)
+    && rawCorrectIndex >= 0
+    && rawCorrectIndex < normalizedChoices.length
+    ? rawCorrectIndex : 0;
   return {
     id: String(item.id),
     domain: normalizeDomainName(item.domain),
     stem: String(item.stem || ""),
     choices: normalizedChoices,
-    correctIndex: Number(item.correctIndex),
+    correctIndex,
     difficulty: clamp(Number(item.difficulty ?? 0), -3, 3),
     discrimination: clamp(Number(item.discrimination ?? 1), 0.3, 3),
     type: String(item.type || "mcq"),
@@ -514,21 +548,28 @@ function assertKvConfigured(env) {
   }
 }
 
-function corsHeaders() {
+function corsHeaders(request) {
+  const origin = request?.headers?.get("Origin") || "";
+  // Allow only the GitHub Pages origin and localhost for dev.
+  // Wildcard "*" was replaced because it allowed any site to read session data.
+  const allowed = [
+    "https://ansbergs.github.io",
+    "http://localhost",
+    "http://127.0.0.1",
+  ];
+  const allowedOrigin = allowed.some(o => origin.startsWith(o)) ? origin : allowed[0];
   return {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type,Authorization",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
   };
 }
 
 function json(payload, status = 200) {
   return new Response(JSON.stringify(payload), {
     status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      ...corsHeaders(),
-    },
+    headers: { "Content-Type": "application/json; charset=utf-8" },
   });
 }
 

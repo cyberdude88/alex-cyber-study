@@ -502,8 +502,9 @@ function renderSourcesHtml(item) {
   const links = sources.map((ref) => {
     const title = escapeHtml(ref.title);
     const publisher = ref.publisher ? ` (${escapeHtml(ref.publisher)})` : "";
-    const url = escapeHtml(ref.url);
-    return `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>${publisher}</li>`;
+    const rawUrl = String(ref.url || "");
+    const safeUrl = /^https?:\/\//i.test(rawUrl) ? escapeHtml(rawUrl) : "#";
+    return `<li><a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${title}</a>${publisher}</li>`;
   }).join("");
   return `<div class="source-block"><p class="small-note">Sources</p><ul class="source-list">${links}</ul></div>`;
 }
@@ -1849,7 +1850,7 @@ function buildReviewText() {
 
   app.attempt.itemsAnswered.forEach((row) => {
     lines.push(
-      `${row.questionNumber}\t${row.domain}\t${row.difficultyBand}\t${row.scored ? "Y" : "N"}\t${row.correct ? "Y" : "N"}\t${row.elapsedSec.toFixed(2)}\t${row.scaledAfter.toFixed(2).replace(".", ",")}\t${row.itemId}`
+      `${row.questionNumber}\t${row.domain}\t${row.difficultyBand}\t${row.scored ? "Y" : "N"}\t${row.correct ? "Y" : "N"}\t${Number.isFinite(row.elapsedSec) ? row.elapsedSec.toFixed(2) : "?"}\t${Number.isFinite(row.scaledAfter) ? row.scaledAfter.toFixed(2).replace(".", ",") : "?"}\t${row.itemId}`
     );
   });
 
@@ -1871,13 +1872,13 @@ function renderReviewTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${row.questionNumber}</td>
-      <td>${row.domain}</td>
-      <td>${row.difficultyBand}</td>
+      <td>${escapeHtml(row.domain)}</td>
+      <td>${escapeHtml(row.difficultyBand)}</td>
       <td>${row.scored ? "Yes" : "No"}</td>
       <td>${row.correct ? "Yes" : "No"}</td>
-      <td>${row.elapsedSec.toFixed(2)}</td>
-      <td>${row.scaledAfter.toFixed(2).replace(".", ",")}</td>
-      <td>${normalizePresentedText(row.explanation || "")}</td>
+      <td>${Number.isFinite(row.elapsedSec) ? row.elapsedSec.toFixed(2) : "—"}</td>
+      <td>${Number.isFinite(row.scaledAfter) ? row.scaledAfter.toFixed(2).replace(".", ",") : "—"}</td>
+      <td>${escapeHtml(normalizePresentedText(row.explanation || ""))}</td>
     `;
     ui.reviewTableBody.appendChild(tr);
   });

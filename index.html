@@ -97,6 +97,43 @@
       white-space: nowrap;
     }
 
+    .track-grid.track-grid-home .track-card.track-shorts {
+      text-align: left;
+      align-items: flex-start;
+    }
+
+    .track-grid.track-grid-home .track-card.track-shorts .track-cta {
+      align-self: flex-start;
+    }
+
+    .track-update-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.7rem;
+      padding: 0.28rem 0.72rem;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.2);
+      border: 1px solid rgba(250, 204, 21, 0.38);
+      color: #fde68a;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .track-update-list {
+      margin: 0.8rem 0 0;
+      padding-left: 1rem;
+      color: rgba(255,255,255,0.82);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .track-update-list li + li {
+      margin-top: 0.2rem;
+    }
+
     .track-wheel-btn {
       position: absolute;
       top: 50%;
@@ -270,10 +307,16 @@
         <span class="track-cta">Start Drill</span>
       </a>
 
-      <a class="track-card track-games" href="shorts.html">
+      <a class="track-card track-games track-shorts" href="shorts.html">
         <span class="track-icon">🧠</span>
+        <span class="track-update-badge">Updated • 27 shorts</span>
         <h3>Brain Sticky Videos</h3>
-        <p>Bite-sized YouTube Shorts covering CISSP concepts — RAID, security models, privacy laws, STRIDE, and more. Watch in seconds.</p>
+        <p>Bite-sized YouTube Shorts covering CISSP concepts. The latest additions include NIST RMF, MDM solution design, and Bell-LaPadula.</p>
+        <ul class="track-update-list">
+          <li>New D1 short: NIST RMF</li>
+          <li>New D4 short: MDM Solution</li>
+          <li>New D3 short: Bell-LaPadula</li>
+        </ul>
         <span class="track-cta">Watch Shorts</span>
       </a>
       </div>
