@@ -58,5 +58,7 @@
     let tc=null,te=null;function tS(e){e.preventDefault();te=e.target.closest('.flow-step');if(!te||!te.draggable)return;draggedStep=te;te.classList.add('dragging');tc=te.cloneNode(true);tc.style.cssText=`position:fixed;z-index:10000;pointer-events:none;opacity:0.85;width:${te.offsetWidth}px;`;document.body.appendChild(tc);mv(e.touches[0])}function tM(e){e.preventDefault();if(!tc)return;mv(e.touches[0]);const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);document.querySelectorAll('.flow-slot').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.flow-slot');if(z)z.classList.add('drag-over')}}function tE(e){if(!tc)return;tc.remove();tc=null;if(te)te.classList.remove('dragging');const t=e.changedTouches[0],el=document.elementFromPoint(t.clientX,t.clientY);document.querySelectorAll('.flow-slot').forEach(s=>s.classList.remove('drag-over'));if(el){const z=el.closest('.flow-slot');if(z)dropOn(z)}te=null}function mv(t){if(!tc)return;tc.style.left=(t.clientX-tc.offsetWidth/2)+'px';tc.style.top=(t.clientY-30)+'px'}
     initSesame();
   </script>
+  <!-- GoatCounter analytics -->
+  <script data-goatcounter="https://alex-cyber.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
